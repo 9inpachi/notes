@@ -4,10 +4,7 @@ import ReactDOM from 'react-dom';
 // import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-// // If you want your app to work offline and load faster, you can change
-// // unregister() to register() below. Note this comes with some pitfalls.
-// // Learn more about service workers: https://bit.ly/CRA-PWA
-
+// A simple test component that can created anywhere
 class TestComponent extends React.Component {
     render () {
         return <div className="header">
@@ -16,6 +13,14 @@ class TestComponent extends React.Component {
     }
 }
 
-ReactDOM.render(<TestComponent />, document.getElementById('root'));
+// Inline styles work as JSON
+// The {} are used to define variables so that styles JSON is essentially working as a variable
+var variableAsComponent = ( // Kuuru desu yo *_*
+    <div className="header">
+        <div style={{display: "block", width: "100px", height: "100px", background: "red"}}></div>
+    </div>
+);
+
+ReactDOM.render(variableAsComponent, document.getElementById('root'));
 
 serviceWorker.unregister();
