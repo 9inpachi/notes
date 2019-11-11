@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 // import './index.css';
 // import App from './App';
+import Button from './components/button';
 import * as serviceWorker from './serviceWorker';
 
-// A simple test component that can created anywhere
+// A simple test component that can be created anywhere
 class TestComponent extends React.Component {
     render () {
         return <div className="header">
@@ -18,6 +19,7 @@ class TestComponent extends React.Component {
 var variableAsComponent = ( // Kuuru desu yo *_*
     <div className="header">
         <div style={{display: "block", width: "100px", height: "100px", background: "red"}}></div>
+        <Button title={"Hello"} />
     </div>
 );
 
