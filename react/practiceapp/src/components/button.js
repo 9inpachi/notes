@@ -1,7 +1,9 @@
 import React from 'react';
 
-export default function Button({title}) {
+function Button({ title, href }) {
     return (
-        <button class="btn btn-default" title="{title}">{title}</button>
+        <a class="btn btn-default" href={href} title={title}>{title}</a>
     );
 }
+
+export default Button;
