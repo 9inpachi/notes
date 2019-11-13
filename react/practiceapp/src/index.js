@@ -5,6 +5,9 @@ import './index.css';
 import Button from './components/button';
 import Box from './components/Box';
 import ColorBox from './components/ColorBox';
+import LifeCycle from './components/LifeCycle';
+import HooksComponent from './components/HooksComponent';
+import RouterApp from './components/ReactRouter';
 
 // A simple test component that can be created anywhere
 class TestComponent extends React.Component {
@@ -42,4 +45,5 @@ function Body ({data}) {
     );
 }
 
-ReactDOM.render(<Body data={{boxesData: boxes}} />, document.getElementById('root'));
+// ReactDOM.render(<LifeCycle allowChange={true} />, document.getElementById('root'));
+ReactDOM.render(<RouterApp />, document.getElementById('root'));
