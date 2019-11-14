@@ -36,11 +36,11 @@ export default function ReactRouter() {
                     <Route path='/contact'>
                         <Contact />
                     </Route>
-                    <Route path='/sub-routes' exact> {/* exact will make sure to look for the exact route without any wildcards */}
-                        <p>Sub rou  tes exist here</p>
+                    <Route path='/sub-routes'>
+                        <h2>Sub routes exist here</h2>
                         <SubRoutes />
                     </Route>
-                    <Route path='/' exact>
+                    <Route path='/' exact> {/* exact will make sure to look for the exact route without any wildcards */}
                         <Home />
                     </Route>
                     <Route path='/'>
@@ -53,28 +53,30 @@ export default function ReactRouter() {
 }
 
 function Home() {
-    return <p>Home here</p>;
+    return <h2>Home here</h2>;
 }
 
 function About() {
-    return <p>About here</p>;
+    return <h2>About here</h2>;
 }
 
 function Contact() {
-    return <p>Contact here</p>;
+    return <h2>Contact here</h2>;
 }
 
 function SubRoutes() {
-    var match = useRouteMatch(); // Used to get the currect route
+    var match = useRouteMatch(); // Used to get the currect route (can get url or path)
     console.log(match);
     return (
         <div>
-            <button>
-                <Link to={`${match.url}/sub-route-1`}>Sub Route 1</Link>
-            </button>
-            <button>
-                <Link to={`${match.url}/sub-route-2`}>Sub Route 2</Link>
-            </button>
+            <ul>
+                <li>
+                    <Link to={`${match.url}/sub-route-1`}>Sub Route 1</Link>
+                </li>
+                <li>
+                    <Link to={`${match.url}/sub-route-2`}>Sub Route 2</Link>
+                </li>
+            </ul>
             <Switch>
                 <Route path={`${match.url}/sub-route-1`}>
                     <p>Sub route 1 data</p>
