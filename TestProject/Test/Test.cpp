@@ -2,6 +2,7 @@
 #define CL_HPP_TARGET_OPENCL_VERSION 200
 
 #include <CL/cl2.hpp>
+#include <iostream>
 
 int main()
 {
@@ -46,6 +47,19 @@ int main()
 	auto device2 = devices2.front();
 	auto vendor2 = device2.getInfo<CL_DEVICE_VENDOR>();
 	auto version2 = device2.getInfo<CL_DEVICE_VERSION>();
+
+	// Checking each platform and all device vendors
+	for (int i = 0; i < platforms.size(); i++) {
+		std::cout << "Platform #" << i << std::endl;
+		auto currPlatform = platforms[i];
+		std::vector<cl::Device> allDevices;
+		currPlatform.getDevices(CL_DEVICE_TYPE_ALL, &allDevices);
+		for (int j = 0; j < allDevices.size(); j++) {
+			std::cout << "----Device #" << j << std::endl;
+			std::cout << "--------Device Vendor: " << allDevices[j].getInfo<CL_DEVICE_VENDOR>() << std::endl;
+			std::cout << "--------Device Name: " << allDevices[j].getInfo<CL_DEVICE_NAME>() << std::endl;
+		}
+	}
 
 	auto test = NULL;
 }
