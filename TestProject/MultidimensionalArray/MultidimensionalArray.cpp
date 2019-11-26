@@ -25,7 +25,7 @@ int main()
 	std::array<std::array<int, cols>, rows> arr = { { {1, 1}, {2, 2}, {3, 3} } };
 
 	// Print array
-	std::cout << "Array before: ";
+	std::cout << "Array before: " << std::endl;
 	for (int i = 0; i < arr.size(); i++) {
 		for (int j = 0; j < arr[i].size(); j++) {
 			std::cout << arr[i][j] << " ";
@@ -33,6 +33,7 @@ int main()
 		std::cout << std::endl;
 	}
 
+	// Memory flags: device access | host (pc) access | how to transfer memory across
 	cl::Buffer buf(context, CL_MEM_READ_WRITE | CL_MEM_HOST_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(int) * count, arr.data());
 	
 	cl::Kernel kernel(program, "MultidimensionalArray");
@@ -45,7 +46,7 @@ int main()
 	cl::finish;
 
 	// Print array
-	std::cout << "Array after: ";
+	std::cout << "Array after: " << std::endl;
 	for (int i = 0; i < arr.size(); i++) {
 		for (int j = 0; j < arr[i].size(); j++) {
 			std::cout << arr[i][j] << " ";

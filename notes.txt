@@ -1,0 +1,17 @@
+WORK GROUP
+In which work items share local memory
+
+WORK ITEM
+Single item under processing
+
+GLOBAL ID
+Kernel: get_global_id(0)
+ID of the work item relative to all work items
+
+LOCAL SIZE
+Kernel: get_local_size(0)
+Size of the work group the work item is in
+
+LOCAL ID
+Kernel: get_local_id(0)
+ID of the work item relative to the work group
