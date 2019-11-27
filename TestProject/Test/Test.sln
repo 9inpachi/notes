@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcessArray", "..\ProcessA
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultidimensionalArray", "..\MultidimensionalArray\MultidimensionalArray.vcxproj", "{31B651CD-0017-490F-BA72-C29D289FA5ED}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NumericalReduction", "..\NumericalReduction\NumericalReduction.vcxproj", "{29D3B8CF-BDE0-4B86-BD50-822F0063487F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -99,6 +101,20 @@ Global
 		{31B651CD-0017-490F-BA72-C29D289FA5ED}.Release|x64.Build.0 = Release|x64
 		{31B651CD-0017-490F-BA72-C29D289FA5ED}.Release|x86.ActiveCfg = Release|Win32
 		{31B651CD-0017-490F-BA72-C29D289FA5ED}.Release|x86.Build.0 = Release|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Debug|ARM.ActiveCfg = Debug|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Debug|Win32.Build.0 = Debug|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Debug|x64.ActiveCfg = Debug|x64
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Debug|x64.Build.0 = Debug|x64
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Debug|x86.ActiveCfg = Debug|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Debug|x86.Build.0 = Debug|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Release|ARM.ActiveCfg = Release|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Release|Win32.ActiveCfg = Release|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Release|Win32.Build.0 = Release|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Release|x64.ActiveCfg = Release|x64
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Release|x64.Build.0 = Release|x64
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Release|x86.ActiveCfg = Release|Win32
+		{29D3B8CF-BDE0-4B86-BD50-822F0063487F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
