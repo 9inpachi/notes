@@ -23,16 +23,16 @@ __kernel void NumericalReduction(__global int* inData, __local int* localData, _
 
 // EXTRA //
 
-__kernel void PostAddition(__global int* data, __global int* outData, int size) {
-	size_t globalId = get_global_id(0);
-	size_t globalSize = get_global_size(0);
-
-	int i;
-	for (i = globalId; i < size; i += globalSize) {
-		outData[0] += data[i];
-	}
-
-	/*localData[get_group_id(0)] += data[get_global_id(0)];
-	barrier(CLK_GLOBAL_MEM_FENCE);
-	outData[]*/
-}
+//__kernel void PostAddition(__global int* data, __global int* outData, int size) {
+//	size_t globalId = get_global_id(0);
+//	size_t globalSize = get_global_size(0);
+//
+//	int i;
+//	for (i = globalId; i < size; i += globalSize) {
+//		outData[0] += data[i];
+//	}
+//
+//	/*localData[get_group_id(0)] += data[get_global_id(0)];
+//	barrier(CLK_GLOBAL_MEM_FENCE);
+//	outData[]*/
+//}

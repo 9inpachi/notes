@@ -12,7 +12,7 @@ cl::Program createProgram(const std::string& filename) {
 
 	// FOR PLATFORM [0]
 	// Using platforms[1] because context.getInfo<CL_CONTEXT_DEVICES>() not working for platforms[0]
-	auto platform = platforms[0];
+	auto platform = platforms[1];
 
 	_ASSERT(platforms.size() > 0);
 

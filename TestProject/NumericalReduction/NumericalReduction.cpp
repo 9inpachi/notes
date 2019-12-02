@@ -50,38 +50,38 @@ int main()
 	// EXTRA //
 	// Adding the results
 
-	auto resultVec = outVec;
+	//auto resultVec = outVec;
 
-	cl_int err1 = CL_SUCCESS;
-	cl::Kernel kernelAdd(program, "PostAddition", &err1);
+	//cl_int err1 = CL_SUCCESS;
+	//cl::Kernel kernelAdd(program, "PostAddition", &err1);
 
-	std::vector<int> vecAdd(4);
-	int sum;
+	//std::vector<int> vecAdd(4);
+	//int sum;
 
-	int arraySize = outVec.size();
-	std::cout << arraySize;
-	cl::Buffer bufAdd(context, CL_MEM_READ_WRITE | CL_MEM_HOST_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(int) * outVec.size(), outVec.data(), &err1);
-	//cl::Buffer bufSize(context, CL_MEM_READ_ONLY | CL_MEM_HOST_NO_ACCESS, sizeof(int) * sizeof(arraySize), &arraySize, &err1);
-	cl::Buffer bufSum(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, sizeof(int) * vecAdd.size(), &err1);
+	//int arraySize = outVec.size();
+	//std::cout << arraySize;
+	//cl::Buffer bufAdd(context, CL_MEM_READ_WRITE | CL_MEM_HOST_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(int) * outVec.size(), outVec.data(), &err1);
+	////cl::Buffer bufSize(context, CL_MEM_READ_ONLY | CL_MEM_HOST_NO_ACCESS, sizeof(int) * sizeof(arraySize), &arraySize, &err1);
+	//cl::Buffer bufSum(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, sizeof(int) * vecAdd.size(), &err1);
 
-	kernelAdd.setArg(0, bufAdd);
-	kernelAdd.setArg(1, bufSum);
-	kernelAdd.setArg(2, arraySize);
-	//kernelAdd.setArg(2, bufSum);
+	//kernelAdd.setArg(0, bufAdd);
+	//kernelAdd.setArg(1, bufSum);
+	//kernelAdd.setArg(2, arraySize);
+	////kernelAdd.setArg(2, bufSum);
 
-	cl::CommandQueue queueAdd(context, device);
-	queueAdd.enqueueNDRangeKernel(kernelAdd, cl::NullRange, cl::NDRange(outVec.size()));
-	//queueAdd.enqueueTask(kernelAdd);
-	queueAdd.enqueueReadBuffer(bufAdd, CL_TRUE, 0, sizeof(int) * outVec.size(), outVec.data());
-	queueAdd.enqueueReadBuffer(bufSum, CL_TRUE, 0, sizeof(int) * vecAdd.size(), vecAdd.data());
+	//cl::CommandQueue queueAdd(context, device);
+	//queueAdd.enqueueNDRangeKernel(kernelAdd, cl::NullRange, cl::NDRange(outVec.size()));
+	////queueAdd.enqueueTask(kernelAdd);
+	//queueAdd.enqueueReadBuffer(bufAdd, CL_TRUE, 0, sizeof(int) * outVec.size(), outVec.data());
+	//queueAdd.enqueueReadBuffer(bufSum, CL_TRUE, 0, sizeof(int) * vecAdd.size(), vecAdd.data());
 
-	// Normal sum
-	int normalSum = 0;
-	for (int i = 0; i < outVec.size(); i++) {
-		normalSum += outVec[i];
-	}
+	//// Normal sum
+	//int normalSum = 0;
+	//for (int i = 0; i < outVec.size(); i++) {
+	//	normalSum += outVec[i];
+	//}
 
-	auto errName = getCLError(err);
+	//auto errName = getCLError(err);
 
 	std::cin.get();
 }
