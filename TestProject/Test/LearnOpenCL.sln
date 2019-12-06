@@ -22,6 +22,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VectorAddChain", "..\Vector
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VectorAddThree", "..\VectorAddThree\VectorAddThree.vcxproj", "{09F2459C-0044-4212-8906-EAD97A5F58FA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise06", "..\Exercise06\Exercise06.vcxproj", "{299AB72D-3B79-49DB-B345-085033731097}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -147,6 +149,20 @@ Global
 		{09F2459C-0044-4212-8906-EAD97A5F58FA}.Release|x64.Build.0 = Release|x64
 		{09F2459C-0044-4212-8906-EAD97A5F58FA}.Release|x86.ActiveCfg = Release|Win32
 		{09F2459C-0044-4212-8906-EAD97A5F58FA}.Release|x86.Build.0 = Release|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Debug|ARM.ActiveCfg = Debug|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Debug|Win32.ActiveCfg = Debug|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Debug|Win32.Build.0 = Debug|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Debug|x64.ActiveCfg = Debug|x64
+		{299AB72D-3B79-49DB-B345-085033731097}.Debug|x64.Build.0 = Debug|x64
+		{299AB72D-3B79-49DB-B345-085033731097}.Debug|x86.ActiveCfg = Debug|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Debug|x86.Build.0 = Debug|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Release|ARM.ActiveCfg = Release|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Release|Win32.ActiveCfg = Release|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Release|Win32.Build.0 = Release|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Release|x64.ActiveCfg = Release|x64
+		{299AB72D-3B79-49DB-B345-085033731097}.Release|x64.Build.0 = Release|x64
+		{299AB72D-3B79-49DB-B345-085033731097}.Release|x86.ActiveCfg = Release|Win32
+		{299AB72D-3B79-49DB-B345-085033731097}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
