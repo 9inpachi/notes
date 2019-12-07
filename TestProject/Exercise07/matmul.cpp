@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  PROGRAM: Matrix Multiplication driver
+//  PROGRAM: Matrix Multipliplication driver
 //
 //  PURPOSE: This is a driver program to test various ways of computing
 //           the product:
@@ -13,53 +13,34 @@
 //  USAGE:   The matrices are constant matrices, square and the order is
 //           set as a constant, ORDER (see mult.h).
 //
-//  HISTORY: Written by Tim Mattson, August 2010
+//  HISTORY: Written by Tim Mattson, August 2010 
 //           Modified by Simon McIntosh-Smith, September 2011
 //           Modified by Tom Deakin and Simon McIntosh-Smith, October 2012
 //           Updated to C++ Wrapper v1.2.6 by Tom Deakin, August 2013
-//           Modified to assume square matrices by Simon McIntosh-Smith, Sep 2014
+//           Modified to assume square matricies by Tom Deakin, October 2014
 //
 //------------------------------------------------------------------------------
 
 #include "matmul.hpp"
 #include "matrix_lib.hpp"
-#include "../Common/util.hpp"
 #include "../Common/err_code.h"
 #include "../Common/device_picker.hpp"
-
-std::string kernelsource = "__kernel void mmul(                         \n" \
-"   const int N,                                                        \n" \
-"   __global float* A,                                                  \n" \
-"   __global float* B,                                                  \n" \
-"   __global float* C)                                                  \n" \
-"{                                                                      \n" \
-"	int k;                                                              \n" \
-"	int i = get_global_id(0);                                           \n" \
-"	int j = get_global_id(1);                                           \n" \
-"	float tmp;															\n" \
-"	if ((i<N) && (j<N)) {												\n" \
-"		tmp = 0.0;														\n" \
-"		barrier(CLK_GLOBAL_MEM_FENCE);														\n" \
-"		for (k=0; k<N; k++){				                                \n" \
-"			tmp += A[i*N+k] * B[k*N+j];                                 \n" \
-"		}                                                               \n" \
-"	    C[i*N+j] = tmp;                                                 \n" \
-"	}                                                                   \n" \
-"}                                                                      \n" \
-"\n";
+#include "../Common/util.hpp"
 
 int main(int argc, char *argv[])
 {
 
-    int N;                  // A[N][N], B[N][N], C[N][N]
-    int size;               // Number of elements in each matrix
+    int N;      // A[N][N], B[N][N], C[N][N]
+    int size;   // Number of elements in each matrix
 
 
     double start_time;      // Starting time
-    double run_time;        // Timing
-    util::Timer timer;      // Timing
+    double run_time;        // Timing data
+    util::Timer timer;      // Timer
 
-    N    = ORDER;
+
+    N = ORDER;
+
     size = N * N;
 
     std::vector<float> h_A(size); // Host memory for Matrix A
@@ -75,7 +56,7 @@ int main(int argc, char *argv[])
     try
     {
 
-        cl_uint deviceIndex = 2;
+        cl_uint deviceIndex = 0;
         parseArguments(argc, argv, &deviceIndex);
 
         // Get list of devices
@@ -104,21 +85,17 @@ int main(int argc, char *argv[])
 // Run sequential matmul
 //--------------------------------------------------------------------------------
 
-
         initmat(N, h_A, h_B, h_C);
 
-        timer.reset();
-
-        printf("\n===== Sequential, matrix mult (dot prod), order %d on host CPU ======\n",N);
+        printf("\n===== Sequential, matrix mult (dot prod), order %d on host CPU ======\n",ORDER);
         for(int i = 0; i < COUNT; i++)
         {
             zero_mat(N, h_C);
-
             start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
 
             seq_mat_mul_sdot(N, h_A, h_B, h_C);
 
-            run_time  = (static_cast<double>(timer.getTimeMilliseconds()) / 1000.0) - start_time;
+            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
             results(N, h_C, run_time);
         }
 
@@ -139,10 +116,8 @@ int main(int argc, char *argv[])
 // OpenCL matrix multiplication ... Naive
 //--------------------------------------------------------------------------------
 
-        timer.reset();
-
         // Create the compute program from the source buffer
-        cl::Program program(context, kernelsource, true);
+        cl::Program program(context, util::loadProgram("kernels/C_elem.cl"), true);
 
         // Create the compute kernel from the program
         cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> naive_mmul(program, "mmul");
@@ -152,7 +127,6 @@ int main(int argc, char *argv[])
         // Do the multiplication COUNT times
         for (int i = 0; i < COUNT; i++)
         {
-			//std::cout << "DOING " + i;
             zero_mat(N, h_C);
 
             start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
@@ -167,7 +141,75 @@ int main(int argc, char *argv[])
 
             queue.finish();
 
-            run_time  = (static_cast<double>(timer.getTimeMilliseconds()) / 1000.0) - start_time;
+            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+
+            cl::copy(queue, d_c, h_C.begin(), h_C.end());
+
+            results(N, h_C, run_time);
+
+        } // end for loop
+
+//--------------------------------------------------------------------------------
+// OpenCL matrix multiplication ... C row per work item
+//--------------------------------------------------------------------------------
+
+        // Create the compute program from the source buffer
+        program = cl::Program(context, util::loadProgram("kernels/C_row.cl"), true);
+
+        // Create the compute kernel from the program
+        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> crow_mmul(program, "mmul");
+
+        printf("\n===== OpenCL, matrix mult, C row per work item, order %d ======\n",N);
+
+        // Do the multiplication COUNT times
+        for (int i = 0; i < COUNT; i++)
+        {
+            zero_mat(N, h_C);
+
+            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+
+            cl::NDRange global(N);
+            crow_mmul(cl::EnqueueArgs(queue, global),
+                    N, d_a, d_b, d_c);
+
+            queue.finish();
+
+            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
+
+            cl::copy(queue, d_c, h_C.begin(), h_C.end());
+
+            results(N, h_C, run_time);
+
+        } // end for loop
+
+//--------------------------------------------------------------------------------
+// OpenCL matrix multiplication ... C row per work item, A row in pivate memory
+//--------------------------------------------------------------------------------
+
+        // Create the compute program from the source buffer
+        program = cl::Program(context, util::loadProgram("kernels/C_row_priv.cl"), true);
+
+        // Create the compute kernel from the program
+        cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> arowpriv_mmul(program, "mmul");
+
+        printf("\n===== OpenCL, matrix mult, C row, A row in priv mem, order %d ======\n",N);
+
+        // Do the multiplication COUNT times
+        for (int i = 0; i < COUNT; i++)
+        {
+            zero_mat(N, h_C);
+
+            start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
+
+
+            cl::NDRange global(N);
+            cl::NDRange local(ORDER / 16);
+            arowpriv_mmul(cl::EnqueueArgs(queue, global, local),
+                    N, d_a, d_b, d_c);
+
+            queue.finish();
+
+            run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
 
             cl::copy(queue, d_c, h_C.begin(), h_C.end());
 

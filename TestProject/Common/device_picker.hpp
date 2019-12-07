@@ -14,7 +14,7 @@
 #pragma once
 
 #include <vector>
-#include <err_code.h>
+#include <../Common/err_code.h>
 #include <iostream>
 
 #define MAX_INFO_STRING 256

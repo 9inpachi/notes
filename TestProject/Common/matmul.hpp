@@ -21,7 +21,7 @@
 
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #define __CL_ENABLE_EXCEPTIONS
-#include "../Common/cl.hpp"
+#include "cl.hpp"
 
 
 #include "matrix_lib.hpp"
