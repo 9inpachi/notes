@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         initmat(N, h_A, h_B, h_C);
 
         printf("\n===== Sequential, matrix mult (dot prod), order %d on host CPU ======\n",ORDER);
-        for(int i = 0; i < COUNT; i++)
+        /*for(int i = 0; i < COUNT; i++)
         {
             zero_mat(N, h_C);
             start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 
             run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
             results(N, h_C, run_time);
-        }
+        }*/
 
 //--------------------------------------------------------------------------------
 // Setup the buffers, initialize matrices, and write them into global memory
