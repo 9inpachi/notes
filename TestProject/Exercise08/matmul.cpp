@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	try
 	{
 
-		cl_uint deviceIndex = 0;
+		cl_uint deviceIndex = 2;
 		parseArguments(argc, argv, &deviceIndex);
 
 		// Get list of devices
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
 			kernel.setArg(1, d_a);
 			kernel.setArg(2, d_b);
 			kernel.setArg(3, d_c);
-			kernel.setArg(4, localmem);
+			kernel.setArg(4, sizeof(float) * N, nullptr);
 
 			cl::CommandQueue queue(context, device);
 
