@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	try
 	{
 
-		cl_uint deviceIndex = 2;
+		cl_uint deviceIndex = 0;
 		parseArguments(argc, argv, &deviceIndex);
 
 		// Get list of devices
