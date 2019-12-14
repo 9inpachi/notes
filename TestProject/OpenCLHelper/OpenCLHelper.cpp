@@ -12,7 +12,7 @@ cl::Program createProgram(const std::string& filename) {
 
 	// FOR PLATFORM [0]
 	// Using platforms[1] because context.getInfo<CL_CONTEXT_DEVICES>() not working for platforms[0]
-	auto platform = platforms[0];
+	auto platform = platforms[1];
 
 	_ASSERT(platforms.size() > 0);
 
@@ -37,6 +37,19 @@ cl::Program createProgram(const std::string& filename) {
 
 	return program;
 	
+}
+
+std::vector<cl::Device> getAllDevices(std::vector<cl::Device> &devices) {
+	std::vector<cl::Platform> platforms;
+	cl::Platform::get(&platforms);
+
+	for (int i = 0; i < platforms.size(); i++) {
+		std::vector<cl::Device> platformDevices;
+		platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &platformDevices);
+		devices.insert(devices.end(), platformDevices.begin(), platformDevices.end());
+	}
+
+	return devices;
 }
 
 std::string getCLError(cl_int errorCode) {
