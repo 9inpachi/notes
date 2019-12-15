@@ -18,5 +18,11 @@
     <ClCompile Include="Exercise09.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Solution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReductionPi.cl" />
   </ItemGroup>
 </Project>
