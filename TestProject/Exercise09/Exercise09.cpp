@@ -3,13 +3,13 @@
 #include "OpenCLHelper.h"
 #include<string>
 
-static long n_steps = 1024;
+static long n_steps = 512 * 512;
 
 #define DEVICE_INDEX 0
 
 int main()
 {
-	printf("Using sequential ------\n");
+	printf("Starting sequential ------\n");
 	int i; double pi, sum = 0.0, x = 0.0;
 
 	float step = 1.0 / (float)n_steps;
@@ -21,20 +21,15 @@ int main()
 
 	pi = step * sum;
 
-    printf("%f\n", pi);
+    printf("Using sequential: %f\n", pi);
 
+	printf("\nStarting OpenCL ------\n");
 	// OPENCL WAY OF FINDING PI
 	cl::Program program = createProgram("ReductionPi.cl");
 	cl::Context context = program.getInfo<CL_PROGRAM_CONTEXT>();
 	std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
-	devices = getAllDevices(devices);
+	cl::Device device = getDevice(DEVICE_INDEX);
 
-	if (devices.size() == 0) {
-		printf("NO DEVICES");
-		return -1;
-	}
-
-	cl::Device device = devices[DEVICE_INDEX];
 
 	cl::Kernel kernel(program, "ReductionPi");
 
@@ -44,8 +39,7 @@ int main()
 
 	int n_workgroups = n_steps / (int)workgroupSize;
 
-	printf("No of workgroups: %d \
-		\nWorkgroups size: %d\n", n_workgroups, workgroupSize);
+	printf("No of workgroups: %d \nWorkgroups size: %zu\n", n_workgroups, workgroupSize);
 
 	std::vector<float> outVals(n_workgroups);
 	std::vector<float> data(n_steps);
@@ -66,7 +60,6 @@ int main()
 	cl::NDRange local(workgroupSize);
 	queue.enqueueNDRangeKernel(kernel, cl::NullRange, global, local);
 	queue.enqueueReadBuffer(outBuf, CL_TRUE, 0, sizeof(float) * n_workgroups, outVals.data());
-	queue.enqueueReadBuffer(dataBuf, CL_TRUE, 0, sizeof(float) * data.size(), data.data());
 
 	queue.finish();
 

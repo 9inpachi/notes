@@ -31,25 +31,33 @@ cl::Program createProgram(const std::string& filename) {
 	cl::Context context(device);
 	cl::Program program(context, programSources);
 
-	std::cout << "OpenCLHelper > Using device: " << device.getInfo<CL_DEVICE_NAME>() << std::endl;
-
 	program.build("-cl-std=CL1.2");
 
 	return program;
 	
 }
 
-std::vector<cl::Device> getAllDevices(std::vector<cl::Device> &devices) {
+cl::Device getDevice(int deviceIndex) {
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
+
+	std::vector<cl::Device> allDevices;
 
 	for (int i = 0; i < platforms.size(); i++) {
 		std::vector<cl::Device> platformDevices;
 		platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &platformDevices);
-		devices.insert(devices.end(), platformDevices.begin(), platformDevices.end());
+		allDevices.insert(allDevices.end(), platformDevices.begin(), platformDevices.end());
 	}
 
-	return devices;
+	if (deviceIndex >= allDevices.size()) {
+		printf("NO DEVICE AT INDEX");
+		exit(-1);
+	}
+	else {
+		cl::Device selectedDevice = allDevices[deviceIndex];
+		std::cout << "\nUsing device: " << selectedDevice.getInfo<CL_DEVICE_NAME>() << std::endl;
+		return selectedDevice;
+	}
 }
 
 std::string getCLError(cl_int errorCode) {

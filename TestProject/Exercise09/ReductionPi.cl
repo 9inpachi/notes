@@ -8,9 +8,10 @@ __kernel void ReductionPi(const float step, __global float *data, __local float 
 	barrier(CLK_LOCAL_MEM_FENCE);
 
 	int groupId = get_group_id(0);
-
-	for (int i = 0; i < localSize; i++) {
-		outData[groupId] += 4.0f / (1.0f + localData[i] * localData[i]);
-	}
+	
+	if (localId == 0)
+		for (int i = 0; i < localSize; i++) {
+			outData[groupId] += 4.0f / (1.0f + localData[i] * localData[i]);
+		}
 
 }
