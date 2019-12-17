@@ -25,11 +25,13 @@ int main()
 
 	printf("\nStarting OpenCL ------\n");
 	// OPENCL WAY OF FINDING PI
-	cl::Program program = createProgram("ReductionPi.cl");
+	cl::Program program = createProgram("ReductionPi.cl", DEVICE_INDEX);
 	cl::Context context = program.getInfo<CL_PROGRAM_CONTEXT>();
 	std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
-	cl::Device device = getDevice(DEVICE_INDEX);
-
+	for (int i = 0; i < devices.size(); i++) {
+		std::cout << devices[i].getInfo<CL_DEVICE_NAME>()<<std::endl;
+	}
+	cl::Device device = devices[0];
 
 	cl::Kernel kernel(program, "ReductionPi");
 

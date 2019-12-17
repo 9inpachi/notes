@@ -5,23 +5,32 @@
 #include <string>
 #include <iostream>
 
-cl::Program createProgram(const std::string& filename) {
+cl::Program createProgram(const std::string& filename, const int deviceIndex) {
 	std::vector<cl::Platform> platforms;
-
 	cl::Platform::get(&platforms); // Gets all the platforms
-
-	// FOR PLATFORM [0]
-	// Using platforms[1] because context.getInfo<CL_CONTEXT_DEVICES>() not working for platforms[0]
-	auto platform = platforms[0];
 
 	_ASSERT(platforms.size() > 0);
 
+	// Getting all devices and putting them into a single vector
 	std::vector<cl::Device> devices;
-	platform.getDevices(CL_DEVICE_TYPE_ALL, &devices);
+	for (int i = 0; i < platforms.size(); i++) {
+		std::vector<cl::Device> platformDevices;
+		platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &platformDevices);
+		devices.insert(devices.end(), platformDevices.begin(), platformDevices.end());
+	}
 
 	_ASSERT(devices.size() > 0);
 
-	auto device = devices.front(); // We will perform our operations using this device
+	cl::Device device;
+	if (deviceIndex >= devices.size()) {
+		std::cout << "NO DEVICE AT THE GIVEN INDEX" << std::endl;
+		device = devices.front();
+	}
+	else {
+		device = devices[deviceIndex]; // We will perform our operations using this device
+	}
+	
+	std::cout << "Using device: " << device.getInfo<CL_DEVICE_NAME>() << std::endl;
 
 	std::ifstream openCLFile(filename);
 	std::string srcString(std::istreambuf_iterator<char>(openCLFile), (std::istreambuf_iterator<char>()));
@@ -33,31 +42,8 @@ cl::Program createProgram(const std::string& filename) {
 
 	program.build("-cl-std=CL1.2");
 
-	return program;
+	return context;
 	
-}
-
-cl::Device getDevice(int deviceIndex) {
-	std::vector<cl::Platform> platforms;
-	cl::Platform::get(&platforms);
-
-	std::vector<cl::Device> allDevices;
-
-	for (int i = 0; i < platforms.size(); i++) {
-		std::vector<cl::Device> platformDevices;
-		platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &platformDevices);
-		allDevices.insert(allDevices.end(), platformDevices.begin(), platformDevices.end());
-	}
-
-	if (deviceIndex >= allDevices.size()) {
-		printf("NO DEVICE AT INDEX");
-		exit(-1);
-	}
-	else {
-		cl::Device selectedDevice = allDevices[deviceIndex];
-		std::cout << "\nUsing device: " << selectedDevice.getInfo<CL_DEVICE_NAME>() << std::endl;
-		return selectedDevice;
-	}
 }
 
 std::string getCLError(cl_int errorCode) {
