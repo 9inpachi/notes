@@ -1,31 +1,21 @@
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 
-#include "cl/cl.hpp"
+#include "OpenCLHelper.h"
 #include <iostream>
+
+#define DEVICE_INDEX 0
 
 int main()
 {
 	// For multiple devices
-	std::vector<cl::Platform> platforms;
-	cl::Platform::get(&platforms);
+	cl::Program program;
+	cl::Context context;
 	std::vector<cl::Device> devices;
-	std::vector<std::string> devicesNames;
+	cl::Device device;
+	createProgramForAll("ProcessArray.cl", program, context, devices, device, DEVICE_INDEX);
 
-	for (int i = 0; i < platforms.size(); i++) {
-		std::vector<cl::Device> platformDevices;
-		platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &platformDevices);
-		for (int j = 0; j < platformDevices.size(); j++) {
-			std::string deviceName = platformDevices[j].getInfo<CL_DEVICE_NAME>();
-			if (std::find(devicesNames.begin(), devicesNames.end(), deviceName) == devicesNames.end()) {
-				devicesNames.push_back(deviceName);
-				devices.push_back(platformDevices[j]);
-			}
-		}
-	}
+	context = cl::Context(devices);
 
-	for (int i = 0; i < devices.size(); i++) {
-		std::cout << "Device: " << devices[i].getInfo<CL_DEVICE_NAME>() << std::endl;
-	}
 	/*
 	std::vector<int> vec(1024);
 	//std::fill(vec.begin(), vec.end(), 1);

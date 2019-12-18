@@ -5,15 +5,10 @@
 
 int main()
 {
-	cl::Program program = createProgram("ProcessArray.cl");
+	cl::Program program = createProgram("ProcessArray.cl", 0);
 	cl::Context context = program.getInfo<CL_PROGRAM_CONTEXT>();
-	//auto devices = program.getInfo<CL_PROGRAM_DEVICES>();
-	auto devices = context.getInfo<CL_CONTEXT_DEVICES>();
-	if (devices.size() == 0) {
-		std::cout << "NO DEVICES";
-		return -1;
-	}
-	auto device = devices.front();
+	std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
+	cl::Device device = devices.front();
 
 	auto deviceName = device.getInfo<CL_DEVICE_NAME>();
 

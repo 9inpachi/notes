@@ -34,7 +34,7 @@ int main1(int argc, char* argv[])
 
 	try
 	{
-		cl_uint deviceIndex = 0;
+		cl_uint deviceIndex = 2;
 		parseArguments(argc, argv, &deviceIndex);
 
 		// Get list of devices
@@ -69,7 +69,7 @@ int main1(int argc, char* argv[])
 		work_group_size = ko_pi.getWorkGroupInfo<CL_KERNEL_WORK_GROUP_SIZE>(device);
 		//printf("wgroup_size = %lu\n", work_group_size);
 
-		cl::make_kernel<int, float, cl::LocalSpaceArg, cl::Buffer> pi(program, "ReductionPi");
+		cl::make_kernel<int, float, cl::LocalSpaceArg, cl::Buffer> pi(program, "ReductionPiSolution");
 
 		// Now that we know the size of the work_groups, we can set the number of work
 		// groups, the actual number of steps, and the step size

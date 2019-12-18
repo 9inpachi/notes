@@ -7,14 +7,9 @@
 
 int main()
 {
-	cl::Program program = createProgram("VectorAddChain.cl");
+	cl::Program program = createProgram("VectorAddChain.cl", 0);
 	cl::Context context = program.getInfo<CL_PROGRAM_CONTEXT>();
 	std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
-	if (devices.size() == 0) {
-		std::cout << "NO DEVICES";
-		return -1;
-	}
-
 	cl::Device device = devices.front();
 
 	int count = LENGTH;

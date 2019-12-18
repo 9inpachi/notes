@@ -7,10 +7,10 @@
 
 int main()
 {
-	cl::Program program = createProgram("HelloWorld.cl");
-	auto context = program.getInfo<CL_PROGRAM_CONTEXT>();
-	auto devices = context.getInfo<CL_CONTEXT_DEVICES>();
-	auto device = devices.front();
+	cl::Program program = createProgram("HelloWorld.cl", 0);
+	cl::Context context = program.getInfo<CL_PROGRAM_CONTEXT>();
+	std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
+	cl::Device device = devices.front();
 
 	char buf[13];
 	cl::Buffer memBuf(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, sizeof(buf));

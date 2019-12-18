@@ -6,15 +6,10 @@
 
 int main()
 {
-	auto program = createProgram("NumericalReduction.cl");
-	auto context = program.getInfo<CL_PROGRAM_CONTEXT>();
-	auto devices = context.getInfo<CL_CONTEXT_DEVICES>();
-	if (devices.size() == 0) {
-		std::cout << "NO DEVICES";
-		return -1;
-	}
-
-	auto device = devices.front();
+	auto program = createProgram("NumericalReduction.cl", 0);
+	cl::Context context = program.getInfo<CL_PROGRAM_CONTEXT>();
+	std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
+	cl::Device device = devices.front();
 
 	// Declare a vector that is a multiple of work size so numerical reduction can be easily processed
 	std::vector<int> vec(1024);
