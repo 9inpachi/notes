@@ -2,19 +2,35 @@
 
 #include "OpenCLHelper.h"
 #include <iostream>
+#include <fstream>
 
 #define DEVICE_INDEX 0
+#define KERNEL_FILE_NAME "ReductionPi.cl"
 
 int main()
 {
 	// For multiple devices
-	cl::Program program;
-	cl::Context context;
-	std::vector<cl::Device> devices;
-	cl::Device device;
-	createProgramForAll("ProcessArray.cl", program, context, devices, device, DEVICE_INDEX);
 
-	context = cl::Context(devices);
+	std::vector<cl::Platform> platforms;
+	cl::Platform::get(&platforms);
+
+	std::vector<cl::Device> devices;
+
+	for (int i = 0; i < platforms.size(); i++) {
+		std::vector<cl::Device> platformDevices;
+		platforms[i].getDevices(CL_DEVICE_TYPE_ALL, &platformDevices);
+		devices.insert(devices.end(), platformDevices.begin(), platformDevices.end());
+	}
+
+	// We have all the devices now. Moving on to creating the context and program
+
+	std::ifstream kernelFile(KERNEL_FILE_NAME);
+	std::string kernelString(std::istreambuf_iterator<char>(kernelFile), (std::istreambuf_iterator<char>()));
+
+	cl::Program::Sources programSources(1, std::make_pair(kernelString.c_str(), kernelString.length() + 1));
+
+	cl::Context context(devices);
+	cl::Program program(context, programSources);
 
 	/*
 	std::vector<int> vec(1024);
