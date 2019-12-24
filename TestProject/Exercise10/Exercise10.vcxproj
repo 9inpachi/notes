@@ -162,6 +162,9 @@
       <Project>{8c7aae28-f49e-4724-8552-8245e2f9f3f9}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ProcessArray.cl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
