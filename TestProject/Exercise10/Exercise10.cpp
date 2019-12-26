@@ -29,10 +29,13 @@ int main()
 
 	cl::Program::Sources programSources(1, std::make_pair(kernelString.c_str(), kernelString.length() + 1));
 
-	cl::Context context(devices[0]);
+	cl::Context context(devices[2]);
 	cl::Program program(context, programSources);
 
+	program.build("-cl-std=CL1.2");
+
 	std::vector<int> vec(1024);
+	std::vector<int> vec1(512), vec2(1024);
 	//std::fill(vec.begin(), vec.end(), 1);
 
 	auto err = 0;
@@ -44,15 +47,17 @@ int main()
 	err = kernel.setArg(0, inBuf); // These are the arguments in the .cl file function
 	err = kernel.setArg(1, outBuf);
 
-	cl::CommandQueue queue(context, devices[0]);
-	err = queue.enqueueFillBuffer(inBuf, 1, 0, sizeof(int) * vec.size());
-	err = queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(vec.size()));
-	err = queue.enqueueReadBuffer(outBuf, CL_FALSE, 0, sizeof(int) * vec.size(), vec.data());
+	cl::CommandQueue queue(context, devices[2]);
+	err = queue.enqueueFillBuffer(inBuf, 1, 0, sizeof(int) * vec.size() / 2);
+	err = queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(vec.size() / 2));
+	err = queue.enqueueReadBuffer(outBuf, CL_TRUE, 0, sizeof(int) * vec.size() / 2, vec1.data());
+	queue.finish();
 
-	/*cl::CommandQueue queue1(context, devices[1]);
-	err = queue1.enqueueFillBuffer(inBuf, 1, sizeof(int) * vec.size() / 2, sizeof(int) * vec.size());
-	err = queue1.enqueueNDRangeKernel(kernel, cl::NDRange(vec.size() / 2), cl::NDRange(vec.size()));
-	err = queue1.enqueueReadBuffer(outBuf, CL_FALSE, sizeof(int) * vec.size() / 2, sizeof(int) * vec.size(), vec2.data())*/;
+	cl::CommandQueue queue1(context, devices[2]);
+	err = queue1.enqueueFillBuffer(inBuf, 2, 0, sizeof(int) * vec.size() / 2);
+	err = queue1.enqueueNDRangeKernel(kernel, cl::NDRange(0), cl::NDRange(vec.size() / 2));
+	err = queue1.enqueueReadBuffer(outBuf, CL_TRUE, 0, sizeof(int) * vec.size() / 2, vec2.data());
+	queue1.finish();
 
 	cl::finish();
 
