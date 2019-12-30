@@ -22,6 +22,10 @@ int main()
 		devices.insert(devices.end(), platformDevices.begin(), platformDevices.end());
 	}
 
+	for (int i = 0; i < devices.size(); i++) {
+		std::cout << "Device " << i << ": " << devices[i].getInfo<CL_DEVICE_NAME>() << std::endl;
+	}
+
 	// We have all the devices now. Moving on to creating the context and program
 
 	std::ifstream kernelFile(KERNEL_FILE_NAME);
@@ -29,7 +33,7 @@ int main()
 
 	cl::Program::Sources programSources(1, std::make_pair(kernelString.c_str(), kernelString.length() + 1));
 
-	cl::Context context(devices[2]);
+	cl::Context context(devices[DEVICE_INDEX]);
 	cl::Program program(context, programSources);
 
 	program.build("-cl-std=CL1.2");
@@ -47,13 +51,13 @@ int main()
 	err = kernel.setArg(0, inBuf); // These are the arguments in the .cl file function
 	err = kernel.setArg(1, outBuf);
 
-	cl::CommandQueue queue(context, devices[2]);
+	cl::CommandQueue queue(context, devices[DEVICE_INDEX]);
 	err = queue.enqueueFillBuffer(inBuf, 1, 0, sizeof(int) * vec.size() / 2);
 	err = queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(vec.size() / 2));
 	err = queue.enqueueReadBuffer(outBuf, CL_TRUE, 0, sizeof(int) * vec.size() / 2, vec1.data());
 	queue.finish();
 
-	cl::CommandQueue queue1(context, devices[2]);
+	cl::CommandQueue queue1(context, devices[DEVICE_INDEX]);
 	err = queue1.enqueueFillBuffer(inBuf, 2, 0, sizeof(int) * vec.size() / 2);
 	err = queue1.enqueueNDRangeKernel(kernel, cl::NDRange(0), cl::NDRange(vec.size() / 2));
 	err = queue1.enqueueReadBuffer(outBuf, CL_TRUE, 0, sizeof(int) * vec.size() / 2, vec2.data());
