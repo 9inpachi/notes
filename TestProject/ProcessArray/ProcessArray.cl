@@ -1,3 +1,4 @@
 __kernel void ProcessArray(__global int* inData, __global int* outData) {
-	outData[get_global_id(0)] = inData[get_global_id(0)] * 2;
+	size_t globalId = get_global_id(0);
+	outData[globalId] = inData[globalId] * 2;
 }

@@ -7,7 +7,7 @@
 
 static long n_steps = 512 * 512 * 512;
 
-#define DEVICE_INDEX 2
+#define DEVICE_INDEX 1
 
 void main()
 {

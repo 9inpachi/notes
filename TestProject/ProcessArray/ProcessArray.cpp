@@ -5,7 +5,7 @@
 
 int main()
 {
-	cl::Program program = createProgram("ProcessArray.cl", 0);
+	cl::Program program = createProgram("ProcessArray.cl", 1); // Only works with GPU
 	cl::Context context = program.getInfo<CL_PROGRAM_CONTEXT>();
 	std::vector<cl::Device> devices = context.getInfo<CL_CONTEXT_DEVICES>();
 	cl::Device device = devices.front();
