@@ -58,29 +58,8 @@ int main(int argc, char* argv[])
 		cl::Context context(chosen_device);
 		cl::CommandQueue queue(context, device);
 
-		//--------------------------------------------------------------------------------
-		// Run sequential matmul
-		//--------------------------------------------------------------------------------
-
-		initmat(N, h_A, h_B, h_C);
-
 		printf("\n===== Sequential, matrix mult (dot prod), order %d on host  ======\n", ORDER);
-		/*for(int i = 0; i < COUNT; i++)
-		{
-			zero_mat(N, h_C);
-			start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
 
-			seq_mat_mul_sdot(N, h_A, h_B, h_C);
-
-			run_time  = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
-			results(N, h_C, run_time);
-		}*/
-
-		//--------------------------------------------------------------------------------
-		// Setup the buffers, initialize matrices, and write them into global memory
-		//--------------------------------------------------------------------------------
-
-				//  Reset A, B and C matrices (just to play it safe)
 		initmat(N, h_A, h_B, h_C);
 
 		d_a = cl::Buffer(context, h_A.begin(), h_A.end(), true);
@@ -108,80 +87,8 @@ int main(int argc, char* argv[])
 
 			start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
 
-			// Execute the kernel over the entire range of C matrix elements ... computing
-			// a dot product for each element of the product matrix.  The local work
-			// group size is set to NULL ... so I'm telling the OpenCL runtime to
-			// figure out a local work group size for me.
 			cl::NDRange global(N, N);
 			naive_mmul(cl::EnqueueArgs(queue, global),
-				N, d_a, d_b, d_c);
-
-			queue.finish();
-
-			run_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
-
-			cl::copy(queue, d_c, h_C.begin(), h_C.end());
-
-			results(N, h_C, run_time);
-
-		} // end for loop
-
-//--------------------------------------------------------------------------------
-// OpenCL matrix multiplication ... C row per work item
-//--------------------------------------------------------------------------------
-
-		// Create the compute program from the source buffer
-		program = cl::Program(context, util::loadProgram("kernels/C_row.cl"), true);
-
-		// Create the compute kernel from the program
-		cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> crow_mmul(program, "mmul");
-
-		printf("\n===== OpenCL, matrix mult, C row per work item, order %d ======\n", N);
-
-		// Do the multiplication COUNT times
-		for (int i = 0; i < COUNT; i++)
-		{
-			zero_mat(N, h_C);
-
-			start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
-
-			cl::NDRange global(N);
-			crow_mmul(cl::EnqueueArgs(queue, global),
-				N, d_a, d_b, d_c);
-
-			queue.finish();
-
-			run_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0 - start_time;
-
-			cl::copy(queue, d_c, h_C.begin(), h_C.end());
-
-			results(N, h_C, run_time);
-
-		} // end for loop
-
-//--------------------------------------------------------------------------------
-// OpenCL matrix multiplication ... C row per work item, A row in pivate memory
-//--------------------------------------------------------------------------------
-
-		// Create the compute program from the source buffer
-		program = cl::Program(context, util::loadProgram("kernels/C_row_priv.cl"), true);
-
-		// Create the compute kernel from the program
-		cl::make_kernel<int, cl::Buffer, cl::Buffer, cl::Buffer> arowpriv_mmul(program, "mmul");
-
-		printf("\n===== OpenCL, matrix mult, C row, A row in priv mem, order %d ======\n", N);
-
-		// Do the multiplication COUNT times
-		for (int i = 0; i < COUNT; i++)
-		{
-			zero_mat(N, h_C);
-
-			start_time = static_cast<double>(timer.getTimeMilliseconds()) / 1000.0;
-
-
-			cl::NDRange global(N);
-			cl::NDRange local(ORDER / 16);
-			arowpriv_mmul(cl::EnqueueArgs(queue, global, local),
 				N, d_a, d_b, d_c);
 
 			queue.finish();
