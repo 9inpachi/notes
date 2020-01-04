@@ -30,4 +30,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="kernels\C_elem.cl" />
+  </ItemGroup>
 </Project>

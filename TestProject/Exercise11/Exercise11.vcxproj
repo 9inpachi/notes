@@ -162,6 +162,9 @@
     <ClInclude Include="matmul.hpp" />
     <ClInclude Include="matrix_lib.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="kernels\C_elem.cl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
