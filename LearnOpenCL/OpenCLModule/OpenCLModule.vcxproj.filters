@@ -15,7 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OpenCLFramework.cpp">
+    <ClInclude Include="OpenCLModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OpenCLModule.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

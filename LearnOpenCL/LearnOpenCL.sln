@@ -3,36 +3,38 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test.vcxproj", "{537D445F-0238-46E8-9242-BFA93F8E3A9B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{537D445F-0238-46E8-9242-BFA93F8E3A9B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloWorld", "..\HelloWorld\HelloWorld.vcxproj", "{99FC72FD-F74F-4F2E-A059-B1EC59ECDE2C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloWorld", "HelloWorld\HelloWorld.vcxproj", "{99FC72FD-F74F-4F2E-A059-B1EC59ECDE2C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8C7AAE28-F49E-4724-8552-8245E2F9F3F9} = {8C7AAE28-F49E-4724-8552-8245E2F9F3F9}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCLHelper", "..\OpenCLHelper\OpenCLHelper.vcxproj", "{8C7AAE28-F49E-4724-8552-8245E2F9F3F9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCLHelper", "OpenCLHelper\OpenCLHelper.vcxproj", "{8C7AAE28-F49E-4724-8552-8245E2F9F3F9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcessArray", "..\ProcessArray\ProcessArray.vcxproj", "{09A8BD2B-AE72-4FFE-B4A2-84BB63F56253}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProcessArray", "ProcessArray\ProcessArray.vcxproj", "{09A8BD2B-AE72-4FFE-B4A2-84BB63F56253}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultidimensionalArray", "..\MultidimensionalArray\MultidimensionalArray.vcxproj", "{31B651CD-0017-490F-BA72-C29D289FA5ED}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultidimensionalArray", "MultidimensionalArray\MultidimensionalArray.vcxproj", "{31B651CD-0017-490F-BA72-C29D289FA5ED}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NumericalReduction", "..\NumericalReduction\NumericalReduction.vcxproj", "{29D3B8CF-BDE0-4B86-BD50-822F0063487F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NumericalReduction", "NumericalReduction\NumericalReduction.vcxproj", "{29D3B8CF-BDE0-4B86-BD50-822F0063487F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VectorAddChain", "..\VectorAddChain\VectorAddChain.vcxproj", "{FDCE2457-F5CA-481D-B01C-06E3D5E06CD2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VectorAddChain", "VectorAddChain\VectorAddChain.vcxproj", "{FDCE2457-F5CA-481D-B01C-06E3D5E06CD2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VectorAddThree", "..\VectorAddThree\VectorAddThree.vcxproj", "{09F2459C-0044-4212-8906-EAD97A5F58FA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VectorAddThree", "VectorAddThree\VectorAddThree.vcxproj", "{09F2459C-0044-4212-8906-EAD97A5F58FA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise06", "..\Exercise06\Exercise06.vcxproj", "{299AB72D-3B79-49DB-B345-085033731097}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise06", "Exercise06\Exercise06.vcxproj", "{299AB72D-3B79-49DB-B345-085033731097}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise07", "..\Exercise07\Exercise07.vcxproj", "{4AF9E36D-7A9D-441C-90DA-273C25620528}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise07", "Exercise07\Exercise07.vcxproj", "{4AF9E36D-7A9D-441C-90DA-273C25620528}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise08", "..\Exercise08\Exercise08.vcxproj", "{D8715078-5499-4011-BC17-30CB4EA35BED}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise08", "Exercise08\Exercise08.vcxproj", "{D8715078-5499-4011-BC17-30CB4EA35BED}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise09", "..\Exercise09\Exercise09.vcxproj", "{6BD26407-072A-4167-AB93-BC35C37150D5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise09", "Exercise09\Exercise09.vcxproj", "{6BD26407-072A-4167-AB93-BC35C37150D5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise10", "..\Exercise10\Exercise10.vcxproj", "{41E57BEB-23AC-4B23-A55D-F53A1AFCA9D4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise10", "Exercise10\Exercise10.vcxproj", "{41E57BEB-23AC-4B23-A55D-F53A1AFCA9D4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise11", "..\Exercise11\Exercise11.vcxproj", "{6FB40436-630D-4B51-A2A6-A5F51AEBD18F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise11", "Exercise11\Exercise11.vcxproj", "{6FB40436-630D-4B51-A2A6-A5F51AEBD18F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCLModule", "OpenCLModule\OpenCLModule.vcxproj", "{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -243,6 +245,20 @@ Global
 		{6FB40436-630D-4B51-A2A6-A5F51AEBD18F}.Release|x64.Build.0 = Release|x64
 		{6FB40436-630D-4B51-A2A6-A5F51AEBD18F}.Release|x86.ActiveCfg = Release|Win32
 		{6FB40436-630D-4B51-A2A6-A5F51AEBD18F}.Release|x86.Build.0 = Release|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Debug|ARM.ActiveCfg = Debug|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Debug|Win32.Build.0 = Debug|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Debug|x64.ActiveCfg = Debug|x64
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Debug|x64.Build.0 = Debug|x64
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Debug|x86.ActiveCfg = Debug|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Debug|x86.Build.0 = Debug|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Release|ARM.ActiveCfg = Release|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Release|Win32.ActiveCfg = Release|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Release|Win32.Build.0 = Release|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Release|x64.ActiveCfg = Release|x64
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Release|x64.Build.0 = Release|x64
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Release|x86.ActiveCfg = Release|Win32
+		{4BC0E9C9-824C-44CB-B04A-6BA5AAC0A076}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

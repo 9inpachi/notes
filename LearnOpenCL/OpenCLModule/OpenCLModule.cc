@@ -1,9 +1,9 @@
-#include "OpenCLFramework.h"
+#include "OpenCLModule.h"
 
-OpenCLFramework::OpenCLProgram::OpenCLProgram(const std::string& kernelFile, const cl_uint deviceIndex) {
+OpenCLModule::OpenCLProgram::OpenCLProgram(const std::string& kernelFile, const cl_uint deviceIndex) {
 	this->createProgram(kernelFile, program, context, allDevices, device, deviceIndex);
 }
-void OpenCLFramework::OpenCLProgram::createProgram(const std::string& filename, cl::Program& program, cl::Context& context, std::vector<cl::Device>& devices, cl::Device& device, const int deviceIndex)
+void OpenCLModule::OpenCLProgram::createProgram(const std::string& filename, cl::Program& program, cl::Context& context, std::vector<cl::Device>& devices, cl::Device& device, const int deviceIndex)
 {
 
 	// Getting all platforms to gather devices from
