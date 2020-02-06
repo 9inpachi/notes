@@ -43,3 +43,23 @@ void OpenCLModule::OpenCLProgram::createProgram(const std::string& filename, cl:
 	program.build("-cl-std=CL2.0");
 
 }
+
+template<class T>
+void OpenCLModule::OpenCLProgram::runKernel(const std::string& kernelName, std::vector<T>& valueVec)
+{
+	std::vector<cl::Buffer> bufVec(valueVec.size());
+	for (int i = 0; i < bufVec.size(); i++) {
+		bufVec[i] = cl::Buffer(context, valueVec[i].begin(), valueVec[i].end(), true);
+	}
+
+	cl::Kernel kernel(program, kernelName);
+	for (int i = 0; i < bufVec.size(); i++) {
+		kernel.setArg(i, bufVec[i]);
+	}
+
+	cl::CommandQueue queue(context, device);
+	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(valueVec[i].size()));
+	queue.enqueueReadBuffer(bufVec[0], CL_TRUE, 0, sizeof(int) * valueVec[0].size(), valueVec[0].data());
+
+	queue.finish();
+}
