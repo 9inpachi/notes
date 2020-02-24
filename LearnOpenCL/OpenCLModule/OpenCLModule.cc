@@ -1,6 +1,7 @@
 #include "OpenCLModule.h"
 
-OpenCLModule::OpenCLProgram::OpenCLProgram(const std::string& kernelFile, const cl_uint deviceIndex) {
+OpenCLModule::OpenCLProgram::OpenCLProgram() {}
+OpenCLModule::OpenCLProgram::OpenCLProgram(const std::string& kernelFile, const int deviceIndex) {
 	this->createProgram(kernelFile, program, context, allDevices, device, deviceIndex);
 }
 void OpenCLModule::OpenCLProgram::createProgram(const std::string& filename, cl::Program& program, cl::Context& context, std::vector<cl::Device>& devices, cl::Device& device, const int deviceIndex)
@@ -40,12 +41,11 @@ void OpenCLModule::OpenCLProgram::createProgram(const std::string& filename, cl:
 	context = cl::Context(device);
 	program = cl::Program(context, programSources);
 
-	program.build("-cl-std=CL2.0");
+	program.build("-cl-std=CL1.2");
 
 }
 
-template<class T>
-void OpenCLModule::OpenCLProgram::runKernel(const std::string& kernelName, std::vector<T>& valueVec)
+void OpenCLModule::OpenCLProgram::runKernel(const char* kernelName, std::vector<std::vector<int>>& valueVec)
 {
 	std::vector<cl::Buffer> bufVec(valueVec.size());
 	for (int i = 0; i < bufVec.size(); i++) {
@@ -58,7 +58,7 @@ void OpenCLModule::OpenCLProgram::runKernel(const std::string& kernelName, std::
 	}
 
 	cl::CommandQueue queue(context, device);
-	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(valueVec[i].size()));
+	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(valueVec[0].size()));
 	queue.enqueueReadBuffer(bufVec[0], CL_TRUE, 0, sizeof(int) * valueVec[0].size(), valueVec[0].data());
 
 	queue.finish();

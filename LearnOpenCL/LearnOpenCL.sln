@@ -38,6 +38,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCLModule", "OpenCLModul
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestOpenCLModule", "TestOpenCLModule\TestOpenCLModule.vcxproj", "{B269811C-987C-4C03-8A0E-24A6CBCBC37F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Events", "Events\Events.vcxproj", "{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -275,6 +277,20 @@ Global
 		{B269811C-987C-4C03-8A0E-24A6CBCBC37F}.Release|x64.Build.0 = Release|x64
 		{B269811C-987C-4C03-8A0E-24A6CBCBC37F}.Release|x86.ActiveCfg = Release|Win32
 		{B269811C-987C-4C03-8A0E-24A6CBCBC37F}.Release|x86.Build.0 = Release|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Debug|ARM.ActiveCfg = Debug|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Debug|Win32.Build.0 = Debug|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Debug|x64.ActiveCfg = Debug|x64
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Debug|x64.Build.0 = Debug|x64
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Debug|x86.ActiveCfg = Debug|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Debug|x86.Build.0 = Debug|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Release|ARM.ActiveCfg = Release|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Release|Win32.ActiveCfg = Release|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Release|Win32.Build.0 = Release|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Release|x64.ActiveCfg = Release|x64
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Release|x64.Build.0 = Release|x64
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Release|x86.ActiveCfg = Release|Win32
+		{A77B6C5F-9F14-4A69-855F-AEB70C99FE72}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
