@@ -1,0 +1,16 @@
+{
+  "name": "dsa-ts",
+  "version": "1.0.0",
+  "description": "Data Structures and Algorithms in TypeScript",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "tsc --watch",
+    "run-ts": "ts-node"
+  },
+  "author": "Fawad Ali <m.fawaadali98@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  }
+}
