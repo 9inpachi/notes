@@ -1,7 +1,7 @@
 
 class SingletonClass {
   /** A single instance of the class */
-  static instance: SingletonClass;
+  private static instance: SingletonClass;
   /** ID of the instance */
   instanceID: number;
   /** Get the instance of the class */
@@ -28,7 +28,7 @@ class SingletonClass {
     if (SingletonClass.instance === undefined) {
       SingletonClass.instance = this.init(value);
     } else {
-      // If we want to throw error. That is to not allow another instance at all.
+      // To not allow another object at all, we can throw an error.
       // throw new Error('NOT ALLOWED TO CREATE ANOTHER INSTANCE');
     }
     return SingletonClass.instance;
