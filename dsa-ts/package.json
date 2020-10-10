@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "start": "tsc --watch",
-    "run-ts": "ts-node"
+    "ts": "ts-node"
   },
   "author": "Fawad Ali <m.fawaadali98@gmail.com>",
   "license": "MIT",
