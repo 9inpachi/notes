@@ -119,6 +119,14 @@ const mostLeftNode = (root: bNode): bNode => {
   }
 }
 
+/**
+ * For deleting a node.
+ * 1 - If there are no children of the node, then we undefine the node.
+ * 2 - If it has once child, then we make it equal to that child (right or left)
+ * 3 - If it has both children, then we take the right child's most left node and use that 
+ *     for the node value and delete the right child's most left node. If there are no
+ *     left children of the right child then we use the right child as the node.
+ */
 const deleteNode = (root: bNode, value: number): bNode => {
   if (value < root.value) {
     root.left = deleteNode(root.left, value);
@@ -141,6 +149,6 @@ const deleteNode = (root: bNode, value: number): bNode => {
   return root;
 }
 
-deleteNode(root, 14);
+deleteNode(root, 8);
 
 console.log(JSON.stringify(root, undefined, 2));
