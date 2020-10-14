@@ -11,7 +11,7 @@ function insertionSort(arr: number[]) {
     const key = arr[i];
     let j = i - 1;
     while (j >= 0 && key < arr[j]) {
-      arr[j + 1] = arr[j]
+      arr[j + 1] = arr[j];
       j--;
     }
     arr[j + 1] = key;
@@ -21,4 +21,6 @@ function insertionSort(arr: number[]) {
 
 const testArr = [2, 3, -4, 10, 200];
 
-console.assert(insertionSort(testArr) === [-4, , 3, 10, 200], 'Wrong implementation');
+insertionSort(testArr)
+
+console.assert(testArr[0] === -4 && testArr[testArr.length - 1] === 200, 'Wrong implementation');
