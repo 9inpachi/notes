@@ -10,10 +10,12 @@ function insertionSort(arr: number[]) {
   for (let i = 1; i < arr.length; i++) {
     const key = arr[i];
     let j = i - 1;
+    // Compare to all previous elements
     while (j >= 0 && key < arr[j]) {
       arr[j + 1] = arr[j];
       j--;
     }
+    // Place it before the one greater element on left side
     arr[j + 1] = key;
   }
   return arr;
