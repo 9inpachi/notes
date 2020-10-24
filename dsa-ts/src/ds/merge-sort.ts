@@ -1,3 +1,7 @@
+/**
+ * Divide and conquer. Divide the array in two parts recursively until only individual elements are left. Then start merging them from ground up while sorting the merges and keep returning the merges and keep sorting the merges.
+ */
+
 function merge(arr1: number[], arr2: number[]) {
     let tempArr: number[] = [];
 
@@ -21,13 +25,12 @@ function merge(arr1: number[], arr2: number[]) {
     return tempArr;
 }
 
-function mergeSort(arr: number[]) {
-    if (arr.length === 1) {
-        return arr;
-    }
+function mergeSort(arr: number[]): number[] {
+    if (arr.length === 1) return arr;
 
-    let leftPart = arr.slice(0, arr.length / 2);
-    let rightPart = arr.slice(arr.length / 2, arr.length);
+    const half = arr.length / 2;
+    let leftPart = arr.slice(0, half);
+    let rightPart = arr.slice(half, arr.length);
 
     leftPart = mergeSort(leftPart);
     rightPart = mergeSort(rightPart);
