@@ -1,4 +1,6 @@
 import React from 'react';
+import ClassComponent1 from './ClassComponents/ClassComponent1';
+import ClassComponent2 from './ClassComponents/ClassComponent2';
 import Component1 from './Component1';
 import Component2 from './Component2';
 import { UserContext } from './UserContext';
@@ -20,6 +22,8 @@ function App() {
         <Component1 />
         <Component2 />
       </div>
+      <ClassComponent1 />
+      <ClassComponent2 />
     </UserContext.Provider>
   );
 }
