@@ -1,0 +1,30 @@
+{
+  "name": "sports-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/9inpachi/notes.git"
+  },
+  "author": "Fawad Ali <m.fawaadali98@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/9inpachi/notes/issues"
+  },
+  "homepage": "https://github.com/9inpachi/notes#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15.4.0",
+    "mongoose": "^5.10.14"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
