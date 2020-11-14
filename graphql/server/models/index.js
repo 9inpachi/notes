@@ -9,7 +9,7 @@ const sportSchema = new Schema({
 const playerSchema = new Schema({
   name: String,
   gender: String,
-  sportId: String
+  sports: [mongoose.Types.ObjectId]
 });
 
 const sportModel = mongoose.model('Sport', sportSchema);
