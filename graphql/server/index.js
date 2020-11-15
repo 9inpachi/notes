@@ -6,7 +6,7 @@ const { graphqlHTTP } = require('express-graphql');
 
 const schema = require('./schema');
 
-mongoose.connect('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
   console.log('Database connected');
 });

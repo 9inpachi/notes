@@ -1,8 +1,9 @@
 const graphql = require('graphql');
+const mongoose = require('mongoose');
 
 const { Sport, Player } = require('../models');
 
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLList, GraphQLSchema } = graphql;
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLList, GraphQLSchema, GraphQLInt } = graphql;
 
 const SportType = new GraphQLObjectType({
   name: 'Sport',
@@ -22,16 +23,36 @@ const PlayerType = new GraphQLObjectType({
     gender: { type: GraphQLString },
     sports: {
       type: GraphQLList(SportType),
-      resolve: (parent, args) => Player.aggregate([
-        {
-          $lookup: {
-            from: 'Sport',
-            localField: 'sports',
-            foreignField: '_id',
-            as: 'sports'
+      args: {
+        first: { type: GraphQLInt }
+      },
+      resolve: async (parent, args) => {
+        const results = await Player.aggregate([
+          {
+            $match: {
+              _id: mongoose.Types.ObjectId(parent.id)
+            }
+          },
+          {
+            $lookup: {
+              from: 'sports',
+              localField: 'sports',
+              foreignField: '_id',
+              as: 'sports_full'
+            }
+          },
+          {
+            $project: { sports_full: 1 }
           }
-        }
-      ])
+        ]).exec();
+        let allSports = results[0].sports_full;
+        allSports = allSports.map(sport => {
+          sport.id = mongoose.Types.ObjectId(sport._id);
+          delete sport._id;
+          return sport;
+        });
+        return allSports;
+      }
     }
   }
 });
@@ -66,9 +87,9 @@ const Mutation = new GraphQLObjectType({
     addSport: {
       type: SportType,
       args: {
-        name: GraphQLString,
-        type: GraphQLString,
-        rules: GraphQLList(GraphQLString)
+        name: { type: GraphQLString },
+        type: { type: GraphQLString },
+        rules: { type: GraphQLList(GraphQLString) }
       },
       resolve: (parent, args) => {
         const sport = new Sport({
@@ -82,9 +103,9 @@ const Mutation = new GraphQLObjectType({
     addPlayer: {
       type: PlayerType,
       args: {
-        name: GraphQLString,
-        gender: GraphQLString,
-        sports: GraphQLList(GraphQLID)
+        name: { type: GraphQLString },
+        gender: { type: GraphQLString },
+        sports: { type: GraphQLList(GraphQLID) }
       },
       resolve: (parent, args) => {
         const player = new Player({
