@@ -1,8 +1,6 @@
 const graphql = require('graphql');
-const mongoose = require('mongoose');
 
-const Sport = mongoose.model('Sport');
-const Player = mongoose.model('Player');
+const { Sport, Player } = require('../models');
 
 const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLList, GraphQLSchema } = graphql;
 

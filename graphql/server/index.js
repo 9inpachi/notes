@@ -1,22 +1,21 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const cors = require('cors');
 const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql');
 
-const schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
+const schema = require('./schema');
 
-const root = {
-  hello: () => 'Hello world'
-};
+mongoose.connect('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connection.once('open', () => {
+  console.log('Database connected');
+});
+
+app.use(cors());
 
 app.use('/graphql', graphqlHTTP({
   schema,
-  rootValue: root,
-  graphiql: false
+  graphiql: true
 }));
 
 app.listen(4000);

@@ -12,10 +12,10 @@ const playerSchema = new Schema({
   sports: [mongoose.Types.ObjectId]
 });
 
-const sportModel = mongoose.model('Sport', sportSchema);
-const playerModel = mongoose.model('Player', playerSchema);
+const Sport = mongoose.model('Sport', sportSchema, 'sports');
+const Player = mongoose.model('Player', playerSchema, 'players');
 
 module.exports = {
-  sportModel,
-  playerModel
+  Sport,
+  Player
 };
