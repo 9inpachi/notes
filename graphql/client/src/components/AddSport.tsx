@@ -1,7 +1,10 @@
+import { useMutation } from '@apollo/client';
 import React, { ChangeEvent, useState } from 'react';
+import { addSportQuery } from '../queries';
 
 const AddSport: React.FC<{}> = () => {
   const [input, setInput] = useState<{ [key: string]: string }>({});
+  const [addSport, { data }] = useMutation(addSportQuery);
 
   const handeChange = (e: ChangeEvent<HTMLInputElement>) => setInput({
     ...input,
@@ -10,7 +13,15 @@ const AddSport: React.FC<{}> = () => {
 
   const onAddSport = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(input);
+    addSport({
+      variables: {
+        name: input?.sportName,
+        type: input?.sportType,
+        rules: input?.sportRules.split(',').map(rule => rule.trim())
+      }
+    }).finally(() => {
+      console.log(data);
+    });
   };
 
   return (

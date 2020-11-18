@@ -20,6 +20,15 @@ query GetSport($id: ID) {
 }
 `;
 
+const addSportQuery = gql`
+mutation AddSport($name: String!, $type: String!, $rules: [String!]) {
+  addSport(name: $name, type: $type, rules: $rules) {
+    id
+    name
+  }
+}
+`;
+
 const getAllPlayersQuery = gql`
 {
   players {
@@ -46,9 +55,20 @@ query GetPlayer($id: ID) {
 }
 `;
 
+const addPlayerQuery = gql`
+mutation AddPlayer($name: String!, $gender: String!, $sports: [ID]) {
+  addPlayer(name: $name, gender: $gender, sports: $sports) {
+    id
+    name
+  }
+}
+`;
+
 export {
   getAllSportsQuery,
   getSportQuery,
+  addSportQuery,
   getAllPlayersQuery,
-  getPlayerQuery
+  getPlayerQuery,
+  addPlayerQuery
 };
