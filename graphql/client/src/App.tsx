@@ -1,9 +1,8 @@
 import React from 'react';
-import { ApolloClient, ApolloProvider, InMemoryCache, useQuery } from '@apollo/client';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import AddSport from './components/AddSport';
 import SportsList from './components/SportsList';
-import SportsContext from './contexts/SportsContext';
-import { getAllPlayersQuery, getAllSportsQuery } from './queries';
+import SportsProvider from './providers/SportsProvider';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -11,15 +10,10 @@ const client = new ApolloClient({
 });
 
 const App: React.FC = () => {
-  // const allSports = useQuery(getAllSportsQuery);
-  // const allPlayers = useQuery(getAllPlayersQuery);
 
   return (
-    <SportsContext.Provider value={{
-      sports: [],
-      selectedSport: undefined
-    }}>
-      <ApolloProvider client={client}>
+    <ApolloProvider client={client}>
+      <SportsProvider>
         <div className="container">
           <div className="row">
             <div className="edit-section col-6">
@@ -35,8 +29,8 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
-      </ApolloProvider>
-    </SportsContext.Provider>
+      </SportsProvider>
+    </ApolloProvider>
   );
 }
 

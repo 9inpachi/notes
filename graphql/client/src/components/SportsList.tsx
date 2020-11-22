@@ -1,28 +1,31 @@
-import React, { MouseEvent } from 'react';
-import { useQuery } from '@apollo/client';
-import { getAllSportsQuery } from '../queries';
+import React from 'react';
 import Sport from '../types/sport.interface';
+import SportsContext from '../contexts/SportsContext';
 
 const SportsList: React.FC = () => {
-  const { error, data } = useQuery(getAllSportsQuery);
-
-  const onSportSelect = (e: MouseEvent<HTMLButtonElement>) => {
-    console.log(e.target);
-  };
-
   return (
     <div className="all-sports m-5">
-      {error && <p>Error getting list</p>}
-      {data?.sports && data.sports.map((sport: Sport, index: number) => {
-        return <button
-          key={`sportList${index}`}
-          className="btn btn-secondary m-1"
-          data-id={data?.id}
-          onClick={onSportSelect}
-        >
-          {sport.name}
-        </button>;
-      })}
+      <SportsContext.Consumer>
+        {({ sports, selectedSportId, setSelectedSportId }) => {
+          return (
+            <>
+              {sports && sports.length < 1 && <p>Error getting list</p>}
+              {sports && sports.map((sport: Sport, index: number) => {
+                return <button
+                  key={`sportList${index}`}
+                  className={`btn btn-secondary m-1${sport.id === selectedSportId ? ' active' : ''}`}
+                  data-id={sport.id}
+                  onClick={e => {
+                    setSelectedSportId?.((e.target as any).dataset.id);
+                  }}
+                >
+                  {sport.name}
+                </button>;
+              })}
+            </>
+          );
+        }}
+      </SportsContext.Consumer>
     </div>
   );
 };
