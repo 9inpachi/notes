@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 const getAllSportsQuery = gql`
 {
   sports {
+    id
     name
     type
     rules
@@ -13,6 +14,7 @@ const getAllSportsQuery = gql`
 const getSportQuery = gql`
 query GetSport($id: ID) {
   sport(id: $id) {
+    id
     name
     type
     rules
@@ -32,9 +34,11 @@ mutation AddSport($name: String!, $type: String!, $rules: [String!]) {
 const getAllPlayersQuery = gql`
 {
   players {
+    id
     name
     gender
     sports {
+      id
       name
       type
     }
@@ -45,9 +49,11 @@ const getAllPlayersQuery = gql`
 const getPlayerQuery = gql`
 query GetPlayer($id: ID) {
   player(id: $id) {
+    id
     name
     gender
     sports {
+      id
       name
       type
     }

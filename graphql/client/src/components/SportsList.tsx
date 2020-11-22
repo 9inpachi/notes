@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { useQuery } from '@apollo/client';
 import { getAllSportsQuery } from '../queries';
 import Sport from '../types/sport.interface';
 
 const SportsList: React.FC = () => {
   const { error, data } = useQuery(getAllSportsQuery);
+
+  const onSportSelect = (e: MouseEvent<HTMLButtonElement>) => {
+    console.log(e.target);
+  };
 
   return (
     <div className="all-sports m-5">
@@ -13,6 +17,8 @@ const SportsList: React.FC = () => {
         return <button
           key={`sportList${index}`}
           className="btn btn-secondary m-1"
+          data-id={data?.id}
+          onClick={onSportSelect}
         >
           {sport.name}
         </button>;
