@@ -3,6 +3,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import AddSport from './components/AddSport';
 import SportsList from './components/SportsList';
 import SportsProvider from './providers/SportsProvider';
+import SingleSport from './components/SingleSport';
+import SportsContext from './contexts/SportsContext';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -25,7 +27,11 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="view-section col-6">
-              SOME TEXT BUT MORE
+              <SportsContext.Consumer>
+                {({ selectedSportId }) => (
+                  <SingleSport selectedSportId={selectedSportId} />
+                )}
+              </SportsContext.Consumer>
             </div>
           </div>
         </div>
