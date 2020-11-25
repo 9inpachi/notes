@@ -1,15 +1,11 @@
 import React from 'react';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import AddSport from './components/AddSport';
 import SportsList from './components/SportsList';
 import SportsProvider from './providers/SportsProvider';
 import SingleSport from './components/SingleSport';
 import SportsContext from './contexts/SportsContext';
-
-const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache()
-});
+import { client } from './constants/apollo-client';
 
 const App: React.FC = () => {
 
@@ -28,9 +24,11 @@ const App: React.FC = () => {
             </div>
             <div className="view-section col-6">
               <SportsContext.Consumer>
-                {({ selectedSportId }) => (
-                  <SingleSport selectedSportId={selectedSportId} />
-                )}
+                {({ selectedSportId }) => {
+                  if (selectedSportId) {
+                    return <SingleSport selectedSportId={selectedSportId} />;
+                  }
+                }}
               </SportsContext.Consumer>
             </div>
           </div>

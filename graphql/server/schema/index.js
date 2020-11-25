@@ -100,6 +100,17 @@ const Mutation = new GraphQLObjectType({
         return sport.save();
       }
     },
+    deleteSport: {
+      type: SportType,
+      args: {
+        id: { type: GraphQLID }
+      },
+      resolve: (parent, args) => {
+        Sport.deleteOne({ _id: args.id }, (err) => {
+          if (err) console.log(error);
+        });
+      }
+    },
     addPlayer: {
       type: PlayerType,
       args: {

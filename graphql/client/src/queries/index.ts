@@ -27,6 +27,18 @@ mutation AddSport($name: String!, $type: String!, $rules: [String!]) {
   addSport(name: $name, type: $type, rules: $rules) {
     id
     name
+    type
+    rules
+  }
+}
+`;
+
+const deleteSportQuery = gql`
+mutation deleteSport($id: ID) {
+  deleteSport(id: $id) {
+    id
+    name
+    type
   }
 }
 `;
@@ -74,6 +86,7 @@ export {
   getAllSportsQuery,
   getSportQuery,
   addSportQuery,
+  deleteSportQuery,
   getAllPlayersQuery,
   getPlayerQuery,
   addPlayerQuery
