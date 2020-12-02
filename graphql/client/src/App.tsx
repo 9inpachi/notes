@@ -17,8 +17,10 @@ const App: React.FC = () => {
             <div className="edit-section col-6">
               <div className="sports">
                 <h2>Sports</h2>
-                {/* {allSports?.error && <p>Could not get sports</p>} */}
+                <hr />
                 <AddSport />
+                <hr />
+                <h3>Existing Sports</h3>
                 <SportsList />
               </div>
             </div>

@@ -8,7 +8,7 @@ const SportsList: React.FC = () => {
       <SportsContext.Consumer>
         {({ sports, selectedSportId, setSelectedSportId }) => (
           <>
-            {sports && sports.length < 1 && <p>Error getting list</p>}
+            {!sports && <p>Error getting list</p>}
             {sports && sports.map((sport: Sport, index: number) => {
               return <button
                 key={`sportList${index}`}

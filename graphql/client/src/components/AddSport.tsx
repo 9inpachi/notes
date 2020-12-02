@@ -5,9 +5,11 @@ import { addSportQuery } from '../queries';
 
 const AddSport: React.FC = () => {
   const [input, setInput] = useState<{ [key: string]: string }>({});
-  const [addSport, { data }] = useMutation(addSportQuery);
+  const [addSport, { data, loading }] = useMutation(addSportQuery);
 
   const { sports, setSports } = useContext(SportsContext);
+
+  const [error, setError] = useState('');
 
   const handeChange = (e: ChangeEvent<HTMLInputElement>) => setInput({
     ...input,
@@ -16,16 +18,21 @@ const AddSport: React.FC = () => {
 
   const onAddSport = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setError('');
+
     addSport({
       variables: {
         name: input?.sportName,
         type: input?.sportType,
-        rules: input?.sportRules.split(',').map(rule => rule.trim())
+        rules: input?.sportRules?.split(',').map(rule => rule.trim())
       }
     }).then((res) => {
       const sportsArr = sports ? [...sports] : [];
       sportsArr.push(res.data?.addSport);
       setSports?.(sportsArr);
+    }).catch(err => {
+      setError('Error adding sport');
     });
   };
 
@@ -44,6 +51,8 @@ const AddSport: React.FC = () => {
         <input type="text" className="form-control" id="sportRules" name="sportRules" onChange={handeChange} />
       </div>
       <button type="submit" className="btn btn-primary">Add Sport</button>
+      {loading && <div className="mt-3 alert alert-info">Adding...</div>}
+      {error && <div className="mt-3 alert alert-danger">{error}</div>}
     </form>
   );
 };
