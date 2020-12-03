@@ -5,7 +5,7 @@ import { addSportQuery } from '../queries';
 
 const AddSport: React.FC = () => {
   const [input, setInput] = useState<{ [key: string]: string }>({});
-  const [addSport, { data, loading }] = useMutation(addSportQuery);
+  const [addSport, { loading }] = useMutation(addSportQuery);
 
   const { sports, setSports } = useContext(SportsContext);
 
