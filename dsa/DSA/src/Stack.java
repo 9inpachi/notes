@@ -3,7 +3,7 @@
  */
 public class Stack {
   private int[] array;
-  public int top;
+  private int top;
   private int size;
 
   Stack(int stackSize) {
@@ -35,6 +35,10 @@ public class Stack {
 
   public Boolean isFull() {
     return top == size - 1;
+  }
+
+  public int peek() {
+    return array[top];
   }
 
   public int size() {

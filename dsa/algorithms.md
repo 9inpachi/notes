@@ -1,7 +1,7 @@
 # Algorithms
 
-https://www.programiz.com/dsa\
-https://youtu.be/SUCNWiJUaKs - recurrence relation\
+https://www.programiz.com/dsa  
+https://youtu.be/SUCNWiJUaKs - recurrence relation  
 https://youtu.be/A03oI0znAoc - asymptotic notation
 
 ## Linearly Scalable Algorithms
