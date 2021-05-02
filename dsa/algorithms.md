@@ -1,7 +1,7 @@
 # Algorithms
 
-https://www.programiz.com/dsa
-https://youtu.be/SUCNWiJUaKs - recurrence relation
+https://www.programiz.com/dsa\
+https://youtu.be/SUCNWiJUaKs - recurrence relation\
 https://youtu.be/A03oI0znAoc - asymptotic notation
 
 ## Linearly Scalable Algorithms
@@ -85,20 +85,20 @@ Thus, T(n) = f(n) = Θ(n2)
 
 Time complexities in order of increasing complexity. Complexity here is the work required to solve a problem.
 
-1. 1
+1. 1  
    Linearly running some statements.
-2. log(n)
+2. log(n)  
    We divide the problem into smaller parts and solve them and the complexity decreases each time we divide the problem. For example, binary search.
-3. sqrt(n)
-4. n
+3. sqrt(n)  
+4. n  
    As we increase the input, the time to solve it linearly increases in the middle of x and y coordinates.
-5. nlog(n)
+5. nlog(n)  
    The complexity increases linearly solving subparts of the problem in addition to the problem itself.
-6. n^2 or n^k
+6. n^2 or n^k  
    We call the same size of problem multiple times nested inside so it takes the problem twice the time to solve. For example nested for loops.
-7. 2^n
+7. 2^n  
    The complexity increases exponentially with time.
-8. n!
+8. n!  
    The complexity increases like a mad dog.
 
 ## Divide and Conquer
