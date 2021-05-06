@@ -16,7 +16,7 @@ public class CircularQueue {
 
   public CircularQueue enqueue(int value) {
     if (isFull()) {
-      System.out.println("CircularQueue is full.");
+      System.out.println("Queue is full.");
     } else {
       if (front == -1) {
         front = 0;
@@ -30,7 +30,7 @@ public class CircularQueue {
 
   public CircularQueue dequeue() {
     if (isEmpty()) {
-      System.out.println("CircularQueue is empty.");
+      System.out.println("Queue is empty.");
     } else {
       if (front == rear) {
         front = -1;
@@ -52,18 +52,23 @@ public class CircularQueue {
   }
 
   public void print() {
+    if (isEmpty()) {
+      System.out.println("Queue is empty.");
+      return;
+    }
+
     int i;
     for (i = front; i != rear; i = (i + 1) % size) {
-      System.out.println("i=" + i + " - value=" + array[i] + " - front=" + front + " - rear=" + rear);
-      // System.out.print(array[i] + (i == rear - 1 ? "" : "__"));
+      System.out.println("value=" + array[i] + " - i=" + i + " - front=" + front + " - rear=" + rear);
     }
-    System.out.println("i=" + i + " - value=" + array[i] + " - front=" + front + " - rear=" + rear);
+    System.out.println("value=" + array[i] + " - i=" + i + " - front=" + front + " - rear=" + rear);
     System.out.println();
   }
 
   public static void main(String[] args) {
     CircularQueue queue = new CircularQueue(4);
-    queue.enqueue(1).enqueue(2).enqueue(3).enqueue(4).dequeue().enqueue(5).dequeue().dequeue().enqueue(6);
+    queue.enqueue(1).enqueue(2).enqueue(3).enqueue(4).dequeue().enqueue(5).dequeue().dequeue().enqueue(6).dequeue()
+        .dequeue();
     queue.print();
   }
 }
