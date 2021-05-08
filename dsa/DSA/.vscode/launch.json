@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch PriorityQueue",
+      "request": "launch",
+      "mainClass": "PriorityQueue",
+      "projectName": "DSA_447b24e0"
+    },
+    {
+      "type": "java",
       "name": "Launch CircularQueue",
       "request": "launch",
       "mainClass": "CircularQueue",
