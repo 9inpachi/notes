@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 class LinkedListNode<K, V> {
   K key;
@@ -17,11 +18,12 @@ class LinkedListNode<K, V> {
  * list to have multiple values at that index of array.
  */
 public class Map<K, V> {
-  ArrayList<LinkedListNode<K, V>> mapArray = new ArrayList<LinkedListNode<K, V>>();
+  ArrayList<LinkedListNode<K, V>> mapArray;
   int size = 100;
 
   Map(int size) {
     this.size = size;
+    mapArray = new ArrayList<LinkedListNode<K, V>>(Collections.nCopies(size, null));
   }
 
   void put(K key, V value) {
@@ -30,15 +32,26 @@ public class Map<K, V> {
 
     if (headNode == null) {
       headNode = new LinkedListNode<K, V>(key, value);
+      mapArray.set(index, headNode);
       return;
     }
 
     LinkedListNode<K, V> temp = headNode;
-    while (temp.next != null) {
+    LinkedListNode<K, V> lastNode = temp;
+
+    while (temp != null) {
+      // If the key already exists.
+      if (temp.key == key) {
+        temp.value = value;
+        return;
+      }
+
+      lastNode = temp;
       temp = temp.next;
     }
+
     LinkedListNode<K, V> newNode = new LinkedListNode<K, V>(key, value);
-    temp.next = newNode;
+    lastNode.next = newNode;
   }
 
   V get(K key) {
@@ -68,6 +81,13 @@ public class Map<K, V> {
   }
 
   public static void main(String[] args) {
-    
+    Map<String, String> hashMap = new Map<String, String>(3);
+    hashMap.put("someKey1", "Some value of key 1");
+    hashMap.put("someKey2", "Some value of key 2");
+    hashMap.put("someKey3", "Some value of key 3");
+    hashMap.put("someKey3", "Some value of key 3 updated");
+    System.out.println(hashMap.get("someKey2"));
+    System.out.println(hashMap.get("someKey1"));
+    System.out.println(hashMap.get("someKey3"));
   }
 }
