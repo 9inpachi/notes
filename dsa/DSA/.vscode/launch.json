@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch Heap",
+      "request": "launch",
+      "mainClass": "Heap",
+      "projectName": "DSA_447b24e0"
+    },
+    {
+      "type": "java",
       "name": "Launch Map",
       "request": "launch",
       "mainClass": "Map",
