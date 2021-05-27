@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch BinaryTree",
+      "request": "launch",
+      "mainClass": "BinaryTree",
+      "projectName": "DSA_447b24e0"
+    },
+    {
+      "type": "java",
       "name": "Launch Heap",
       "request": "launch",
       "mainClass": "Heap",
