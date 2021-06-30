@@ -1,8 +1,8 @@
 # Algorithms
 
-https://www.programiz.com/dsa  
-https://youtu.be/SUCNWiJUaKs - recurrence relation  
-https://youtu.be/A03oI0znAoc - asymptotic notation
+<https://www.programiz.com/dsa>  
+<https://youtu.be/SUCNWiJUaKs> - recurrence relation  
+<https://youtu.be/A03oI0znAoc> - asymptotic notation
 
 ## Linearly Scalable Algorithms
 
@@ -42,7 +42,6 @@ f(n) = Ω(g(n))
 
 Theta notation encloses the function betweent the lower and upper bounds aka it gives the average-case complexity of an algorithm.
 
-
 ## Master Theorem
 
 The master theorem is used to calculate the time complexity of recurrence relations (recursive functions — like divide and conquer algorithms) in a simple and quick way.
@@ -54,9 +53,9 @@ T(n) = aT(n/b) + f(n),
 where,
 n = size of input
 a = number of subproblems in the recursion
-n/b = size of each subproblem. All subproblems are assumed 
+n/b = size of each subproblem. All subproblems are assumed
      to have the same size.
-f(n) = cost of the work done outside the recursive call, 
+f(n) = cost of the work done outside the recursive call,
       which includes the cost of dividing the problem and
       cost of merging the solutions
 
@@ -89,7 +88,7 @@ Time complexities in order of increasing complexity. Complexity here is the work
    Linearly running some statements.
 2. log(n)  
    We divide the problem into smaller parts and solve them and the complexity decreases each time we divide the problem. For example, binary search.
-3. sqrt(n)  
+3. sqrt(n)
 4. n  
    As we increase the input, the time to solve it linearly increases in the middle of x and y coordinates.
 5. nlog(n)  
