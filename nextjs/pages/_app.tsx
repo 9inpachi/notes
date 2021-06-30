@@ -5,4 +5,5 @@ import "../styles/globals.scss";
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   return <Component {...pageProps} />;
 };
+
 export default MyApp;
