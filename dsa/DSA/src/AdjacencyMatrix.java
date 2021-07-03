@@ -9,16 +9,18 @@ public class AdjacencyMatrix {
   }
 
   void addEdge(int i, int j) {
-    if (i == j)
+    if (i == j) {
       return;
+    }
 
     adjMatrix[i][j] = true;
     adjMatrix[j][i] = true;
   }
 
   void removeEdge(int i, int j) {
-    if (i == j)
+    if (i == j) {
       return;
+    }
 
     adjMatrix[i][j] = false;
     adjMatrix[j][i] = false;
