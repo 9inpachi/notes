@@ -1,3 +1,5 @@
+package queue;
+
 /**
  * FIFO - First In First Out.
  */

@@ -1,3 +1,4 @@
+package graph;
 
 public class AdjacencyMatrix {
   public boolean adjMatrix[][];

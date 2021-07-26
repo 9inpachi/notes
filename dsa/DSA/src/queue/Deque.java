@@ -1,3 +1,5 @@
+package queue;
+
 /**
  * Double ended queue.
  */

@@ -1,3 +1,5 @@
+package tree;
+
 public class BalancedBinaryTree {
   Boolean isTreeBalanced(TreeNode root, int height) {
     int leftTreeHeight = getTreeHeight(root.left, height + 1);
