@@ -1,4 +1,4 @@
-package org.practice.designpatterns;
+package org.practice.designpatterns.factory;
 
 interface Shape {
   void draw();
