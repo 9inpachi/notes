@@ -44,6 +44,11 @@ class Observable<T> extends Observer<T> {
   }
 }
 
+/**
+ * Pattern used when there is a one-tp-many relationship between objects.
+ * That is, when one object is updated, it's dependents are notified of the change.
+ * Behavioral Pattern.
+ */
 public class ObserverPattern {
   public static void main(String[] args) {
     Subject<Integer> subject = new Subject<>();
