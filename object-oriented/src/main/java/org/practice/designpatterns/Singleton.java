@@ -15,6 +15,10 @@ class SingletonConfig {
   }
 }
 
+/**
+ * A pattern to make sure that only a single object of a particular class can be created.
+ * Creational Pattern.
+ */
 public class Singleton {
   public static void main(String[] args) {
     SingletonConfig instance = SingletonConfig.getInstance();

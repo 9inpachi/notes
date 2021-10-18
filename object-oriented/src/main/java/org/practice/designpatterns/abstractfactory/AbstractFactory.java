@@ -75,6 +75,11 @@ class FactoryMaker {
   }
 }
 
+/**
+ * A pattern that works around a super factory that can be used to create/get
+ * other factories. Such factory is called factory of factories.
+ * Creational Pattern.
+ */
 public class AbstractFactory {
   public static void main(String[] args) {
     // Normal

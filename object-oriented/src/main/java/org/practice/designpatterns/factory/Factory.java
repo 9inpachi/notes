@@ -46,6 +46,11 @@ class ShapeFactory {
   }
 }
 
+/**
+ * A pattern to create objects without exposing the internal creation logic
+ * and making use of a common interface to refer to the object.
+ * Creational Pattern.
+ */
 public class Factory {
   public static void main(String[] args) {
     ShapeFactory.createShape(ShapeType.SQUARE).draw();

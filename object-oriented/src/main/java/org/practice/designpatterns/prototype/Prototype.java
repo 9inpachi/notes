@@ -36,6 +36,11 @@ class CloneFactory {
   }
 }
 
+/**
+ * Pattern used to create a clone of an object. Used when creating a new object is costly
+ * and the object already has some information (for example from database).
+ * Creational Pattern.
+ */
 public class Prototype {
   public static void main(String[] args) {
     Square square = new Square();
