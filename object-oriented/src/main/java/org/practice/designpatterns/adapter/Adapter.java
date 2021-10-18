@@ -1,9 +1,9 @@
 package org.practice.designpatterns.adapter;
 
 interface Drink {
-  public void prepare();
+  void prepare();
 
-  public void drink();
+  void drink();
 }
 
 class Tea {
@@ -72,12 +72,12 @@ class DrinkAdapter implements Drink {
 public class Adapter {
   public static void main(String[] args) {
     // Hot drink.
-    DrinkAdapter adapter = new DrinkAdapter("hot");
+    Drink adapter = new DrinkAdapter("hot");
     adapter.prepare();
     adapter.drink();
 
     // Cold drink.
-    DrinkAdapter adapterCold = new DrinkAdapter("cold");
+    Drink adapterCold = new DrinkAdapter("cold");
     adapterCold.prepare();
     adapterCold.drink();
   }
