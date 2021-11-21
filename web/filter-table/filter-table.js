@@ -9,6 +9,7 @@ function FilterTable(selector, headers, rows) {
   this.rows = rows;
   this.tableHeader = this.element.appendChild(document.createElement("thead"));
   this.tableBody = this.element.appendChild(document.createElement("tbody"));
+  this.sortOrder = "ASC";
 
   /**
    * Sanity Checks
@@ -64,6 +65,43 @@ FilterTable.prototype.render = function () {
     }
 
     this.tableBody.appendChild(tableRow);
+  }
+};
+
+/**
+ * Sort by the selected column.
+ * @param {string} col The column to order the rows by.
+ */
+FilterTable.prototype.sortByColumn = function (col) {
+  const colIndex = this.headers.indexOf(col);
+  if (colIndex === -1) {
+    throw new Error("Invalid column selected for sorting");
+  }
+
+  // Toggle sort order.
+  this.sortOrder = this.sortOrder === "ASC" ? "DSC" : "ASC";
+
+  this.sort((a, b) => {
+    const comparator =
+      this.sortOrder === "ASC"
+        ? a[colIndex] < b[colIndex]
+        : a[colIndex] > b[colIndex];
+
+    return comparator ? -1 : 1;
+  });
+};
+
+/**
+ * Enable to sort by column.
+ */
+FilterTable.prototype.enableSortByColumn = function () {
+  const colHeaders = this.tableHeader.querySelectorAll("th");
+
+  for (const colHeader of colHeaders) {
+    colHeader.style.setProperty("cursor", "pointer");
+    colHeader.addEventListener("click", () =>
+      this.sortByColumn.bind(this)(colHeader.textContent)
+    );
   }
 };
 
