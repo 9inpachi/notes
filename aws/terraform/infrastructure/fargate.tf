@@ -11,7 +11,7 @@ resource "aws_ecs_task_definition" "backend_test_task" {
 
     // Fargate requires task definitions to have an execution role ARN to support ECR images
     execution_role_arn = "${aws_iam_role.ecs_role.arn}"
-hi
+
     container_definitions = <<EOT
 [
     {
