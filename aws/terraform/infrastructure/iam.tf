@@ -3,7 +3,7 @@ resource "aws_iam_role" "ecs_role" {
 
   assume_role_policy = <<POLICY
 {
-  "Version": "2021-11-26",
+  "Version": "2012-10-17",
   "Statement": [
     {
       "Sid": "",

@@ -1,23 +1,7 @@
-resource "aws_subnet" "public_a" {
-  vpc_id = "${var.default_vpc.vpc_id}"
-  cidr_block = "172.31.1.0/24"
-  availability_zone = "${var.aws_region}_testa"
-}
-
-resource "aws_subnet" "public_b" {
-  vpc_id = "${var.default_vpc.vpc_id}"
-  cidr_block = "172.31.2.0/24"
-  availability_zone = "${var.aws_region}_testb"
-}
-
-resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id = "${var.default_vpc.vpc_id}"
-}
-
 resource "aws_route" "internet_access" {
   route_table_id = "${var.default_vpc.main_route_table_id}"
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id = "${aws_internet_gateway.internet_gateway.id}"
+  gateway_id = "${var.vpc_gateway}"
 }
 
 resource "aws_security_group" "security_group_test" {

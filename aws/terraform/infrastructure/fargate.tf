@@ -6,28 +6,27 @@ resource "aws_ecs_task_definition" "backend_test_task" {
     network_mode = "awsvpc"
 
     // Valid sizes are shown here: https://aws.amazon.com/fargate/pricing/
-    memory = "512"
-    cpu = "10"
+    memory = 512
+    cpu = 256
 
     // Fargate requires task definitions to have an execution role ARN to support ECR images
     execution_role_arn = "${aws_iam_role.ecs_role.arn}"
 
-    container_definitions = <<EOT
-[
-    {
-        "name": "test_container",
-        "image": "184319202034.dkr.ecr.me-south-1.amazonaws.com/ecr_test_repo:latest",
-        "memory": 512,
-        "essential": true,
-        "portMappings": [
-            {
-                "containerPort": 3000,
-                "hostPort": 3000
-            }
-        ]
-    }
-]
-EOT
+    container_definitions = jsonencode([
+        {
+            name = "test_container",
+            image = "184319202034.dkr.ecr.me-south-1.amazonaws.com/ecr_test_repo:latest",
+            cpu = 256,
+            memory = 512,
+            essential = true,
+            portMappings = [
+                {
+                    containerPort = 3000,
+                    hostPort = 3000
+                }
+            ]
+        }
+    ])
 }
 
 resource "aws_ecs_cluster" "backend_test_cluster" {
@@ -44,7 +43,7 @@ resource "aws_ecs_service" "backend_test_service" {
     desired_count = 1
 
     network_configuration {
-        subnets = ["${aws_subnet.public_a.id}", "${aws_subnet.public_b.id}"]
+        subnets = var.vpc_subnets
         security_groups = ["${aws_security_group.security_group_test.id}"]
         assign_public_ip = true
     }
