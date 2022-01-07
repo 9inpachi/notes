@@ -25,4 +25,17 @@ The infrastructure is configured to use already existing VPC, subnets and gatewa
           docker tag terraform-test-app $ACCOUNT_ID.dkr.ecr.me-south-1.amazonaws.com/ecr_test_repo:latest
           docker push $ACCOUNT_ID.dkr.ecr.me-south-1.amazonaws.com/ecr_test_repo:latest
         ```
-
+4. Create `iam.tf` for creating an IAM role and attaching a policy.
+5. Create `network.tf` for setting up a VPC, its subnets, gateway, routing and security groups. It's also possible to use an existing VPC.
+6. Create `fargate.tf` for creating an ECS task definition, container definition in the task definition, an ECS cluster and then an ECS service inside that cluster which uses the created task definition.
+7. Create `vars.tf` to define any variables (with default fallback values) and then a `vars.tfvars` can be supplied to the terraform commands to use secret variables.
+    ```sh
+      terraform apply -var-file="vars.tfvars"
+    ```
+8. Use the following terraform commands to plan and apply the infrastructure.
+    ```sh
+      terraform plan
+      terraform apply
+      terraform destroy
+    ```
+9. Access the app by going to the "Public IPv4 address" of the network interface (`eni-<id>`) associated to the task definition in ECS.
