@@ -30,9 +30,8 @@ do {
 
 ### Properties
 
-Own Properties: These are the properties that are directly added to the object and not the prototype of the object. (`const o = { a: 1 }`)
-
-Prototype Properties: These are the properties that are not part of the object itself but the object's prototype (and chained prototypes).
+**Own Properties**: These are the properties that are directly added to the object and not the prototype of the object. (`const o = { a: 1 }`)\
+**Prototype Properties**: These are the properties that are not part of the object itself but the object's prototype (and chained prototypes).
 
 ### Shadowing Properties
 
