@@ -4,7 +4,7 @@
 
 A mechanism by which JavaScript objects inherit features from one another. It is a built-in property of every JavaScript object.
 
-Link: <https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes>
+**Link:** <https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes>
 
 ### Prototype Chaining
 
@@ -30,8 +30,8 @@ do {
 
 ### Properties
 
-**Own Properties**: These are the properties that are directly added to the object and not the prototype of the object. (`const o = { a: 1 }`)\
-**Prototype Properties**: These are the properties that are not part of the object itself but the object's prototype (and chained prototypes).
+**Own Properties:** These are the properties that are directly added to the object and not the prototype of the object. (`const o = { a: 1 }`)\
+**Prototype Properties:** These are the properties that are not part of the object itself but the object's prototype (and chained prototypes).
 
 ### Shadowing Properties
 
@@ -96,8 +96,8 @@ Person.prototype.greet = function () {
 
 ## Prototypal Inheritance
 
-Link: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain>\
-Classes and prototypal inheritance: <https://www.digitalocean.com/community/tutorials/demystifying-es6-classes-and-prototypal-inheritance>
+**Link:** <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Inheritance_and_the_prototype_chain>\
+**Classes and prototypal inheritance:** <https://www.digitalocean.com/community/tutorials/demystifying-es6-classes-and-prototypal-inheritance>
 
 Overwriting/setting `prototype` breaks the prototype chain.
 
