@@ -107,7 +107,7 @@ customElements.define("tooltip-info", TooltipElement);
 External styles can also be added to the shadow DOM using the `<link>` element like we normally do in a regular DOM.
 
 ```js
-const link = document.createELement("link");
+const link = document.createElement("link");
 link.setAttribute("rel", "stylesheet");
 link.setAttribute("href", "styles.css");
 
