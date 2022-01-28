@@ -20,7 +20,7 @@ In cross-site scripting, the attacker makes the client involuntarily execute cli
 
 In cross-site request forgery, the attacker tries to trick and fool you into making a request that you did not intend. This could be like sending a link that changes your settings on a website. Or sending you a link to a form which looks exactly like another site (e.g. Facebook) tricking you into inputting your sensitive data.
 
-Examples:
+**Examples:**
 
 - A malicious link: `https://somewebsite.com/update-password?password=abc`
 - Link to a replica website where you enter data into forms.
