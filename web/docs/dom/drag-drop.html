@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style type="text/css">
+      #item {
+        width: 6rem;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid dimgray;
+        cursor: grab;
+        margin: 0.5rem;
+      }
+
+      .boxes {
+        display: grid;
+        grid-template: 1fr / 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .boxes > div {
+        height: 10rem;
+        border: 2px solid dimgray;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Drag the item to either of the boxes</h1>
+
+    <div id="item" draggable="true">Move me</div>
+
+    <div class="boxes">
+      <div id="sourceBox"></div>
+      <div id="targetBox"></div>
+    </div>
+
+    <script type="text/javascript">
+      const item = document.getElementById("item");
+      const source = document.getElementById("sourceBox");
+      const target = document.getElementById("targetBox");
+
+      // When the item has started to be dragged.
+      const onDragStart = (event) => {
+        // Set the data of data transfer.
+        event.dataTransfer.setData("itemId", event.target.id);
+      };
+
+      // When the item is dragged over the target box.
+      const onDragOver = (event) => {
+        event.preventDefault();
+      };
+      // When the item is dropped over the target box.
+      const onDrop = (event) => {
+        event.preventDefault();
+        const itemId = event.dataTransfer.getData("itemId");
+        event.target.appendChild(document.getElementById(itemId));
+      };
+
+      // Attach the event handlers to boxes.
+      [source, target].forEach((box) => {
+        box.addEventListener("dragover", onDragOver);
+        box.addEventListener("drop", onDrop);
+      });
+
+      // Attach the event handlers to item.
+      item.addEventListener("dragstart", onDragStart);
+    </script>
+  </body>
+</html>
