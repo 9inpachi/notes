@@ -7,3 +7,4 @@
 - [IIFE (Immediately Invoked Function Expression)](./iife.md)
 - [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
 - [DOM Events and Event Handling](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events)
+- [Semantic HTML](https://learn-the-web.algonquindesign.ca/topics/html-semantics-cheat-sheet/)

@@ -58,4 +58,4 @@ class TooltipElement extends HTMLElement {
   }
 }
 
-customElements.define("tooltip-info", TooltipElement);
+window.customElements.define("tooltip-info", TooltipElement);

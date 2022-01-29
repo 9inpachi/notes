@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slider</title>
+    <style type="text/css">
+      :root {
+        --z-index-float: 10;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .slider {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .slider-images {
+        width: 100%;
+        white-space: nowrap;
+      }
+      .slider-images > img {
+        width: 100%;
+        display: inline-block;
+      }
+
+      .left-arrow,
+      .right-arrow {
+        font-family: cursive;
+        font-size: 5rem;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 1rem;
+        cursor: pointer;
+        background: unset;
+        border: unset;
+        z-index: var(--z-index-float);
+      }
+      .left-arrow:hover,
+      .right-arrow:hover {
+        color: gray;
+      }
+      .left-arrow {
+        left: 1%;
+      }
+      .right-arrow {
+        right: 1%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slider">
+      <button class="left-arrow">&lt;</button>
+      <div class="slider-images">
+        <img
+          alt="Slider Image"
+          src="https://www.teahub.io/photos/full/229-2294705_wallpaper-natsume-yuujinchou-natsume-takashi-madara-natsume-yuujinchou.jpg"
+        />
+        <img alt="Slider Image" src="https://i.imgur.com/D4KXclJ.png" />
+        <img
+          alt="Slider Image"
+          src="https://wallpaperaccess.com/full/1907112.jpg"
+        />
+      </div>
+      <button class="right-arrow">&gt;</button>
+    </div>
+
+    <script type="text/javascript">
+      class Slider {
+        slideIndex = 0;
+        element = null;
+        sliderImagesContainer = null;
+        sliderImages = [];
+
+        /**
+         * Create the slider.
+         * @param {Object} options Options to create the slider.
+         * @param {string} options.query Query to select the element.
+         * @param {boolean} options.controls Whether the controls should be enabled.
+         * @param {number} options.interval Interval to switch between slides.
+         */
+        constructor(options) {
+          const { query, controls, interval } = options;
+          this.element = document.querySelector(query);
+
+          this.sliderImagesContainer =
+            this.element.querySelector(".slider-images");
+          this.sliderImages = this.sliderImagesContainer.children;
+
+          if (controls) {
+            this.#enableControls();
+          }
+        }
+
+        #enableControls() {
+          this.leftArrow = this.element.querySelector(".left-arrow");
+          this.rightArrow = this.element.querySelector(".right-arrow");
+
+          this.leftArrow.addEventListener("click", this.prevSlide.bind(this));
+          this.rightArrow.addEventListener("click", this.nextSlide.bind(this));
+        }
+
+        #translateSlide() {
+          if (this.slideIndex >= this.sliderImages.length) {
+            this.slideIndex = 0;
+          } else if (this.slideIndex < 0) {
+            this.slideIndex = this.sliderImages.length - 1;
+          }
+
+          this.sliderImagesContainer.style.transform = `translateX(-${
+            this.slideIndex * 100
+          }%)`;
+        }
+
+        nextSlide() {
+          console.log("CALLED NEXT");
+          this.slideIndex++;
+          this.#translateSlide();
+        }
+
+        prevSlide() {
+          this.slideIndex--;
+          this.#translateSlide();
+        }
+      }
+
+      const slider = new Slider({ query: ".slider", controls: true });
+    </script>
+  </body>
+</html>
