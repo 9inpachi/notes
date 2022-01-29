@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Drag and Drop</title>
     <style type="text/css">
       #item {
         width: 6rem;
@@ -59,7 +59,8 @@
       const onDrop = (event) => {
         event.preventDefault();
         const itemId = event.dataTransfer.getData("itemId");
-        event.target.appendChild(document.getElementById(itemId));
+        const itemToDrop = document.getElementById(itemId);
+        event.target.appendChild(itemToDrop);
       };
 
       // Attach the event handlers to boxes.
@@ -70,6 +71,37 @@
 
       // Attach the event handlers to item.
       item.addEventListener("dragstart", onDragStart);
+
+      // Logic for moving the element.
+
+      // let itemOffsetX, itemOffsetY;
+
+      // item.addEventListener("drag", (event) => {
+      //   const element = event.target; // `item` in this case.
+
+      //   element.style.position = "fixed";
+      //   element.style.top = `${event.clientY - itemOffsetY}px`;
+      //   element.style.left = `${event.clientX - itemOffsetX}px`;
+      // });
+      // item.addEventListener("dragstart", (event) => {
+      //   const clientRect = event.target.getBoundingClientRect();
+      //   itemOffsetX = event.clientX - clientRect.x;
+      //   itemOffsetY = event.clientY - clientRect.y;
+      //   event.dataTransfer.setDragImage(
+      //     event.target,
+      //     window.outerWidth,
+      //     window.outerHeight
+      //   );
+      // });
+      // item.addEventListener("dragend", (event) => {
+      //   resetItemStyles(event.target);
+      // });
+
+      // const resetItemStyles = (element) => {
+      //   element.style.position = "";
+      //   element.style.top = "";
+      //   element.style.left = "";
+      // };
     </script>
   </body>
 </html>
