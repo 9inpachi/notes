@@ -24,10 +24,11 @@
       .slider-images {
         width: 100%;
         white-space: nowrap;
+        display: flex;
+        transition: all 0.5s;
       }
       .slider-images > img {
         width: 100%;
-        display: inline-block;
       }
 
       .left-arrow,
@@ -78,6 +79,8 @@
         element = null;
         sliderImagesContainer = null;
         sliderImages = [];
+        intervalId;
+        interval;
 
         /**
          * Create the slider.
@@ -97,6 +100,10 @@
           if (controls) {
             this.#enableControls();
           }
+          if (interval) {
+            this.interval = interval;
+            this.#enableAutoSlide();
+          }
         }
 
         #enableControls() {
@@ -107,7 +114,26 @@
           this.rightArrow.addEventListener("click", this.nextSlide.bind(this));
         }
 
+        #enableAutoSlide() {
+          this.intervalId = setInterval(
+            this.nextSlide.bind(this),
+            this.interval
+          );
+        }
+
+        #resetInterval() {
+          clearInterval(this.intervalId);
+          this.intervalId = setInterval(
+            this.nextSlide.bind(this),
+            this.interval
+          );
+        }
+
         #translateSlide() {
+          if (this.interval) {
+            this.#resetInterval();
+          }
+
           if (this.slideIndex >= this.sliderImages.length) {
             this.slideIndex = 0;
           } else if (this.slideIndex < 0) {
@@ -120,7 +146,6 @@
         }
 
         nextSlide() {
-          console.log("CALLED NEXT");
           this.slideIndex++;
           this.#translateSlide();
         }
@@ -131,7 +156,11 @@
         }
       }
 
-      const slider = new Slider({ query: ".slider", controls: true });
+      const slider = new Slider({
+        query: ".slider",
+        controls: true,
+        interval: 3000,
+      });
     </script>
   </body>
 </html>
