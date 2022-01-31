@@ -4,6 +4,10 @@
 <https://youtu.be/SUCNWiJUaKs> - recurrence relation  
 <https://youtu.be/A03oI0znAoc> - asymptotic notation
 
+## In-Place Algorithms
+
+An in-place algorithm is an algorithm which transforms input using no auxiliary data structure. However, a small amount of extra storage space is allowed for auxiliary variables. The input is usually overwritten by the output as the algorithm executes. An in-place algorithm updates its input sequence only through replacement or swapping of elements.
+
 ## Linearly Scalable Algorithms
 
 The solution size grows linearly with the problem. If we increase the input size, the longer it takes to execute the program. For example, sum of 10^11 with for loop.
