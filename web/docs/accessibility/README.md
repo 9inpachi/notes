@@ -2,6 +2,11 @@
 
 Link: <https://developer.mozilla.org/en-US/docs/Web/Accessibility>
 
+## Content
+
+- [HTML Accessibility](./html-a11y.md)
+- [CSS and JavaScript Accessibility](./css-and-javascript.md)
+
 ## Introduction
 
 Accessibility is the practice of making websites usable for as many people as possible, It's not limited to people with disabilities but also people on mobile devices or slow internet connection.
@@ -34,9 +39,9 @@ People who might be limited in their cognitive or intellectual ability. It might
 
 Accessibility for people with cognitive impairments can be improved keeping in mind the following:
 
-* Presenting content through video or text-to-speech
-* Easily understandable content
-* Focus important content by making it bold, italic and using other visual techniques
-* Have consistent layout
-* Make authentication easy and simple
-* Forms are easy to complete with meaningful errors
+- Presenting content through video or text-to-speech
+- Easily understandable content
+- Focus important content by making it bold, italic and using other visual techniques
+- Have consistent layout
+- Make authentication easy and simple
+- Forms are easy to complete with meaningful errors

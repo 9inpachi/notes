@@ -18,6 +18,9 @@ To make websites accessible, use the element that best fits the content. A good 
 <main>
   <article>
     <h2>Article heading</h2>
+    <section>
+      <h3>Article section</h3>
+    </section>
   </article>
 
   <aside>
@@ -41,8 +44,8 @@ Making unsemantic markup keyboard accessible.
 3. Add keyboard interaction.
 
    ```js
-   document.addEventListener('keydown', (e) => {
-     if (e.code === 'Enter') {
+   document.addEventListener("keydown", (e) => {
+     if (e.code === "Enter") {
        document.activeElement.click();
      }
    });
@@ -73,7 +76,13 @@ Tables should use semantic markup like `<th>`, `<summary>`, `<caption>`, `<thead
 Text alternatives should be specified for visible elements like icons and images.
 
 ```html
-<img src="cat.png" aria-labelledby="Cat" alt="Cat" title="Cat"  />
+<img
+  src="cat.png"
+  aria-labelledby="Cat"
+  alt="Cat"
+  title="Cat"
+  longdesc="cat.html"
+/>
 ```
 
 Screen readers can read the `src` image attribute but sometimes image names do not make sense. In this case having alternative text helps.
@@ -84,11 +93,31 @@ Screen readers can read the `src` image attribute but sometimes image names do n
 
 ```html
 <figure>
-  <img src="dinosaur.png" alt="Dinosaur">
+  <img src="dinosaur.png" alt="Dinosaur" />
   <figcaption>A dinosaur standing on two legs</figcaption>
 </figure>
 ```
 
 ### Empty `alt` Attributes
 
-Empty `alt` attributes on images indicate that there is an image with no real meaning.
+Empty `alt` attributes on images indicate that the image has no real meaning. Another option is to use `role="presentation"` as this prevents screen readers reading out alternative text.
+
+## Links
+
+### Styling
+
+Links should be styled in a way that they are distinguishable from regular text. The **difference should not only be in the color**. All states like `focus`, `visited`, `active` etc. should have difference in color with a 4:5 contrast between all of them.
+
+### External Links
+
+Not all screen readers perceive and read the `target="_blank"` to indicate that the link will open in a new tab. Ideally, it should be specified in the link text, that it opens in a new tab.
+
+```html
+<a target="_blank" href="http://example.com">
+  Go to example (opens in new tab)
+</a>
+```
+
+## Proximity/Distance
+
+Elements should be placed at a fair distance so people suffering from motor control issues (their hands shake a lot), don't click the wrong content.
