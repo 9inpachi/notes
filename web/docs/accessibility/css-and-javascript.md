@@ -43,3 +43,30 @@ The practice here is to use absolute positioning to move the content out of the 
 ## JavaScript
 
 JavaScript can also break accessibility. Most of the accessibility features can be handled by using semantic HTML markup but for applications that are built entirely around JavaScript, like a browser game that completely renders on a `<canvas>`, the accessibility aspects have to be manually addressed.
+
+While visually impaired people are not the target of 3D games, accessibility should still be kept in mind for keyboard users and people with color deficiencies.
+
+### Unobtrusive JavaScript
+
+The idea of unobtrusive JavaScript is that it should be used to extend functionality, not build it. Most of the website functions should work without JavaScript.
+
+Examples of unobtrusive JavaScript are:
+
+- Form validation
+- Keyboard controls for `<video>`
+
+If you are building entire widgets around JavaScript, then make sure to consider WAI-ARIA attributes for accessibility.
+
+### Mouse Specific Events
+
+Mouse events like `mouseover`, `mouseout`, `dblclick` etc. are not accessible to keyboard users. These events should be doubled up with similar events that can be called with other means, like `focus` and `blur` on keyboard.
+
+For example, a code that shows a zoomed-in version of an image can have the following handlers.
+
+```js
+thumbnail.addEventListener("mouseover", showImage);
+thumbnail.addEventListener("mouseout", hideImage);
+
+thumbnail.addEventListener("focus", showImage);
+thumbnail.addEventListener("blur", hideImage);
+```
