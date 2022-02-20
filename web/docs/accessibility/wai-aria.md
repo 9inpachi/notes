@@ -2,10 +2,12 @@
 
 Web Accessibility Initiative - Accessibility Rich Internet Applications
 
-WAI-ARIA is a specification written by the W3C (World Wide Web Consortium) that defines additional attributes which can be applied to elements for additional semantics and improve accessibility.
+WAI-ARIA is a specification written by the W3C (World Wide Web Consortium) that defines additional attributes which can be applied to elements for additional semantics and improved accessibility.
 
 ## Links
 
+- **Mozilla WAI-ARIA Basics:** <https://developer.mozilla.org/en-US/docs/Learn/Accessibility/WAI-ARIA_basics>\
+  (Includes practical implementations)
 - **Specification:** <https://www.w3.org/TR/wai-aria-1.1>
 - **Authoring Practices:** <https://www.w3.org/TR/wai-aria-practices-1.1/>
 - **Role Definitions:** <https://www.w3.org/TR/wai-aria-1.1/#role_definitions>
@@ -31,3 +33,14 @@ Not all features of the spec are supported.
 
 - The browser support is quite good at about [98% global support](https://caniuse.com/#feat=wai-aria).
 - The screenreaders are a bit behind browsers.
+
+## When to Use
+
+Ideally, the native HTML elements should be used, WAI-ARIA should only be used when needed. Like building JavaScript UI libraries with custom widgets.
+
+- Signposts/Landmarks\
+  Using ARIA's `role`.
+- Dynamic content updates\
+  To notify screen readers of dynamic content updates using `aria-live`.
+- Enhancing keyboard accessibility
+- Accessibility of non-semantic controls and custom widgets
