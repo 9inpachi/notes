@@ -6,6 +6,7 @@ Link: <https://developer.mozilla.org/en-US/docs/Web/Accessibility>
 
 - [HTML Accessibility](./html-a11y.md)
 - [CSS and JavaScript Accessibility](./css-and-javascript.md)
+- [WAI-ARIA (Web Accessibility Initiative - Accessibility Rick Internet Applications)](./wai-aria.md)
 
 ## Introduction
 
