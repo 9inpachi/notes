@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Box Drag</title>
+    <style type="text/css">
+      #box {
+        width: 4rem;
+        height: 4rem;
+        background: dimgray;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box"></div>
+
+    <script type="text/javascript">
+      const box = document.querySelector("#box");
+      let initialBoxX = null;
+      let initialBoxY = null;
+      let posX = null;
+      let posY = null;
+      let animationFrame = null;
+
+      const startDrag = (event) => {
+        const { clientX, clientY } = getClientCoords(event);
+        initialBoxX = clientX - box.offsetLeft;
+        initialBoxY = clientY - box.offsetTop;
+        moveBox();
+      };
+
+      const stopDrag = (event) => {
+        cancelAnimationFrame(animationFrame);
+      };
+
+      const onDrag = (event) => {
+        const { clientX, clientY } = getClientCoords(event);
+        posX = clientX;
+        posY = clientY;
+      };
+
+      const moveBox = () => {
+        const offsetX = posX - initialBoxX;
+        const offsetY = posY - initialBoxY;
+
+        box.style.left = offsetX + "px";
+        box.style.top = offsetY + "px";
+
+        animationFrame = requestAnimationFrame(moveBox);
+      };
+
+      const getClientCoords = (event) => {
+        const isTouch = event.targetTouches;
+        const clientX = !isTouch
+          ? event.clientX
+          : event.targetTouches[0].clientX;
+        const clientY = !isTouch
+          ? event.clientY
+          : event.targetTouches[0].clientY;
+
+        return { clientX, clientY };
+      };
+
+      box.addEventListener("mousedown", startDrag);
+      document.addEventListener("mousemove", onDrag);
+      document.addEventListener("mouseup", stopDrag);
+      box.addEventListener("touchstart", (event) => {
+        onDrag(event);
+        startDrag(event);
+      });
+      document.addEventListener("touchmove", onDrag);
+      document.addEventListener("touchend", stopDrag);
+    </script>
+  </body>
+</html>
