@@ -4,6 +4,12 @@ Shadow DOM API provides a way of creating encapsulated web components by attachi
 
 **Link:** <https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM>
 
+- [Terminologies](#terminologies)
+- [Basics](#basics)
+- [Example Web Component](#example-web-component)
+  - [Defining a Custom Element](#defining-a-custom-element)
+  - [External Styles](#external-styles)
+
 ## Terminologies
 
 - **Shadow Host:** The host (regular) element in the DOM to which the shadow DOM is attached to.

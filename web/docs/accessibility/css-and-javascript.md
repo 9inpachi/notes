@@ -1,5 +1,15 @@
 # CSS and JavaScript Accessibility
 
+- [CSS](#css)
+  - [Correct Semantics](#correct-semantics)
+  - [Standard Content Look](#standard-content-look)
+  - [Element Styling](#element-styling)
+  - [Color Contrast](#color-contrast)
+  - [Hiding Things](#hiding-things)
+- [JavaScript](#javascript)
+  - [Unobtrusive JavaScript](#unobtrusive-javascript)
+  - [Mouse Specific Events](#mouse-specific-events)
+
 ## CSS
 
 ### Correct Semantics

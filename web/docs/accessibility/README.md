@@ -2,6 +2,14 @@
 
 Link: <https://developer.mozilla.org/en-US/docs/Web/Accessibility>
 
+- [Content](#content)
+- [Introduction](#introduction)
+  - [Types of Disabilities](#types-of-disabilities)
+    - [Visual Impairments](#visual-impairments)
+    - [Hairing Impairments](#hairing-impairments)
+    - [Mobility/Movement Impairments](#mobilitymovement-impairments)
+    - [Cognitive Impairments](#cognitive-impairments)
+
 ## Content
 
 - [HTML Accessibility](./html-a11y.md)

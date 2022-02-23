@@ -4,6 +4,11 @@ Web Accessibility Initiative - Accessibility Rich Internet Applications
 
 WAI-ARIA is a specification written by the W3C (World Wide Web Consortium) that defines additional attributes which can be applied to elements for additional semantics and improved accessibility.
 
+- [Links](#links)
+- [Features](#features)
+- [Support](#support)
+- [When to Use](#when-to-use)
+
 ## Links
 
 - **Mozilla WAI-ARIA Basics:** <https://developer.mozilla.org/en-US/docs/Learn/Accessibility/WAI-ARIA_basics>\

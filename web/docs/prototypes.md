@@ -1,5 +1,14 @@
 # JavaScript Prototypes
 
+- [Prototypes](#prototypes)
+  - [Prototype Chaining](#prototype-chaining)
+  - [Properties](#properties)
+  - [Shadowing Properties](#shadowing-properties)
+  - [Setting a Prototype](#setting-a-prototype)
+- [Prototypal Inheritance](#prototypal-inheritance)
+  - [Inheritance](#inheritance)
+    - [Methods for Extending Prototype Chain](#methods-for-extending-prototype-chain)
+
 ## Prototypes
 
 A mechanism by which JavaScript objects inherit features from one another. It is a built-in property of every JavaScript object.

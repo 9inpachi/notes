@@ -4,6 +4,18 @@ Accessibility in HTML is as easy as using semantic HTML elements.
 
 **HTML Semantics Cheat Sheet**: <https://learn-the-web.algonquindesign.ca/topics/html-semantics-cheat-sheet/>
 
+- [Elements to Use](#elements-to-use)
+- [UI Controls](#ui-controls)
+  - [Meaningful Text Labels](#meaningful-text-labels)
+  - [Accessible Data Tables](#accessible-data-tables)
+- [Text Alternatives](#text-alternatives)
+  - [Figure](#figure)
+  - [Empty `alt` Attributes](#empty-alt-attributes)
+- [Links](#links)
+  - [Styling](#styling)
+  - [External Links](#external-links)
+- [Proximity/Distance](#proximitydistance)
+
 ## Elements to Use
 
 To make websites accessible, use the element that best fits the content. A good semantic HTML markup may look like the following.

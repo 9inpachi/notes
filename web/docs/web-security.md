@@ -1,5 +1,8 @@
 # Web Security
 
+- [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
+- [Cross-Site Request Forgery (XSRF/CSRF)](#cross-site-request-forgery-xsrfcsrf)
+
 ## Cross-Site Scripting (XSS)
 
 In cross-site scripting, the attacker makes the client involuntarily execute client-side code. This allows execution of aribtrary code that can end up sending sensitive data to the attacker.
