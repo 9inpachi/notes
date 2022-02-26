@@ -2,6 +2,7 @@
 
 - [Web Security Issues (XSS, XSRF)](./web-security)
 - [JavaScript Prototypes & Prototypal Inheritance](./prototypes.md)
+- [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array#instance_methods)
 - [Shadow DOM](./shadow-dom)
 - [HTML DOM API](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API)
   - [Examples](./dom/)
