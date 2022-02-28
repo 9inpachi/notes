@@ -19,7 +19,7 @@ A mechanism by which JavaScript objects inherit features from one another. It is
 
 A prototype of an object is an object itself and has its own prototype, making a prototype chain. The chain ends when a prototype has `null` as its own prototype.
 
-When accessing property of an object, if the property cannot be found on the object itself, then the chained prototypes are checked until the `null` prototype is reached in which case `undefined` is returned. `myObject.hasOwnProperty("prop")` looks for properties this way.
+When accessing property of an object, if the property cannot be found on the object itself, then the chained prototypes are checked until the `null` prototype is reached in which case `undefined` is returned. `myObject.hasOwnProperty("prop")` looks only in `myObject` and doesn't follow the chain.
 
 Logging the chain of prototypes.
 

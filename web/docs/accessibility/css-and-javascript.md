@@ -46,7 +46,7 @@ Your design might look cool, but be sure to use the right color contrast for tex
 Screen readers don't care about hidden things.
 
 For example, tabbed panels. While they visually make a difference for regular users, screen readers only want the content in the right order.\
-The practice here is to use absolute positioning to move the content out of the viewport, so it's hidden for the regular users but still available to screen readers. Because going through tabs is not something peope using screen readers want.
+The practice here is to use absolute positioning to move the content out of the viewport, so it's hidden for the regular users but still available to screen readers. Because going through tabs is not something people using screen readers want.
 
 `display: none` and `visibility: hidden` hide content from screen readers and should be used only when the content is to be hidden from screen readers.
 
