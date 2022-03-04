@@ -81,7 +81,7 @@ Also make sure to use labels along with form controls.
 
 ### Accessible Data Tables
 
-Tables should use semantic markup like `<th>`, `<summary>`, `<caption>`, `<thead>`, `<tfoot>` etc.
+Tables should use semantic markup like `<th>`, `<caption>`, `<thead>`, `<tfoot>` etc. and the summary attribute.
 
 ## Text Alternatives
 
@@ -90,7 +90,7 @@ Text alternatives should be specified for visible elements like icons and images
 ```html
 <img
   src="cat.png"
-  aria-labelledby="Cat"
+  aria-labelledby="elementId"
   alt="Cat"
   title="Cat"
   longdesc="cat.html"
