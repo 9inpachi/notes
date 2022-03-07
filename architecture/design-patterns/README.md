@@ -4,6 +4,24 @@ Link: <https://java-design-patterns.com/patterns/>
 
 This only includes popularly used patterns.
 
+- [Creational](#creational)
+  - [Abstract Factory](#abstract-factory)
+  - [Builder](#builder)
+    - [Telescoping Constructor](#telescoping-constructor)
+    - [Builder Pattern](#builder-pattern)
+  - [Factory](#factory)
+  - [Singleton](#singleton)
+- [Structural](#structural)
+  - [Adapter](#adapter)
+  - [Bridge](#bridge)
+  - [Composite](#composite)
+  - [Decorator](#decorator)
+  - [Flyweight](#flyweight)
+- [Behavioral](#behavioral)
+  - [Chain of Responsibility](#chain-of-responsibility)
+  - [Command](#command)
+  - [Strategy](#strategy)
+
 ## Creational
 
 ### Abstract Factory
@@ -81,9 +99,8 @@ class ShapeFactory {
   }
 }
 
-ShapeFactory factory = new ShapeFactory();
-factory.createShape(ShapteType.CIRCLE).draw();
-factory.createShape(ShapteType.SQUARE).draw();
+ShapeFactory.createShape(ShapteType.CIRCLE).draw();
+ShapeFactory.createShape(ShapteType.SQUARE).draw();
 ```
 
 ### Singleton
@@ -117,7 +134,7 @@ interface CheckoutService {
 
 class CheckoutAdapter {
   Basket basket;
-  CheckoutService checkoutSerive;
+  CheckoutService checkoutService;
 
   void checkoutBasket() {
     Item[] basketItems = basket.getItems();
@@ -235,4 +252,141 @@ class AlchemistShop {
     bottomShelf.forEach(Potion::drink);
   }
 }
+```
+
+## Behavioral
+
+### Chain of Responsibility
+
+Avoid coupling the sender of a request to one receiver and give more than one object the responsibility to handle the request. Chain the receiving objects and pass the request along the chain until an object handles it.
+
+```java
+class Request {
+  RequestType type;
+  void markHandled() {}
+}
+
+abstract class RequestHandler {
+  RequestHandler next;
+
+  RequestHandler(RequestHandler next) {
+    this.next = next;
+  }
+
+  void handleRequest(Request req) {
+    if (next != null) {
+      next.handleRequest();
+    }
+  }
+}
+
+class OrcCommander extends RequestHandler {
+  RequestType typeToHandle;
+
+  OrcCommander(RequestHandler next) {
+    super(next);
+  }
+
+  void handleRequest(Request req) {
+    if (req.type == typeToHandle) {
+      req.markHandled();
+    } else {
+      super.handleRequest(req);
+    }
+  }
+}
+
+class OrcSoldier extends RequestHandler {
+  RequestType typeToHandle;
+
+  OrcSoldier(RequestHandler next) {
+    super(next);
+  }
+
+  void handleRequest(Request req) {
+    if (req.type == typeToHandle) {
+      req.markHandled();
+    } else {
+      super.handleRequest(req);
+    }
+  }
+}
+
+class OrcKing {
+  RequestHandler handlersChain;
+
+  OrcKing() {
+    handlersChain = new OrcCommander(new OrcSoldier());
+  }
+
+  void makeRequest(Request req) {
+    handlersChain.handleRequest(req);
+  }
+}
+```
+
+### Command
+
+Also known as Action, Transaction. Encapsulate a request as an object. Allows parameterizing clients with different requests, queue and log requests, and support undoable operations.
+
+For example, a Wizard can cast a spell on a Goblin and undo it.
+
+```java
+class Wizard {
+  Deque<Runnable> undoStack = new Deque<>();
+  void castSpell(Runnable spell) {}
+  void undoLastSpell() {}
+}
+
+class Goblin {
+  void changeSize() {}
+  void changeVisibility() {}
+}
+
+Wizard wizard = new Wizard();
+Goblin goblin = new Goblin();
+
+wizard.castSpell(goblin::changeSize);
+wizard.castSpell(goblin::changeVisibility);
+
+wizard.undoLastSpell(); // Undoes visibility change.
+wizard.undoLastSpell(); // Undoes size change.
+```
+
+### Strategy
+
+Also known as Policy. Strategy patterns lets us define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithms vary independently from the clients that use it.
+
+```java
+interface FightingStrategy {
+  void execute();
+}
+
+class MagicStrategy implements FightingStrategy {
+  void execute() { log("Attack with magic"); }
+}
+
+class SwordStrategy implements FightingStrategy {
+  void execute() { log("Attack with sword"); }
+}
+
+class Fighter {
+  FightingStrategy strategy;
+
+  void setStrategy(FightingStrategy strategy) {
+    this.strategy = strategy;
+  }
+
+  void attack() {
+    strategy.execute();
+  }
+}
+
+Fighter fighter = new Fighter();
+log("Goblin spotted");
+fighter.setStrategy(new SwordStrategy());
+fighter.attack();
+log("Dragon appeared");
+fighter.setStrategy(new MagicStrategy());
+fighter.attack();
 ```
