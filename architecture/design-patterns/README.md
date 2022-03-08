@@ -21,6 +21,7 @@ This only includes popularly used patterns.
   - [Chain of Responsibility](#chain-of-responsibility)
   - [Command](#command)
   - [Strategy](#strategy)
+  - [Template Method](#template-method)
 
 ## Creational
 
@@ -389,4 +390,67 @@ fighter.attack();
 log("Dragon appeared");
 fighter.setStrategy(new MagicStrategy());
 fighter.attack();
+```
+
+### Template Method
+
+Template method lets subclasses redefine certains steps of an algorithm while keeping the structure of the algorithm.
+
+```java
+abstract class StealingMethod {
+  protected abstract String pickTarget();
+  protected abstract void confuseTarget(String target);
+  protected abstract void stealFromTarget(String target);
+  public void steal() {
+    String target = pickTarget();
+    log("Starting to steal from " + target);
+    this.confuseTarget();
+    this.stealFromTarget();
+  }
+}
+
+class StealBySnatching extends StealingMethod {
+  @Override
+  void confuseTarget(String target) {
+    log("Make loud sound elsewhere to confuse " + target);
+  }
+
+  @Override
+  void stealFromTarget(String target) {
+    log("Quickly grab the item and steal from " + target);
+  }
+}
+
+class StealByThreatening extends StealingMethod {
+  @Override
+  void confuseTarget(String target) {
+    log("Take out a gun and point to " + target);
+  }
+
+  @Override
+  void stealFromTarget(String target) {
+    log("Ask for item from the " + target);
+  }
+}
+
+class Thief {
+  StealingMethod method;
+
+  Thief(StealingMethod method) {
+    this.method = method;
+  }
+
+  void setMethod(StealingMethod method) {
+    this.method = method;
+  }
+
+  void steal() {
+    this.method.steal();
+  }
+}
+
+Thief thief = new Thief(new StealBySnatching());
+thief.steal();
+thief.setMethod(new StealByThreateningMethod());
+thief.steal();
 ```
