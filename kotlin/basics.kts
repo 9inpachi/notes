@@ -1,6 +1,7 @@
 // 1. Hello World!
 
 fun start(): String = "Hello World!"
+
 println(start())
 
 // 2. Arguments (Named and Default)
@@ -13,6 +14,7 @@ println(start())
 // ): String
 
 fun joinOptions(options: Collection<String>) = options.joinToString(prefix = "(", postfix = ")")
+
 println(joinOptions(listOf("hello", "world")))
 
 // 3. Triple-quoted Strings
@@ -39,14 +41,15 @@ println("22 FEB, 2022 " + pattern.matches("22 FEB, 2022"))
 // 5. Nullable Types
 
 fun printMessage(message: String? = null): String = "Message has length " + if (message?.length == null) 0 else message.length
+
 println(printMessage("Has message"))
 println(printMessage())
 
 // 6. Nothing Type
 // Return type of a function that always throws an exception.
 
-fun failWithWrongAge(age: Number?): Nothing = throw IllegalArgumentException("Wrong age: $age")
-fun checkAge(age: Number?) {
+fun failWithWrongAge(age: Int?): Nothing = throw IllegalArgumentException("Wrong age: $age")
+fun checkAge(age: Int?) {
   if (age == null || age !in 0..120) {
     failWithWrongAge(age)
   }
