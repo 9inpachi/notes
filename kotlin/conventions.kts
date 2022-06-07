@@ -14,7 +14,6 @@ val date1 = Date(2012, 12, 5)
 val date2 = Date(2022, 12, 5)
 
 println(date1 < date2)
-// println(Date(2010, 12, 3) in date1,,date2)
 
 // 2. For Loop and Custom Range
 
@@ -50,8 +49,8 @@ operator fun Date.rangeTo(other: Date) = DateRange(this, other)
 val startDate = Date(2022, 1, 1)
 val endDate = Date(2022, 1, 5)
 
-if (Date(2022, 1, 3) !in startDate..endDate) {
-  println("Date is there")
+if (Date(2022, 1, 3) in startDate..endDate) {
+  println("Date is in range.")
 }
 
 for (date in startDate..endDate) {
