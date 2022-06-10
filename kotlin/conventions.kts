@@ -56,3 +56,19 @@ if (Date(2022, 1, 3) in startDate..endDate) {
 for (date in startDate..endDate) {
   println(date)
 }
+
+// 3. Invokable Objects
+
+class Invokable {
+  var numberOfInvokes: Int = 0
+    private set
+
+  operator fun invoke(): Invokable {
+    numberOfInvokes++
+    return this
+  }
+}
+
+val invokableObject = Invokable()
+
+println(invokableObject()()().numberOfInvokes)
