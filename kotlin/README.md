@@ -1,6 +1,6 @@
 # Kotlin
 
-Running scripts.
+Running a script.
 
 ```sh
 kotlinc -script file.kts
