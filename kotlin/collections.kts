@@ -45,7 +45,7 @@ println(negativePart == partition.component2())
 
 // 7. FlatMap
 
-data class Product(val name: String, val priceTiers: List<Int>)
+data class Product(val name: String, val priceTiers: List<Int>, val startPrice: Int? = priceTiers[0])
 
 // Flatten nested collections to a single list. In this case, `priceTiers` are flattened to a single list.
 val flatMapList = listOf(Product("a", listOf(1, 2, 3)), Product("b", listOf(3, 4, 5)))
@@ -61,3 +61,21 @@ println(allPrices.minOrNull())
 println(allPrices.maxOrNull())
 println(minMaxList.minByOrNull{ it.priceTiers.size })
 println(minMaxList.maxByOrNull{ it.priceTiers.size })
+
+// 9. Sum
+
+val sumList = listOf(Product("a", listOf(1), 1), Product("b", listOf(3), 5))
+
+println(sumList.sumOf{ it.startPrice!! })
+
+// 10. Fold and Reduce
+
+// Fold: We specify an initial value and the first step uses that value as the accumulated value.
+// Reduce: The first value in list is taken as the accumulated value and the first step starts from the second value in list.
+
+val foldReduceList = listOf(1, 20, 40)
+
+val sumLambda: (Int, Int) -> Int = { accumulated: Int, current: Int -> accumulated + current }
+
+println(foldReduceList.fold(10, sumLambda))
+println(foldReduceList.reduce(sumLambda))
