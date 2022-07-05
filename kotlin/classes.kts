@@ -55,3 +55,24 @@ val pair: Pair<Int, Int> = Pair(2, 5)
 
 printRationalNumber(integer.r())
 printRationalNumber(pair.r())
+
+// 6. Constructors
+
+// Primary Constructor
+
+class PersonPrimaryConstructor(val name: String) {
+  init {
+    println("Created object with name: " + name)
+  }
+}
+
+// Secondary Constructor
+
+class PersonSecondaryConstructor {
+  constructor(name: String) {
+    println("Created object with name: " + name)
+  }
+}
+
+val person1 = PersonPrimaryConstructor("Primary Constructor Name")
+val person2 = PersonSecondaryConstructor("Secondary Constructor Name")
