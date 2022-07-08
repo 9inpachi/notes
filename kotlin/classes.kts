@@ -31,6 +31,7 @@ fun evaluateExpression(expression: Expression): Int {
 println(evaluateExpression(Sum(Num(3), Num(4))))
 
 // 3. Sealed Classes/Interfaces
+
 // All subclasses/implementations of sealed class/interface are known at compile time.
 
 // In the above example, we make the `Expression` interface sealed (`sealed interface Expression`).
@@ -41,6 +42,7 @@ println(evaluateExpression(Sum(Num(3), Num(4))))
 println(KRandom.nextInt(200))
 
 // 5. Extension Functions
+
 // Custom functions used to extend types or classes.
 
 data class RationalNumber(val numerator: Int, val denominator: Int)

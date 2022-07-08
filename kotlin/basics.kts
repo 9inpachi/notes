@@ -46,6 +46,7 @@ println(printMessage("Has message"))
 println(printMessage())
 
 // 6. Nothing Type
+
 // Return type of a function that always throws an exception.
 
 fun failWithWrongAge(age: Int?): Nothing = throw IllegalArgumentException("Wrong age: $age")
