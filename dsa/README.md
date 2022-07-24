@@ -60,7 +60,9 @@
 - Two Pointers
 - [Bit Manipulation](https://www.youtube.com/watch?v=NLKQEOgBAnw)
 - Depth First Search
+  - Stack (to avoid stack overflow) or recursion
 - Breadth First Search
+  - Uses Queue
 - Topological Sort
 - Matrix Iteration
 - Sliding Window
