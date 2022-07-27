@@ -1,5 +1,17 @@
-{% extends 'base.html' %}
-
-{% block content %}
-  <h1 class="mt-5">{% block title %} WELCOME TO BLOG {% endblock %}</h1>
-{% endblock %}
+{% extends 'base.html' %} {% block content %}
+<h1 class="mt-5">{% block title %} WELCOME TO BLOG {% endblock %}</h1>
+<hr />
+{% for posts_row in posts|batch(3) %}
+<div class="row">
+  {% for post in posts_row %}
+  <div class="card m-2 col-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ post['title'] }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted small">{{ post['created'] }}</h6>
+      <p class="card-text">{{ post['content'] }}</p>
+      <a href="#" class="card-link">Go to blog</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %} {% endblock %}
