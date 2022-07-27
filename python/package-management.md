@@ -9,7 +9,7 @@ python -m venv <venv_dir>
 <venv_dir>/Scripts/activate
 ```
 
-The dependencies are listed in `requirements.txt` separated by a line.
+The dependencies are listed in `requirements.txt` separated by a line. They may also specify the version (`Flask==2.1.3`).
 
 `requirements.txt`
 
@@ -21,14 +21,20 @@ WTForms
 coverage
 ```
 
-These dependencies can installed in the virtual environment by running the following command.
+These dependencies can be installed in the virtual environment by running the following command.
 
 ```sh
 pip install -r requirements.txt
 ```
 
-With this, all your dependencies are set up in the virtual environment and you can run the application.
+With this, all the dependencies are set up in the virtual environment and the application is ready to run.
 
 ```sh
 python app.py
+```
+
+To update the list of packages in `requirements.txt`, they have to be manually added using the following command.
+
+```sh
+pip freeze > requirements.txt
 ```
