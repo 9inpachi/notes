@@ -9,7 +9,9 @@
       <h5 class="card-title">{{ post['title'] }}</h5>
       <h6 class="card-subtitle mb-2 text-muted small">{{ post['created'] }}</h6>
       <p class="card-text">{{ post['content'] }}</p>
-      <a href="#" class="card-link">Go to blog</a>
+      <a href="{{ url_for('post', post_id=post['id']) }}" class="card-link">
+        Go to blog
+      </a>
     </div>
   </div>
   {% endfor %}
