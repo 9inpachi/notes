@@ -61,7 +61,7 @@ python -m pip install <dependency>
 
 ### Dependency Tools
 
-`pip-tools`, `Pipenv` and `poetry` are tools for managing application-specific dependencies. Because using `python freeze` leads to having transitive dependencies (sub dependencies) in the `requirements.txt` file. These tools help in specifying only the main dependencies.
+[`pip-tools`](https://github.com/jazzband/pip-tools), [`Pipenv`](https://packaging.python.org/en/latest/key_projects/#pipenv) and [`poetry`](https://python-poetry.org/) are tools for managing application-specific dependencies. Because using `python freeze` leads to having transitive dependencies (sub dependencies) in the `requirements.txt` file. These tools help in specifying only the main dependencies.
 
 #### `pip-tools`
 
