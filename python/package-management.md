@@ -9,6 +9,8 @@ python -m venv <venv_dir>
 <venv_dir>/Scripts/activate
 ```
 
+## Dependencies List
+
 The dependencies are listed in `requirements.txt` separated by a line. They may also specify the version (`Flask==2.1.3`).
 
 `requirements.txt`
@@ -21,10 +23,14 @@ WTForms
 coverage
 ```
 
-These dependencies can be installed in the virtual environment by running the following command.
+## Managing Dependencies
+
+> **NOTE:** `python -m` in commands is optional but makes them more verbose.
+
+The dependencies listed in `requirements.txt` can be installed in the virtual environment by running the following command.
 
 ```sh
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 With this, all the dependencies are set up in the virtual environment and the application is ready to run.
@@ -33,8 +39,51 @@ With this, all the dependencies are set up in the virtual environment and the ap
 python app.py
 ```
 
+### Updating `requirements.txt`
+
+[Dependency Tools](#dependency-tools) are recommended instead.
+
 To update the list of packages in `requirements.txt`, they have to be manually added using the following command.
 
 ```sh
-pip freeze > requirements.txt
+python -m pip freeze > requirements.txt
+```
+
+### Installing a New Dependency
+
+To install a new dependency.
+
+```sh
+python -m pip install <dependency>
+```
+
+> **NOTE:** Inside a virtual environment, all installation commands will affect the virtual environment and not the global environment.
+
+### Dependency Tools
+
+`pip-tools`, `Pipenv` and `poetry` are tools for managing application-specific dependencies. Because using `python freeze` leads to having transitive dependencies (sub dependencies) in the `requirements.txt` file. These tools help in specifying only the main dependencies.
+
+#### `pip-tools`
+
+`pip-tools` is installed in each project's virtual environment.
+
+```sh
+python -m pip install pip-tools
+```
+
+`pip-compile` compiles a `requirements.txt` file from a `requirements.in` file which only contains the main dependencies.
+
+`requirements.in`
+
+```
+djlint
+Flask
+```
+
+To compile a `requirements.txt` file from this, use `pip-compile`.
+
+```sh
+pip-compile
+# or
+python -m piptools compile
 ```
