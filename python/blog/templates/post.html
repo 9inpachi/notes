@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
   <div class="my-5">
     <h1>
@@ -7,5 +6,7 @@
     </h1>
     <span class="small text-muted">{{ post['created'] }}</span>
     <p>{{ post['content'] }}</p>
+    <a class="btn btn-warning"
+       href="{{ url_for('edit', post_id=post['id']) }}">Edit</a>
   </div>
 {% endblock %}

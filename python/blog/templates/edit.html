@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>
+    {% block title %}Edit Post{% endblock %}
+  </h1>
+  <form method="post">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text"
+             class="form-control"
+             id="title"
+             name="title"
+             value="{{ post['title'] }}"
+             required/>
+    </div>
+    <div class="form-group">
+      <label for="content">Content</label>
+      <textarea class="form-control" id="content" name="content" required>{{ post['content'] }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+  <form class="mt-2"
+        method="post"
+        action="{{ url_for('delete', post_id=post['id']) }}">
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+{% endblock %}
