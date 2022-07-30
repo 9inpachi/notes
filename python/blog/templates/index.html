@@ -1,24 +1,21 @@
 {% extends 'base.html' %}
-
 {% block content %}
-  <h1 class="mt-5">
+  <h1>
     {% block title %}WELCOME TO BLOG{% endblock %}
   </h1>
-
   <hr />
-
-  {% for posts_row in posts|batch(3) %}
-    <div class="row">
-      {% for post in posts_row %}
-        <div class="card m-2 col-sm">
+  <div class="row">
+    {% for post in posts %}
+      <div class="my-2 col-sm-4 col-6">
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{ post['title'] }}</h5>
             <h6 class="card-subtitle mb-2 text-muted small">{{ post['created'] }}</h6>
-            <p class="card-text">{{ post['content'] }}</p>
+            <p class="card-text text-truncate">{{ post['content'] }}</p>
             <a href="{{ url_for('post', post_id=post['id']) }}" class="card-link">Go to blog</a>
           </div>
         </div>
-      {% endfor %}
-    </div>
-  {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

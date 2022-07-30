@@ -14,7 +14,7 @@ def get_db_connection():
 
 def get_post(post_id):
     connection = get_db_connection()
-    post = connection.execute(f"SELECT * FROM posts WHERE id = {post_id}").fetchone()
+    post = connection.execute("SELECT * FROM posts WHERE id = ?", (post_id,)).fetchone()
     connection.close()
 
     if post is None:

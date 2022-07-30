@@ -30,13 +30,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="#">About</a>
+              <a class="nav-link" href="{{ url_for('create') }}">New Post</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
-    <div class="container">
+    <div class="container my-5">
+      {% for message in get_flashed_messages() %}
+          <div class="alert alert-danger">{{ message }}</div>
+      {% endfor %}
       {% block content %}{% endblock %}
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
