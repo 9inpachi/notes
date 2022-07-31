@@ -102,10 +102,10 @@ To check available commands.
 pipenv --help
 ```
 
-Set up the `pipenv` for the project.
+Set up `pipenv` for the project. (If there is already a setup, then this command will install the dependencies)
 
 ```sh
-# Set `PIPENV_VENV_IN_PROJECT=1` for creating a virtual environment in project directory.
+# set `PIPENV_VENV_IN_PROJECT=1` for creating a virtual environment in project directory.
 pipenv install
 ```
 
@@ -123,6 +123,8 @@ To install a dependency. (Use `--dev` option to install it as a dev dependency)
 
 ```sh
 pipenv install flask
+# or install a specific version.
+pipenv install flask==1.0.2
 ```
 
 To generate a `requirements.txt` file including dev dependencies.
