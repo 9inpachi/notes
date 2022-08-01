@@ -1,6 +1,6 @@
-from repository.mongo import MongoRepository
-from repository import Repository
-from schema import KatsuSchema
+from app.repository.mongo import MongoRepository
+from app.repository import Repository
+from .schema import KatsuSchema
 
 
 class Service(object):

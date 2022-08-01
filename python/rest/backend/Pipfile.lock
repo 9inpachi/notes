@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bddeacd797628bd78bb3257897acf61405ee3548df6484c551ae5917297993f8"
+            "sha256": "4d0c25c774b22361fe679bda08d4dfaf82071367faec5a7107ff5c414b9496e1"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -182,6 +182,14 @@
             ],
             "version": "==0.2.8"
         },
+        "pyjwt": {
+            "hashes": [
+                "sha256:72d1d253f32dbd4f5c88eaf1fdc62f3a19f676ccbadb9dbc5d07e951b2b26daf",
+                "sha256:d42908208c699b3b973cbeb01a969ba6a96c821eefb1c5bfe4c390c01d67abba"
+            ],
+            "index": "pypi",
+            "version": "==2.4.0"
+        },
         "pymongo": {
             "hashes": [
                 "sha256:01721da74558f2f64a9f162ee063df403ed656b7d84229268d8e4ae99cfba59c",
@@ -275,7 +283,7 @@
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
                 "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
         },
         "werkzeug": {

@@ -9,5 +9,6 @@ marshmallow = "*"
 pymongo = "*"
 flask-oidc = "*"
 flask-cors = "*"
+pyjwt = "*"
 
 [dev-packages]
