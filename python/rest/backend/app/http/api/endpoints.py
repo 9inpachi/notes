@@ -2,7 +2,8 @@ from flask import Flask, json, g, request
 
 # from flask_oidc import OpenIDConnect
 from flask_cors import CORS
-from ....app.katsu.service import Service as KatsuService
+from katsu.service import Service as KatsuService
+from helpers import json_res
 
 app = Flask(__name__)
 
@@ -20,8 +21,6 @@ CORS(app)
 # @oidc.accept_token(True)
 def index():
     katsuService = KatsuService("test")
-    return json_response(katsuService.find_katsus())
+    return json_res(katsuService.find_katsus())
 
 
-def json_response(payload, status=200):
-    return (json.dumps(payload), status, {"content-type": "application/json"})
