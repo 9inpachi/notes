@@ -4,7 +4,7 @@ from .schema import KatsuSchema
 
 
 class Service(object):
-    def __init__(self, user_id, repo_client=Repository(adapter=MongoRepository)):
+    def __init__(self, user_id, repo_client=Repository(adapter=MongoRepository())):
         self.user_id = user_id
         self.repo_client = repo_client
 
@@ -43,7 +43,7 @@ class Service(object):
         return records_affected > 0
 
     def dump(self, data):
-        return KatsuSchema(exclude=["_id"]).dump(data).data
+        return KatsuSchema().dump(data)
 
     def prepare_katsu(self, githubRepo):
         data = githubRepo.data
