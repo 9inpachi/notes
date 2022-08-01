@@ -9,10 +9,15 @@ def auth_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth_header = request.headers.get("authorization")
+        if not auth_header:
+            return json_res(
+                {"error": "An authorization header is required."}, status=401
+            )
+
         auth_token = auth_header.split(" ")[1]
 
         try:
-            data = jwt.decode(auth_token, app.config["AUTH_SECRET"], algorithm="HS256")
+            data = jwt.decode(auth_token, app.config["AUTH_SECRET"], algorithms=["HS256"])
         except Exception as e:
             return json_res(
                 {"error": "Invalid authorization token", "exception": str(e)},
@@ -41,9 +46,12 @@ def encode_refresh_token(user_id):
 
     return refresh_token
 
+
 def refresh_auth_token(refresh_token):
     try:
-        decoded_info = jwt.decode(refresh_token, app.config["AUTH_SECRET"], algorith="HS256")
+        decoded_info = jwt.decode(
+            refresh_token, app.config["AUTH_SECRET"], algorith=["HS256"]
+        )
         new_auth_token = encode_token(decoded_info["user_id"])
 
         decoded_info["refreshed_token"] = new_auth_token
@@ -51,5 +59,3 @@ def refresh_auth_token(refresh_token):
         return json_res(decoded_info)
     except:
         return json_res({"error": "Refresh token has expired"})
-
-        
