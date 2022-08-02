@@ -21,11 +21,11 @@ class Service(object):
 
         return self.dump(katsu)
 
-    def create_katsu_for(self, githubRepo):
-        katsu = self.prepare_katsu(githubRepo)
+    def create_katsu_for(self, github_repo):
+        katsu = self.prepare_katsu(github_repo)
         self.repo_client.create(katsu)
 
-        return self.dump(githubRepo.data)
+        return self.dump(github_repo.data)
 
     def update_katsu_with(self, repo_id, githubRepo):
         katsu = self.prepare_katsu(githubRepo)

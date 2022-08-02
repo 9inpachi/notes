@@ -1,7 +1,7 @@
 from datetime import datetime
 from functools import wraps
 from app.helpers import json_res
-from flask import request, current_app as app
+from flask import request, current_app as app, session
 import jwt
 
 
@@ -17,7 +17,10 @@ def auth_required(f):
         auth_token = auth_header.split(" ")[1]
 
         try:
-            data = jwt.decode(auth_token, app.config["AUTH_SECRET"], algorithms=["HS256"])
+            data = jwt.decode(
+                auth_token, app.config["AUTH_SECRET"], algorithms=["HS256"]
+            )
+            session["user_id"] = data["user_id"]
         except Exception as e:
             return json_res(
                 {"error": "Invalid authorization token", "exception": str(e)},
