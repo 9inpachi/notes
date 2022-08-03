@@ -16,6 +16,7 @@ app.config["SECRET_KEY"] = environ.get("SECRET_KEY")
 CORS(app)
 
 
+# Anyone can authorize by passing in a `user_id` in the request.
 @app.route("/auth", methods=["POST"])
 def auth():
     user_id = request.json.get("user_id")
@@ -60,7 +61,9 @@ def show(repo_id):
 @auth_required
 def update(repo_id):
     try:
-        github_repo = GitHubRepoSchema().load(json.loads(request.data))
+        repo_data = json.loads(request.data)
+        repo_data["repo_id"] = repo_id
+        github_repo = GitHubRepoSchema().load(repo_data)
     except ValidationError as error:
         return json_res({"error": error.messages_dict}, 422)
 
