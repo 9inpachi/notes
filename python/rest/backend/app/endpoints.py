@@ -1,5 +1,7 @@
 import json
 from os import environ
+
+from marshmallow import ValidationError
 from app.auth import auth_required, encode_token
 from flask import Flask, request, session
 
@@ -10,6 +12,7 @@ from app.helpers import json_res
 
 app = Flask(__name__)
 app.config["AUTH_SECRET"] = environ.get("AUTH_SECRET")
+app.config["SECRET_KEY"] = environ.get("SECRET_KEY")
 CORS(app)
 
 
@@ -29,13 +32,13 @@ def index():
     return json_res(katsuService.find_katsus())
 
 
-@app.route("/katsus", methods=["POST"])
+@app.route("/katsu/create", methods=["POST"])
 @auth_required
 def create():
-    github_repo = GitHubRepoSchema().load(json.loads(request.data))
-
-    if github_repo.errors:
-        return json_res({"error": github_repo.errors}, 422)
+    try:
+        github_repo = GitHubRepoSchema().load(json.loads(request.data))
+    except ValidationError as error:
+        return json_res({"error": error.messages_dict}, 422)
 
     katsu = KatsuService(session["user_id"]).create_katsu_for(github_repo)
 
@@ -55,15 +58,15 @@ def show(repo_id):
 
 @app.route("/katsu/<int:repo_id>", methods=["PUT"])
 @auth_required
-def show(repo_id):
-    github_repo = GitHubRepoSchema().load(json.loads(request.data))
-
-    if github_repo.errors:
-        return json_res({"error": github_repo.errors}, 422)
+def update(repo_id):
+    try:
+        github_repo = GitHubRepoSchema().load(json.loads(request.data))
+    except ValidationError as error:
+        return json_res({"error": error.messages_dict}, 422)
 
     katsu_service = KatsuService(session["user_id"])
     if katsu_service.update_katsu_with(repo_id, github_repo):
-        return json_res(github_repo.data)
+        return json_res(github_repo)
     else:
         return json_res({"error": "Katsu not found."}, 404)
 

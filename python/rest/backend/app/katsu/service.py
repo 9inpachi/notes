@@ -25,10 +25,10 @@ class Service(object):
         katsu = self.prepare_katsu(github_repo)
         self.repo_client.create(katsu)
 
-        return self.dump(github_repo.data)
+        return self.dump(github_repo)
 
-    def update_katsu_with(self, repo_id, githubRepo):
-        katsu = self.prepare_katsu(githubRepo)
+    def update_katsu_with(self, repo_id, github_repo):
+        katsu = self.prepare_katsu(github_repo)
         records_affected = self.repo_client.update(
             {"user_id": self.user_id, "repo_id": repo_id}, katsu
         )
@@ -45,8 +45,8 @@ class Service(object):
     def dump(self, data):
         return KatsuSchema().dump(data)
 
-    def prepare_katsu(self, githubRepo):
-        data = githubRepo.data
+    def prepare_katsu(self, github_repo):
+        data = github_repo
         data["user_id"] = self.user_id
 
         return data
