@@ -1,12 +1,13 @@
 from datetime import datetime
 from functools import wraps
+from inspect import signature
 from app.helpers import json_res
-from flask import request, current_app as app, session
+from flask import request, current_app as app
 import jwt
 
 
-def auth_required(f):
-    @wraps(f)
+def auth_required(func):
+    @wraps(func)
     def decorated(*args, **kwargs):
         auth_header = request.headers.get("authorization")
         if not auth_header:
@@ -20,14 +21,17 @@ def auth_required(f):
             data = jwt.decode(
                 auth_token, app.config["AUTH_SECRET"], algorithms=["HS256"]
             )
-            session["user_id"] = data["user_id"]
         except Exception as e:
             return json_res(
                 {"error": "Invalid authorization token", "exception": str(e)},
                 status=401,
             )
 
-        return f(*args, **kwargs)
+        # If the function has a `user_id` parameter, then pass the parameter.
+        if "auth_user_id" in signature(func).parameters:
+            kwargs["auth_user_id"] = data["user_id"]
+
+        return func(*args, **kwargs)
 
     return decorated
 
