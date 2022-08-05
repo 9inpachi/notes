@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
-import { useRequest } from "../hooks/use-request";
+import { useFetchWrapper } from "../hooks/use-fetch-wrapper";
 import { endpoints } from "../library/endpoints";
 import { Repo } from "../models/repo";
 
@@ -19,23 +19,27 @@ export type RepoCardProps = {
 
 export const RepoCard: FC<RepoCardProps> = (props) => {
   const [isFavorite, setIsFavorite] = useState(props.isFavorite ?? false);
-  const [markFavorite] = useRequest<Omit<Repo, "user_id">, any>(
+
+  const { user_id, ...repoForRequest } = props.repo;
+  const [markFavorite] = useFetchWrapper<Omit<Repo, "user_id">>(
     endpoints.create.url,
     {
       method: endpoints.create.method,
+      auth: true,
+      data: repoForRequest,
     }
   );
-  const [unmarkFavorite] = useRequest(
+
+  const [unmarkFavorite] = useFetchWrapper(
     endpoints.delete.url(props.repo.repo_id),
-    { method: endpoints.delete.method }
+    { method: endpoints.delete.method, auth: true }
   );
 
   const toggleFavorite = () => {
     if (isFavorite) {
       unmarkFavorite();
     } else {
-      const { user_id, ...repoForRequest } = props.repo;
-      markFavorite(repoForRequest);
+      markFavorite();
     }
 
     const updatedValue = !isFavorite;
