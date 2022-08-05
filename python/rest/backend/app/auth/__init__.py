@@ -38,7 +38,10 @@ def auth_required(func):
 
 def encode_token(user_id):
     auth_token = jwt.encode(
-        {"user_id": user_id}, app.config["AUTH_SECRET"], algorithm="HS256"
+        {"user_id": user_id},
+        app.config["AUTH_SECRET"],
+        algorithm="HS256",
+        exp=datetime.now() + datetime.timedelta(minutes=30),
     )
 
     return auth_token
