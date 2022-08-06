@@ -15,7 +15,7 @@ import { Repo } from "../models/repo";
 export type RepoCardProps = {
   repo: Repo;
   isFavorite?: boolean;
-  onFavoriteChange?: (toggle: boolean) => void;
+  onFavoriteChange?: (repoId: number, toggle: boolean) => void;
 };
 
 export const RepoCard: FC<RepoCardProps> = (props) => {
@@ -44,7 +44,7 @@ export const RepoCard: FC<RepoCardProps> = (props) => {
 
     const updatedValue = !isFavorite;
     setIsFavorite(updatedValue);
-    props.onFavoriteChange?.(updatedValue);
+    props.onFavoriteChange?.(props.repo.repo_id, updatedValue);
   };
 
   return (
