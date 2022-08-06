@@ -2,12 +2,12 @@ import { ChangeEventHandler, FC, FormEventHandler, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton, InputBase, Paper } from "@mui/material";
 
-export type SearchProps = {
+export type SearchFormProps = {
   onSearch?: (keyword: string) => void;
   onChange?: (value: string) => void;
 };
 
-export const Search: FC<SearchProps> = ({ onSearch, onChange }) => {
+export const SearchForm: FC<SearchFormProps> = ({ onSearch, onChange }) => {
   const [value, setValue] = useState("");
 
   const changeHandler: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -36,7 +36,7 @@ export const Search: FC<SearchProps> = ({ onSearch, onChange }) => {
     >
       <InputBase
         sx={{ flexGrow: 1 }}
-        placeholder="Search"
+        placeholder="Search on GitHub"
         inputProps={{ "aria-label": "Search" }}
         onChange={changeHandler}
       />

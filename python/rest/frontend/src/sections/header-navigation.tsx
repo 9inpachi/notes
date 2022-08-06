@@ -2,7 +2,7 @@ import { Favorite, Search } from "@mui/icons-material";
 import { Box, Button, Container } from "@mui/material";
 import { FC } from "react";
 
-export const Header: FC = () => (
+export const HeaderNavigation: FC = () => (
   <header>
     <Box component="nav" sx={{ flexGrow: 1 }}>
       <Container

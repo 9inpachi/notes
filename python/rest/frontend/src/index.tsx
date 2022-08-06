@@ -1,31 +1,25 @@
 import { Container } from "@mui/system";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Header } from "./components/header";
-import { ReposList } from "./components/repos-list";
-import { Search } from "./components/search";
+import { HeaderNavigation } from "./sections/header-navigation";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { SearchRepos } from "./sections/search-repos";
+import { FavoriteRepos } from "./sections/favorite-repos";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <Header />
+    <HeaderNavigation />
     <Container fixed>
-      <Search onSearch={console.log} />
-      <ReposList
-        repos={[
-          {
-            description: "Some repo",
-            language: "en",
-            full_name: "Fawad Ali",
-            repo_id: 123,
-            repo_url: "https://github.com/9inpachi/notes",
-            repo_name: "notes",
-            user_id: "test_user",
-          },
-        ]}
-      />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<FavoriteRepos />} />
+          <Route path="/search" element={<SearchRepos />} />
+        </Routes>
+      </BrowserRouter>
     </Container>
   </React.StrictMode>
 );
