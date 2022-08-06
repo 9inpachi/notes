@@ -12,8 +12,8 @@ export const useFetchWrapper = <RequestData, ResponseData = unknown>(
   return useFetch(url, {
     ...options,
     headers: {
-      "authorization": options?.auth ? `Bearer ${localStorage.getItem('accessToken')}` : "",
-      "content-type": "application/json"
+      ...(options?.auth ? { Authorization: `Bearer ${localStorage.getItem('accessToken')}` } : {}),
+      "Content-Type": "application/json"
     },
     body: options?.data ? JSON.stringify(options.data) : undefined,
   })

@@ -23,7 +23,7 @@ export const useFetch = <T = unknown>(
 ): [() => Promise<void>, FetchState<T>] => {
   const initialFetchState: FetchState<T> = {
     data: undefined,
-    loading: true,
+    loading: false,
     error: undefined,
   };
 

@@ -1,6 +1,7 @@
 import { Container } from "@mui/system";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { Header } from "./components/header";
 import { ReposList } from "./components/repos-list";
 import { Search } from "./components/search";
 
@@ -9,6 +10,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    <Header />
     <Container fixed>
       <Search onSearch={console.log} />
       <ReposList

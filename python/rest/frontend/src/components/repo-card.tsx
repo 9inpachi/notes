@@ -1,9 +1,10 @@
-import { Favorite, FavoriteBorder, Link } from "@mui/icons-material";
+import { Error, Favorite, FavoriteBorder, Link } from "@mui/icons-material";
 import {
   Card,
   CardActions,
   CardContent,
   IconButton,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { FC, useState } from "react";
@@ -21,19 +22,18 @@ export const RepoCard: FC<RepoCardProps> = (props) => {
   const [isFavorite, setIsFavorite] = useState(props.isFavorite ?? false);
 
   const { user_id, ...repoForRequest } = props.repo;
-  const [markFavorite] = useFetchWrapper<Omit<Repo, "user_id">>(
-    endpoints.create.url,
-    {
+  const [markFavorite, { loading: markLoading, error: markError }] =
+    useFetchWrapper<Omit<Repo, "user_id">>(endpoints.create.url, {
       method: endpoints.create.method,
       auth: true,
       data: repoForRequest,
-    }
-  );
+    });
 
-  const [unmarkFavorite] = useFetchWrapper(
-    endpoints.delete.url(props.repo.repo_id),
-    { method: endpoints.delete.method, auth: true }
-  );
+  const [unmarkFavorite, { loading: unmarkLoading, error: unmarkError }] =
+    useFetchWrapper(endpoints.delete.url(props.repo.repo_id), {
+      method: endpoints.delete.method,
+      auth: true,
+    });
 
   const toggleFavorite = () => {
     if (isFavorite) {
@@ -55,12 +55,20 @@ export const RepoCard: FC<RepoCardProps> = (props) => {
         <Typography variant="body2">{props.repo.description}</Typography>
       </CardContent>
       <CardActions>
-        <IconButton onClick={toggleFavorite}>
+        <IconButton
+          disabled={markLoading || unmarkLoading}
+          onClick={toggleFavorite}
+        >
           {isFavorite ? <Favorite /> : <FavoriteBorder />}
         </IconButton>
         <IconButton href={props.repo.repo_url} LinkComponent="a">
           <Link />
         </IconButton>
+        {(markError || unmarkError) && (
+          <Tooltip title="Error marking repo">
+            <Error />
+          </Tooltip>
+        )}
       </CardActions>
     </Card>
   );
