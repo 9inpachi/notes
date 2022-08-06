@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 from inspect import signature
 from app.helpers import json_res
@@ -38,10 +38,9 @@ def auth_required(func):
 
 def encode_token(user_id):
     auth_token = jwt.encode(
-        {"user_id": user_id},
+        {"user_id": user_id, "exp": datetime.now() + timedelta(minutes=5)},
         app.config["AUTH_SECRET"],
         algorithm="HS256",
-        exp=datetime.now() + datetime.timedelta(minutes=30),
     )
 
     return auth_token
@@ -49,7 +48,7 @@ def encode_token(user_id):
 
 def encode_refresh_token(user_id):
     refresh_token = jwt.encode(
-        {"user_id": user_id, "exp": datetime.now() + datetime.timedelta(weeks=4)},
+        {"user_id": user_id, "exp": datetime.now() + timedelta(weeks=4)},
         app.config["AUTH_SECRET"],
         algorithm="HS256",
     )

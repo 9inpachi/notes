@@ -1,4 +1,4 @@
-import { Favorite, Search } from "@mui/icons-material";
+import { Favorite, LoginOutlined, Search } from "@mui/icons-material";
 import { Box, Button, Container } from "@mui/material";
 import { FC } from "react";
 
@@ -9,6 +9,9 @@ export const HeaderNavigation: FC = () => (
         fixed
         sx={{ justifyContent: "center", display: "flex", gap: 3 }}
       >
+        <Button href="/login" startIcon={<LoginOutlined />}>
+          Login
+        </Button>
         <Button href="/" startIcon={<Favorite />}>
           Favorites
         </Button>

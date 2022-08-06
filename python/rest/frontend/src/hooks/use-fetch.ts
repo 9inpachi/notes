@@ -54,8 +54,8 @@ export const useFetch = <T = unknown>(
 
     try {
       const response = await fetch(url, options);
-      if (!response.ok) {
-        dispatch({ type: FetchActionType.Error });
+      if (!response.ok || response.status >= 400) {
+        throw new Error("Error in response");
       }
 
       const responseData = (await response.json()) as T;

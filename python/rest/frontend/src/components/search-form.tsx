@@ -1,6 +1,6 @@
 import { ChangeEventHandler, FC, FormEventHandler, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import { IconButton, InputBase, Paper } from "@mui/material";
+import { Search } from "@mui/icons-material";
 
 export type SearchFormProps = {
   onSearch?: (keyword: string) => void;
@@ -16,6 +16,7 @@ export const SearchForm: FC<SearchFormProps> = ({ onSearch, onChange }) => {
   };
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    console.log(event)
     event.preventDefault();
     onSearch?.(value);
   };
@@ -41,7 +42,7 @@ export const SearchForm: FC<SearchFormProps> = ({ onSearch, onChange }) => {
         onChange={changeHandler}
       />
       <IconButton type="submit">
-        <SearchIcon />
+        <Search />
       </IconButton>
     </Paper>
   );
