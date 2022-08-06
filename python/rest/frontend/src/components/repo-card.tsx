@@ -10,10 +10,10 @@ import {
 import { FC, useState } from "react";
 import { useFetchWrapper } from "../hooks/use-fetch-wrapper";
 import { endpoints } from "../library/endpoints";
-import { Repo } from "../models/repo";
+import { GitHubRepo } from "../models/repo";
 
 export type RepoCardProps = {
-  repo: Repo;
+  repo: GitHubRepo;
   isFavorite?: boolean;
   onFavoriteChange?: (repoId: number, toggle: boolean) => void;
 };
@@ -21,12 +21,11 @@ export type RepoCardProps = {
 export const RepoCard: FC<RepoCardProps> = (props) => {
   const [isFavorite, setIsFavorite] = useState(props.isFavorite ?? false);
 
-  const { user_id, ...repoForRequest } = props.repo;
   const [markFavorite, { loading: markLoading, error: markError }] =
-    useFetchWrapper<Omit<Repo, "user_id">>(endpoints.create.url, {
+    useFetchWrapper<GitHubRepo>(endpoints.create.url, {
       method: endpoints.create.method,
       auth: true,
-      data: repoForRequest,
+      data: props.repo,
     });
 
   const [unmarkFavorite, { loading: unmarkLoading, error: unmarkError }] =
@@ -48,10 +47,18 @@ export const RepoCard: FC<RepoCardProps> = (props) => {
   };
 
   return (
-    <Card>
+    <Card
+      variant="outlined"
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       <CardContent>
-        <Typography variant="h5">{props.repo.repo_name}</Typography>
-        <Typography variant="subtitle1">{props.repo.full_name}</Typography>
+        <Typography variant="h6">{props.repo.repo_name}</Typography>
+        <Typography variant="subtitle2">{props.repo.full_name}</Typography>
         <Typography variant="body2">{props.repo.description}</Typography>
       </CardContent>
       <CardActions>

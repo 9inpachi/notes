@@ -6,4 +6,7 @@ export type Repo = {
   full_name: string;
   description: string;
   language: string;
+  isFavorite?: boolean;
 };
+
+export type GitHubRepo = Omit<Repo, "user_id">;

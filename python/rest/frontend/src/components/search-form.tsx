@@ -16,7 +16,6 @@ export const SearchForm: FC<SearchFormProps> = ({ onSearch, onChange }) => {
   };
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
-    console.log(event)
     event.preventDefault();
     onSearch?.(value);
   };
