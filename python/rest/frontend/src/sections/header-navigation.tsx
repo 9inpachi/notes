@@ -1,6 +1,7 @@
 import { Favorite, LoginOutlined, Search } from "@mui/icons-material";
 import { Box, Button, Container } from "@mui/material";
 import { FC } from "react";
+import { Link } from "react-router-dom";
 
 export const HeaderNavigation: FC = () => (
   <header>
@@ -9,13 +10,28 @@ export const HeaderNavigation: FC = () => (
         fixed
         sx={{ justifyContent: "center", display: "flex", gap: 3 }}
       >
-        <Button href="/login" startIcon={<LoginOutlined />}>
+        <Button
+          component={Link}
+          to="/login"
+          startIcon={<LoginOutlined />}
+          color="inherit"
+        >
           Login
         </Button>
-        <Button href="/" startIcon={<Favorite />}>
+        <Button
+          component={Link}
+          to="/"
+          startIcon={<Favorite />}
+          color="inherit"
+        >
           Favorites
         </Button>
-        <Button href="/search" startIcon={<Search />}>
+        <Button
+          component={Link}
+          to="/search"
+          startIcon={<Search />}
+          color="inherit"
+        >
           Search Repos
         </Button>
       </Container>

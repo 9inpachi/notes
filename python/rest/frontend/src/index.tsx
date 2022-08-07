@@ -13,15 +13,15 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <HeaderNavigation />
-    <Container fixed sx={{ mt: 15 }}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <HeaderNavigation />
+      <Container fixed sx={{ mt: 15 }}>
         <Routes>
           <Route path="/" element={<FavoriteRepos />} />
           <Route path="/login" element={<Login />} />
           <Route path="/search" element={<SearchRepos />} />
         </Routes>
-      </BrowserRouter>
-    </Container>
+      </Container>
+    </BrowserRouter>
   </React.StrictMode>
 );

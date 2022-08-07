@@ -56,6 +56,7 @@ export const Login: FC = () => {
           type="submit"
           disabled={loading}
           startIcon={loading ? <Loop /> : <LoginOutlined />}
+          color="inherit"
         >
           Login
         </Button>
