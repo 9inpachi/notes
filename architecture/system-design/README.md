@@ -49,3 +49,13 @@ Useful video: <https://youtu.be/W2Z7fbCLSTw>
    - Fauna automatically creates collections from GraphQL schema to store data and index to query data.
    - Uses multiple database paradigms based on what is required.
    - **Examples:** Fauna.
+8. **Time-Series Database**
+   - Optimized for processing time series data.
+   - A time-series has a name and an optional set of labels.
+   - Contains pairs ordered by timestamp.
+   - **Examples:** InfluxDB, Apache Druid, MongoDB.
+9. **Data Warehouse**
+   - Central repositories of integrated data from one or more disparate sources.
+   - For data analytics and business decisions.
+   - Core component of business intelligence.
+   - **Examples:** Oracle, Teradata.
