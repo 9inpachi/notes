@@ -19,7 +19,7 @@ def auth_required(func):
 
         try:
             data = jwt.decode(
-                auth_token, app.config["AUTH_SECRET"], algorithms=["HS256"]
+                auth_token, app.config.get("AUTH_SECRET"), algorithms=["HS256"]
             )
         except Exception as e:
             return json_res(
@@ -39,7 +39,7 @@ def auth_required(func):
 def encode_token(user_id):
     auth_token = jwt.encode(
         {"user_id": user_id, "exp": datetime.now() + timedelta(minutes=5)},
-        app.config["AUTH_SECRET"],
+        app.config.get("AUTH_SECRET"),
         algorithm="HS256",
     )
 
@@ -49,7 +49,7 @@ def encode_token(user_id):
 def encode_refresh_token(user_id):
     refresh_token = jwt.encode(
         {"user_id": user_id, "exp": datetime.now() + timedelta(weeks=4)},
-        app.config["AUTH_SECRET"],
+        app.config.get("AUTH_SECRET"),
         algorithm="HS256",
     )
 
@@ -59,7 +59,7 @@ def encode_refresh_token(user_id):
 def refresh_auth_token(refresh_token):
     try:
         decoded_info = jwt.decode(
-            refresh_token, app.config["AUTH_SECRET"], algorith=["HS256"]
+            refresh_token, app.config.get("AUTH_SECRET"), algorith=["HS256"]
         )
         new_auth_token = encode_token(decoded_info["user_id"])
 

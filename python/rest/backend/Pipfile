@@ -12,6 +12,7 @@ flask-cors = "*"
 pyjwt = "*"
 
 [dev-packages]
+python-dotenv = "*"
 
 [scripts]
 runapp = "flask run"
