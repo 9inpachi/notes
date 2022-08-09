@@ -44,7 +44,7 @@ Useful video: <https://youtu.be/W2Z7fbCLSTw>
    - Creates index of searchable terms.
    - For search engines.
    - **Examples:** Solr, ElasticSearch, Algolia, Meilisearch.
-7. **Multi-MOdel Database**
+7. **Multi-Model Database**
    - Data is described through GraphQL.
    - Fauna automatically creates collections from GraphQL schema to store data and index to query data.
    - Uses multiple database paradigms based on what is required.

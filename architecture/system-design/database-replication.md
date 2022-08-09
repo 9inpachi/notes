@@ -12,6 +12,14 @@ Since reads happen a lot more than writes in a database, reads and writes can be
 - There are multiple replicas of read databases which are kept in sync with a primary database where data is being written.
 - Gives rise to issues like data inconsistency and synchronization.
 
+## Different Ways to Replicate Database
+
+- **Separated by reads and writes**. Having a primary database for writes and creating read replicas out of it.
+- **Database sharding**. In sharding, the data is divided/partitioned into smaller chunks across multiple database nodes.
+  - In vertical sharding, the data is partitioned by columns. For example, we keep half columns in one database node and half in another.
+  - In horizontal sharding, the data is partitioned by rows. For example, half of the data rows exist in one database node and half in another.
+  - We then have to another layer of abstraction to point to the right data so the retrieval of data is fast.
+
 ## Ways to Synchronize Replicated Databases
 
 - **Statement Based Replications:** Send and run write queries on read replicas.
