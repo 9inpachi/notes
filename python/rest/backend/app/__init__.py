@@ -16,6 +16,10 @@ def create_app():
     app.config["AUTH_SECRET"] = environ.get("AUTH_SECRET")
     CORS(app)
 
+    @app.route("/", methods=["GET"])
+    def health():
+        return "Health check pass"
+
     # Anyone can authorize by passing in a `user_id` in the request.
     @app.route("/auth", methods=["POST"])
     def auth():
