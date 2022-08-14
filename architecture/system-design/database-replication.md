@@ -16,9 +16,9 @@ Since reads happen a lot more than writes in a database, reads and writes can be
 
 - **Separated by reads and writes**. Having a primary database for writes and creating read replicas out of it.
 - **Database sharding**. In sharding, the data is divided/partitioned into smaller chunks across multiple database nodes.
-  - In vertical sharding, the data is partitioned by columns. For example, we keep half columns in one database node and half in another.
-  - In horizontal sharding, the data is partitioned by rows. For example, half of the data rows exist in one database node and half in another.
-  - We then have to another layer of abstraction to point to the right data so the retrieval of data is fast.
+  - In **vertical sharding**, the data is partitioned by columns. For example, we keep half columns in one database node and half in another.
+  - In **horizontal sharding**, the data is partitioned by rows. For example, half of the data rows exist in one database node and half in another.
+  - After sharding, we have to create another layer of abstraction to point to the right data so the retrieval of data is fast.
 
 ## Ways to Synchronize Replicated Databases
 
@@ -32,4 +32,4 @@ Since reads happen a lot more than writes in a database, reads and writes can be
 - **One Directional:** Write to one database and that pushes changes to read replicas. Writing is not allowed to read replicas.
   - A disadvantage is that it doesn't allow scaling writes.
 - **Two Directional:** Can issue writes to read replicas which allows scaling of writes.
-  - Disadvantage is that conflicts arise when syncing the databases together since two databases were being written to independently.
+  - Disadvantage is that conflicts arise when syncing the databases together since two databases were being written to simultaneously.
