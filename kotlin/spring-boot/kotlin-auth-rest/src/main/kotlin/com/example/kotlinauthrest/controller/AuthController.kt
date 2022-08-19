@@ -1,10 +1,14 @@
-package com.example.kotlinauthrest.controllers
+package com.example.kotlinauthrest.controller
 
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@RequestMapping("/auth")
 class AuthController {
+
     @GetMapping(path = ["/"])
     fun index(): Boolean = true
+
 }
