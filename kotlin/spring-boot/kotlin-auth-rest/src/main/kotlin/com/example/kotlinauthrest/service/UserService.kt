@@ -9,7 +9,7 @@ class UserService(val repository: UserRepository) {
 
     fun findUsers(): List<User> = repository.findUsers()
 
-    fun adUser(user: User) {
+    fun addUser(user: User) {
         repository.save(user)
     }
 
