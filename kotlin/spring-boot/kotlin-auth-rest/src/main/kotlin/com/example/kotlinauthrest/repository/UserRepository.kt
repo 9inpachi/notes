@@ -1,6 +1,6 @@
 package com.example.kotlinauthrest.repository
 
-import com.example.kotlinauthrest.dto.User
+import com.example.kotlinauthrest.model.User
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 

@@ -1,6 +1,6 @@
 package com.example.kotlinauthrest.service
 
-import com.example.kotlinauthrest.dto.User
+import com.example.kotlinauthrest.model.User
 import com.example.kotlinauthrest.repository.UserRepository
 import org.springframework.stereotype.Service
 

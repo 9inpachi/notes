@@ -1,6 +1,6 @@
 package com.example.kotlinauthrest.controller
 
-import com.example.kotlinauthrest.dto.User
+import com.example.kotlinauthrest.model.User
 import com.example.kotlinauthrest.service.UserService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
