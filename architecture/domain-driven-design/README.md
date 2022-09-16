@@ -29,4 +29,3 @@ A bounded context is a logical boundary in terms of context. It defines tangible
 ### Ubiquitous Language
 
 Some terms might have different meanings in different contexts. For example, a user when registering is a customer but when checking out is a buyer. The idea is to have the same terminology as the business on the implementation side.
-
