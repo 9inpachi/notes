@@ -1,0 +1,19 @@
+app: aws-serverless-testing
+service: aws-serverless-testing
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+
+functions:
+  processImage:
+    handler: src/index.processImage
+    events:
+      - http:
+          path: /
+          method: get
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
