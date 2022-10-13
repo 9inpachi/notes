@@ -20,3 +20,8 @@ Types of queries the REST API supports:
 1. Structured queries.
 2. Full-text queries.
 3. Complex queries that combine the two.
+
+## Topics
+
+- [Running Elasticsearch Locally](./running-locally.md)
+- [Data Manipulation](./data-manipulation.md)

@@ -63,3 +63,19 @@ Once Elasticsearch is running, we can start Kibana.
 3. Once Kibana is running, open the generated URL in the browser.
    1. Copy the enrollment token from the Elasticsearch start logs and paste it in Kibana.
    2. Then login to Kibana using the username `elastic` and password from the Elasticsearch start logs.
+
+## Starting Stopped Containers
+
+1. Start the Elasticsearch container.
+
+   ```sh
+   docker start -ia es01
+   ```
+
+2. Start the Kibana container.
+
+   ```sh
+   docker start -ia kibana
+   ```
+
+Note that `es01` and `kibana` are the name of the containers set with the `--name` option earlier.
