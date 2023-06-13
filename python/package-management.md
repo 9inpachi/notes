@@ -1,5 +1,16 @@
 # Package Management
 
+- [Virtual Environment](#virtual-environment)
+- [Dependencies List](#dependencies-list)
+- [Managing Dependencies](#managing-dependencies)
+  - [Updating `requirements.txt`](#updating-requirementstxt)
+  - [Installing a New Dependency](#installing-a-new-dependency)
+  - [Dependency Tools](#dependency-tools)
+    - [`pip-tools`](#pip-tools)
+    - [`pipenv`](#pipenv)
+
+## Virtual Environment
+
 Python uses virtual environment to create a virtually isolated environment for a project. This environment contains all the packages and libraries the project needs which need to be installed.
 
 To set up a virtual environment using `venv`.
