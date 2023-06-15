@@ -17,7 +17,7 @@ To set up a virtual environment using `venv`.
 
 ```sh
 python -m venv <venv_dir>
-<venv_dir>/Scripts/activate
+source <venv_dir>/bin/activate
 ```
 
 ## Dependencies List
