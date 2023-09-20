@@ -6,7 +6,21 @@ It is a container centric infrasturture which can run applications on physical a
 
 ## Links
 
-- <https://www.tutorialspoint.com/kubernetes>
+- <https://spacelift.io/blog/kubernetes-tutorial>
+
+## Setup
+
+Since [creating a cluster manually](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) requires a lot of effort, we can use minikube which is a kubernetes distribution containing all kubernetes components. It also includes kubectl.
+
+```sh
+scoop install -g minikube
+```
+
+Install kubectl separately using scoop or use minikube's kubectl.
+
+```sh
+minikube kubectl --
+```
 
 ## Concepts
 
@@ -34,12 +48,3 @@ Node components run on every node to maintain running pods and providing Kuberne
 - **kubelet:** Agent that runs on each node in the cluster to make sure that containers are running in a pod.
 - **kube-proxy:** Maintains network rules on nodes which allow networking to pods from network sessions inside or outside the cluster.
 - **Container Runtime:** Responsible for managing the execution and life cycle of containers within the Kubernetes environment.
-
-## Setup
-
-```sh
-scoop install -g minikube
-scoop install -g kubectl
-minikube start
-kubectl get po -A
-```
