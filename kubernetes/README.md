@@ -26,6 +26,8 @@ minikube kubectl --
 
 - **Pod:** A pod is a group of one or more containers, with shared storage and network resources, and a specification for how to run the containers. (Something like docker compose?)
 - **Node:** A physical or virtual worker machine on which pods run.
+- **Namespace:** Used to isolate groups of resources.
+- **ReplicaSets:** Used to consistently replicate a pod and guarantees availability of a set number of replicas.
 
 ## Architecture
 
