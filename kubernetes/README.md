@@ -55,3 +55,59 @@ Node components run on every node to maintain running pods and providing Kuberne
 - **Ingress:** Closely related objects used to set up HTTP routes to services via a load balancer.
 - **Job:** An object that creates a set of pods and waits for them to terminate. Provides a mechanism for running ad-hoc tasks in the cluster. Kubernetes also provides cron jobs which are a higher level abstraction of jobs.
 - **Volume:** Mount external file storage inside pod.
+
+## Using Kubectl
+
+Create a pod.
+
+```sh
+kubectl run nginx --image nginx:latest
+```
+
+Create a deployment.
+
+```sh
+kubectl create deployment nginx --image nginx:latest --replicas 2
+```
+
+Get pods.
+
+```sh
+kubectl get pods
+```
+
+Scale a deployment.
+
+```sh
+kubectl scale deployment nginx --replicas 1
+```
+
+Expose a service.
+
+```sh
+kubectl expose deployment/nginx --port 80 --type NodePort
+```
+
+**Note:** `--type NodePort` exposes the service on the specified port of the node running the pods.
+
+Get service details.
+
+```sh
+kubectl get services
+kubectl get nodes -o wide
+```
+
+Get service URL through kubectl.
+
+```sh
+# Get node URL.
+kubectl get nodes -o wide
+# Get the service port.
+kubectl get services
+```
+
+Get service URL through minikube.
+
+```sh
+minikube service nginx --url
+```
