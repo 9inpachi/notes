@@ -4,9 +4,19 @@ Kubernetes is a tool for deploying, scaling and monitoring containerized applica
 
 It is a container centric infrasturture which can run applications on physical and virtual machines and also on the cloud.
 
+- [Links](#links)
+- [Setup](#setup)
+- [Architecture](#architecture)
+  - [Control Plane](#control-plane)
+  - [Node](#node)
+- [Concepts](#concepts)
+- [Using Kubectl](#using-kubectl)
+
 ## Links
 
 - <https://spacelift.io/blog/kubernetes-tutorial>
+- <https://kubernetes.io/docs/concepts/overview/components/>
+- <https://kubernetes.io/docs/tutorials/>
 
 ## Setup
 
@@ -15,6 +25,14 @@ Since [creating a cluster manually](https://kubernetes.io/docs/setup/production-
 ```sh
 scoop install -g minikube
 ```
+
+Start the cluster.
+
+```sh
+minikube start
+```
+
+**Note:** Make sure to `minikube delete` to cleanup any previous traces of the cluster.
 
 Install kubectl separately using scoop or use minikube's kubectl.
 
@@ -100,14 +118,27 @@ kubectl get nodes -o wide
 Get service URL through kubectl.
 
 ```sh
-# Get node URL.
+# Get the node URL.
 kubectl get nodes -o wide
 # Get the service port.
 kubectl get services
+```
+
+Forward port to localhost.
+
+```sh
+kubectl port-forward service/nginx 8080:80
 ```
 
 Get service URL through minikube.
 
 ```sh
 minikube service nginx --url
+```
+
+Delete and cleanup resources.
+
+```sh
+kubectl delete service nginx
+kubectl delete deployment nginx
 ```
