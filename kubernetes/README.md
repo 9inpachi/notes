@@ -76,6 +76,10 @@ Node components run on every node to maintain running pods and providing Kuberne
 
 ## Using Kubectl
 
+Usually when deploying an application using kubernetes, we first create a deployment and then expose that deployment by creating a service.
+
+### Kubectl Commands
+
 Create a pod.
 
 ```sh
@@ -141,4 +145,10 @@ Delete and cleanup resources.
 ```sh
 kubectl delete service nginx
 kubectl delete deployment nginx
+```
+
+Apply a declarative yaml file to a cluster.
+
+```sh
+kubectl apply -f example.yml
 ```
