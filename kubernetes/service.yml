@@ -4,9 +4,13 @@ metadata:
   name: example-service
 spec:
   selector:
-    name: example-service
+    name: nginx
   ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
+    - protocol: TCP
+      # New port that will be created to connect to the app.
+      port: 8080
+      # Port used by the container.
+      targetPort: 80
+      # Port to be exposed by the node between the range 3000-32767.
+      nodePort: 30922
   type: NodePort

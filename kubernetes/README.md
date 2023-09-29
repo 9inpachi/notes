@@ -15,6 +15,7 @@ It is a container centric infrasturture which can run applications on physical a
 ## Links
 
 - <https://spacelift.io/blog/kubernetes-tutorial>
+- <https://learnk8s.io/deploying-nodejs-kubernetes>
 - <https://kubernetes.io/docs/concepts/overview/components/>
 - <https://kubernetes.io/docs/tutorials/>
 
@@ -76,7 +77,10 @@ Node components run on every node to maintain running pods and providing Kuberne
 
 ## Using Kubectl
 
-Usually when deploying an application using kubernetes, we first create a deployment and then expose that deployment by creating a service.
+Two Kubernetes resources are needed for deploying an application.
+
+1. `Deployment`: Creates containers and ensures that they are up and running.
+2. `Service`: Makes pods accessible to other pods and users outside the cluster. A pod containing the deployment cannot be accessed without a service.
 
 ### Kubectl Commands
 
@@ -151,4 +155,18 @@ Apply a declarative yaml file to a cluster.
 
 ```sh
 kubectl apply -f example.yml
+```
+
+### Example Deployment
+
+Create the deployment resource using [deployment.yml](./deployment.yml).
+
+```sh
+kubectl apply -f deployment.yml
+```
+
+Create the service resource to allow connecting to the deployment using [service.yml](./service.yml).
+
+```sh
+kubectl apply -f service.yml
 ```
