@@ -4,11 +4,13 @@ metadata:
   name: example-deployment
 spec:
   selector:
+    # Selects pods with the matching labels to belong to this deployment.
     matchLabels:
       name: nginx
   replicas: 2
   template:
     metadata:
+      # Labels for the pods where the containers will be running.
       labels:
         name: nginx
     spec:

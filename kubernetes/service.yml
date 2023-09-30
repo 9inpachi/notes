@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: example-service
 spec:
+  # Selects the pods to expose based on their labels. Should be the same as `spec.template.metadata.labels` in `deployment.yml` because that defines the labels for pods.
   selector:
     name: nginx
   ports:
