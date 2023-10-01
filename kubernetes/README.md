@@ -11,6 +11,8 @@ It is a container centric infrasturture which can run applications on physical a
   - [Node](#node)
 - [Concepts](#concepts)
 - [Using Kubectl](#using-kubectl)
+  - [Kubectl Commands](#kubectl-commands)
+- [Example Deployment](#example-deployment)
 
 ## Links
 
@@ -157,7 +159,7 @@ Apply a declarative yaml file to a cluster.
 kubectl apply -f example.yml
 ```
 
-### Example Deployment
+## Example Deployment
 
 Create the deployment resource using [deployment.yml](./deployment.yml).
 
@@ -169,4 +171,10 @@ Create the service resource to allow connecting to the deployment using [service
 
 ```sh
 kubectl apply -f service.yml
+```
+
+Create the deployment and service resource using a single file. This can be done by separating the resources by `---` in the yaml file.
+
+```sh
+kubectl apply -f application.yml
 ```
