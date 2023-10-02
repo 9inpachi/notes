@@ -178,3 +178,9 @@ Create the deployment and service resource using a single file. This can be done
 ```sh
 kubectl apply -f application.yml
 ```
+
+Port forward to access the service from localhost.
+
+```sh
+kubectl port-forward service/example-service 8080:8080 # localhostPort:servicePort
+```
