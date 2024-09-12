@@ -1,0 +1,77 @@
+type Assign @entity(immutable: true) {
+  id: Bytes!
+  to: Bytes! # address
+  punkIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  value: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PunkTransfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  punkIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PunkOffered @entity(immutable: true) {
+  id: Bytes!
+  punkIndex: BigInt! # uint256
+  minValue: BigInt! # uint256
+  toAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PunkBidEntered @entity(immutable: true) {
+  id: Bytes!
+  punkIndex: BigInt! # uint256
+  value: BigInt! # uint256
+  fromAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PunkBidWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  punkIndex: BigInt! # uint256
+  value: BigInt! # uint256
+  fromAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PunkBought @entity(immutable: true) {
+  id: Bytes!
+  punkIndex: BigInt! # uint256
+  value: BigInt! # uint256
+  fromAddress: Bytes! # address
+  toAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PunkNoLongerForSale @entity(immutable: true) {
+  id: Bytes!
+  punkIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

@@ -1,0 +1,47 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: CryptoPunksMarket
+    network: mainnet
+    source:
+      address: "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb"
+      abi: CryptoPunksMarket
+      startBlock: 3914495
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Assign
+        - Transfer
+        - PunkTransfer
+        - PunkOffered
+        - PunkBidEntered
+        - PunkBidWithdrawn
+        - PunkBought
+        - PunkNoLongerForSale
+      abis:
+        - name: CryptoPunksMarket
+          file: ./abis/CryptoPunksMarket.json
+      eventHandlers:
+        - event: Assign(indexed address,uint256)
+          handler: handleAssign
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: PunkTransfer(indexed address,indexed address,uint256)
+          handler: handlePunkTransfer
+        - event: PunkOffered(indexed uint256,uint256,indexed address)
+          handler: handlePunkOffered
+        - event: PunkBidEntered(indexed uint256,uint256,indexed address)
+          handler: handlePunkBidEntered
+        - event: PunkBidWithdrawn(indexed uint256,uint256,indexed address)
+          handler: handlePunkBidWithdrawn
+        - event: PunkBought(indexed uint256,uint256,indexed address,indexed address)
+          handler: handlePunkBought
+        - event: PunkNoLongerForSale(indexed uint256)
+          handler: handlePunkNoLongerForSale
+      file: ./src/crypto-punks-market.ts
