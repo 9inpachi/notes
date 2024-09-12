@@ -3,6 +3,7 @@
 ## References
 
 - <https://thegraph.com/docs/en/about/>
+- <https://www.youtube.com/watch?v=EJ2em_QkQWU>
 
 ## Introduction
 
@@ -52,3 +53,41 @@ graph init --studio example
 5. If fetching doesn't work, then go to https://miniscan.xyz/ and get the ABI of the contract.
 6. Copy the ABI into the `crypto-punks.json` file and specify the file path to the CLI.
 7. Get the start block of the `CryptoPunks` contract from https://miniscan.xyz/ and specify the block number to the CLI.
+8. Run the stack locally.
+
+```sh
+docker compose up
+```
+
+9.In another terminal, create the node.
+
+```sh
+graph create --node http://localhost:8020/ example
+```
+
+10. Generate the types and build the project.
+
+```sh
+graph codegen
+graph build
+```
+
+10. Deploy the subgraph.
+
+```sh
+graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 example
+```
+
+11. Open the GraphiQL interface to query the subgraph: <http://localhost:8000/subgraphs/name/example/graphql>
+12. Use the GraphQL explorer to query the data.
+
+```gql
+query {
+  punkTransfers(where: {}) {
+    transactionHash
+    punkIndex
+    id
+    from
+  }
+}
+```
