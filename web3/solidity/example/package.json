@@ -1,0 +1,10 @@
+{
+  "name": "example",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "solhint": "^5.1.0",
+    "forge-std": "github:foundry-rs/forge-std#1.9.7"
+  }
+}
