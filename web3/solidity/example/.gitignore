@@ -8,6 +8,8 @@ out/
 # Ignores development broadcast logs
 !/broadcast
 /broadcast/*/31337/
+# Holesky
+/broadcast/*/17000/
 /broadcast/**/dry-run/
 
 # Docs

@@ -12,6 +12,12 @@ sort_imports = true
 solc_version = '0.8.30'
 libs = ['node_modules', 'lib']
 optimizer_runs = 10_000
+remappings = [
+  'forge-std/=node_modules/forge-std/src',
+  'halmos-cheatcodes=node_modules/halmos-cheatcodes',
+  'contracts/=src/contracts',
+  'interfaces/=src/interfaces',
+]
 
 [profile.optimized]
 via_ir = true

@@ -87,7 +87,7 @@ Primary focus of this development setup will be on Foundry as that is more popul
    ```
 6. Make sure the wallet has ETH for gas and deploy the contract by calling the script through foundry.
    ```sh
-   forge script script/Example.s.sol:ExampleScript \
+   forge script script/ExampleDeploy.s.sol:ExampleDeploy \
    --rpc-url holesky\
    --private-key <private-key> \
    --broadcast \
