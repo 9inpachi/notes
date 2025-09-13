@@ -32,6 +32,20 @@ Primary focus of this development setup will be on Foundry as that is more popul
 - **solhit:** For linting solidity code.
 - **medusa:** Fuzzer for testing smart contracts by feeding a large number of diverse and unexpected inputs to identify potential vulnerabilities.
 
+### Package Management
+
+There are two ways to manage packages/libraries when using foundry. Both of them require some manual setup.
+
+1. Using `npm install <package>`. For example, `pnpm install @openzeppelin/contracts`.
+   - This puts the library inside `node_modules/<package>`.
+   - We then have to add `remappings` in [foundry.toml](./foundry.toml) like `remappings = ['forge-std/=node_modules/@openzeppelin/contracts']`.
+2. Using `forge install <package>`. For example, `forge install @openzeppelin/openzeppelin-contracts`.
+   - This puts the library inside `lib/<package>`.
+   - We then have to add `remappings` in [foundry.toml](./foundry.toml) like `remappings = ['forge-std/=lib/openzeppelin-contracts']`.
+   - A downside to using `forge install` is that it will require to do an install for all libraries whereas in npm we can just do `npm install` to install all libraries.
+
+This development setup using npm as that's easier to manage. 
+
 ## Deployment
 
 ### Deploying Locally on Anvil

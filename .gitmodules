@@ -1,6 +1,0 @@
-[submodule "web3/solidity/counter/lib/forge-std"]
-	path = web3/solidity/counter/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "web3/solidity/example/lib/forge-std"]
-	path = web3/solidity/example/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
