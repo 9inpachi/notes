@@ -9,6 +9,12 @@ Solidity is an object oriented (contract oriented) programming language for impl
 - <https://github.com/protofire/solhint>
 - <https://hardhat.org/tutorial>
 - <https://github.com/foundry-rs/foundry>
+- Full Smart Contract Development Course: <https://updraft.cyfrin.io/career-tracks/solidity-smart-contract-developer>
+
+## Notes Resources
+
+- [Theory](./theory.md)
+- [Solidity Basics](./solidity-basics.md)
 
 ## Development Setup
 
@@ -44,7 +50,7 @@ There are two ways to manage packages/libraries when using foundry. Both of them
    - We then have to add `remappings` in [foundry.toml](./foundry.toml) like `remappings = ['forge-std/=lib/openzeppelin-contracts']`.
    - A downside to using `forge install` is that it will require to do an install for all libraries whereas in npm we can just do `npm install` to install all libraries.
 
-This development setup using npm as that's easier to manage. 
+This development setup using npm as that's easier to manage.
 
 ## Deployment
 
