@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.24;
 // Version Range
 // pragma solidity >=0.8.18 <0.9.0;
 // Exact Version
@@ -56,5 +56,32 @@ contract SolidityBasics {
   // This function is pure as it doesn't read from or write to the state.
   function someConstant() public pure returns (uint256) {
     return 100 ether;
+  }
+
+  // SECTION 3: Arrays and Structs
+
+  struct Person {
+    string name;
+    uint256 favoriteNumber;
+  }
+
+  // Another way is to define a struct: `Person('Some', 10)`.
+  Person public somePerson = Person({ name: 'Some', favoriteNumber: 19 });
+
+  // Dymanic array. Extends or shrinks based on the elements.
+  Person[] public listOfPersons;
+  // Following is a static array with a max size of 5.
+  // Person[5] public listOfPersons;
+
+  function addPerson(string memory name, uint256 favoriteNumber) public {
+    listOfPersons.push(Person(name, favoriteNumber));
+  }
+
+  // Section 4: Mapping
+
+  mapping(string => uint256) favoriteNumbersMap;
+
+  function assignFavoriteNumber(string memory name, uint256 favoriteNumber) public {
+    favoriteNumbersMap[name] = favoriteNumber;
   }
 }
