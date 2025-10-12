@@ -31,3 +31,4 @@ Basics of the Solidity language.
     - Now make sure all other files besides the `.sol` file which contains the contract are kept or the contract files are inside the `contracts` directory. Otherwise, the plugin will not be able to compile and deploy the contract.
   - From the sidebar, navigate to the "ZKsync" plugin and compile and deploy the contract using the wallet.
     - The [`01-SimpleStorage.sol`](../practice/src/contracts/course/01-SimpleStorage.sol) from this repo is deployed here: <https://sepolia.explorer.zksync.io/address/0xbcd3D066930988F084c304e500739D13dd50423f>
+- Initializing an existing contract from an address can be done using `MyContract(contractAddress)`.
