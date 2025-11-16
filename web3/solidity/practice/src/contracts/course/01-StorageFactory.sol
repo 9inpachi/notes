@@ -3,10 +3,14 @@ pragma solidity ^0.8.24;
 
 import { SimpleStorage } from './01-SimpleStorage.sol';
 
+/**
+ * This contract is a factory for creating and deploying new contracts. 
+ */
 contract StorageFactory {
   SimpleStorage[] public simpleStorageContracts;
 
   function createSimpleStorageContract() public {
+    // This will deploy a new contract using this factory contract.
     SimpleStorage newSimpleStorage = new SimpleStorage();
     simpleStorageContracts.push(newSimpleStorage);
   }

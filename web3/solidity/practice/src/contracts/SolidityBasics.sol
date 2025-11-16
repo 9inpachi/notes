@@ -85,3 +85,26 @@ contract SolidityBasics {
     favoriteNumbersMap[name] = favoriteNumber;
   }
 }
+
+// Section 5: Inheritance
+
+contract ParentContract {
+  uint256 internal storedNumber;
+
+  // The `virtual` keyword makes the function overridable.
+  function storeNumber(uint256 number) public virtual {
+    storedNumber = number;
+  }
+
+  function getNumber() public view returns (uint256) {
+    return storedNumber;
+  }
+}
+
+contract ChildContract is ParentContract {
+  // The `override` keyword overrides the parent function given that the
+  // parent function is `virtual`.
+  function storeNumber(uint256 number) public override {
+    storedNumber = number + 5;
+  }
+}
