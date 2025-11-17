@@ -32,3 +32,6 @@ Basics of the Solidity language.
   - From the sidebar, navigate to the "ZKsync" plugin and compile and deploy the contract using the wallet.
     - The [`01-SimpleStorage.sol`](../practice/src/contracts/course/01-SimpleStorage.sol) from this repo is deployed here: <https://sepolia.explorer.zksync.io/address/0xbcd3D066930988F084c304e500739D13dd50423f>
 - Initializing an existing contract from an address can be done using `MyContract(contractAddress)`.
+- A function needs to be marked as `payable` in order to receive native token of a block chain (e.g. ETH in Ethereum chain).
+- On revert, all operations before the revert are undone, the gas used is consumed but the unused gas (covering operations after the revert) is refunded to the user.
+- Chainlink makes it possible to get data from outside a blockchain (like price feeds) using a decentralized system.
