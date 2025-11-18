@@ -1,43 +1,53 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { AggregatorV3Interface } from '@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol';
+import { PriceConverter } from './02-PriceConverter.sol';
 
 contract FundMe {
+  // With this, functions inside `PriceConverter` with `uint256` as the
+  // first parameter can used like this `uint256.functionName()`.
+  using PriceConverter for uint256;
+
   uint256 public minimumUsd = 5e18;
+  address public owner;
 
   address[] public funders;
   mapping(address funder => uint256 amountFunded) public addressToAmountFunded;
 
+  constructor() {
+    // Set the address that deployed the contract as the owner.
+    owner = msg.sender;
+  }
+
   function fund() public payable {
-    require(getConversionRate(msg.value) >= minimumUsd, 'At least 1 ETH is required');
+    require(msg.value.getConversionRate() >= minimumUsd, 'At least 1 ETH is required');
     funders.push(msg.sender);
     addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;
   }
 
-  function getPrice() public view returns (uint256) {
-    // ETH/USD testnet address. https://docs.chain.link/data-feeds/price-feeds/addresses
-    AggregatorV3Interface priceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
-    (, int256 price,,,) = priceFeed.latestRoundData();
+  function withdraw() public payable {
+    require(msg.sender == owner, 'Caller must be the owner of the contract.');
 
-    // This will return us the price in terms of wei. For example, if a
-    // price feed has 9 decimals, it will add (18 - 9 = 9) zeroes to the
-    // price so we get the price in wei and can directly multiple with
-    // ETH value.
-    uint256 priceInWei = uint256(price * 10 ** (18 - priceFeed.decimals()));
+    for (uint256 i = 0; i < funders.length; ++i) {
+      address funder = funders[i];
+      addressToAmountFunded[funder] = 0;
+    }
 
-    return priceInWei;
-  }
+    // Reset the array by creating a new array with 0 length.
+    funders = new address[](0);
 
-  function getConversionRate(uint256 value) {
-    uint256 ethPrice = getPrice();
+    // Transfer the funds to the caller.
+    // 1. Use payable.transfer
+    // payable(msg.sender).transfer(address(this).balance);
 
-    // We divide by 1e18 to reset the additional decimal places added
-    // because of both the value and price being 18 decimals. Dividing the
-    // value with 1e18 will bring the result back to 18 decimals instead of
-    // 36 decimals.
-    uint256 ethAmountInUsd = (value * ethPrice) / 1e18;
+    // 2. Use payable.send
+    // bool sendSuccess = payable(msg.sender).send(address(this).balance);
+    // require(sendSuccess, "Send failed");
 
-    return ethAmountInUsd;
+    // 3. Use payable.call (this is the standard) - `call` is a low
+    // level function that can be used to call any smart contract function
+    // without an ABI.
+    (bool callSuccess,) = payable(msg.sender).call{ value: address(this).balance }('');
+    require(callSuccess, 'Call failed to transfer funds');
   }
 }
