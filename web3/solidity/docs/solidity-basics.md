@@ -35,3 +35,4 @@ Basics of the Solidity language.
 - A function needs to be marked as `payable` in order to receive native token of a block chain (e.g. ETH in Ethereum chain).
 - On revert, all operations before the revert are undone, the gas used is consumed but the unused gas (covering operations after the revert) is refunded to the user.
 - Chainlink makes it possible to get data from outside a blockchain (like price feeds) using a decentralized system.
+- `constant` and `immutable` variables save gas as they are a part of the contract bytecode and don't take up storage.

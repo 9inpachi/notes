@@ -13,12 +13,12 @@ library PriceConverter {
     // price feed has 9 decimals, it will add (18 - 9 = 9) zeroes to the
     // price so we get the price in wei and can directly multiple with
     // ETH value.
-    uint256 priceInWei = uint256(price * 10 ** (18 - priceFeed.decimals()));
+    uint256 priceInWei = uint256(price) * 10 ** (18 - priceFeed.decimals());
 
     return priceInWei;
   }
 
-  function getConversionRate(uint256 value) internal {
+  function getConversionRate(uint256 value) internal view returns (uint256) {
     uint256 ethPrice = getPrice();
 
     // We divide by 1e18 to reset the additional decimal places added

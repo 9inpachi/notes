@@ -8,8 +8,10 @@ contract FundMe {
   // first parameter can used like this `uint256.functionName()`.
   using PriceConverter for uint256;
 
-  uint256 public minimumUsd = 5e18;
-  address public owner;
+  uint256 public constant MINIMUM_USD = 5e18;
+  // Like constants but values of immutable variables can be set inside
+  // the contract constructor.
+  address public immutable owner;
 
   address[] public funders;
   mapping(address funder => uint256 amountFunded) public addressToAmountFunded;
@@ -19,15 +21,15 @@ contract FundMe {
     owner = msg.sender;
   }
 
+  // `payable` is used when sending ETH to the contract. It's not needed
+  // when withdrawing ETH.
   function fund() public payable {
-    require(msg.value.getConversionRate() >= minimumUsd, 'At least 1 ETH is required');
+    require(msg.value.getConversionRate() >= MINIMUM_USD, 'At least 5 USD worth of ETH is required');
     funders.push(msg.sender);
     addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;
   }
 
-  function withdraw() public payable {
-    require(msg.sender == owner, 'Caller must be the owner of the contract.');
-
+  function withdraw() public onlyOwner {
     for (uint256 i = 0; i < funders.length; ++i) {
       address funder = funders[i];
       addressToAmountFunded[funder] = 0;
@@ -49,5 +51,11 @@ contract FundMe {
     // without an ABI.
     (bool callSuccess,) = payable(msg.sender).call{ value: address(this).balance }('');
     require(callSuccess, 'Call failed to transfer funds');
+  }
+
+  modifier onlyOwner() {
+    require(msg.sender == owner, 'Caller must be the owner of the contract.');
+    // The underscore is the placeholder for where the function will execute.
+    _;
   }
 }
