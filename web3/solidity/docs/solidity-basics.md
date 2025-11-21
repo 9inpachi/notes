@@ -36,3 +36,5 @@ Basics of the Solidity language.
 - On revert, all operations before the revert are undone, the gas used is consumed but the unused gas (covering operations after the revert) is refunded to the user.
 - Chainlink makes it possible to get data from outside a blockchain (like price feeds) using a decentralized system.
 - `constant` and `immutable` variables save gas as they are a part of the contract bytecode and don't take up storage.
+- `receive()` is a special contract function that is triggered whenever the smart contract receives a transaction without any calldata. This could be an ETH transfer transaction with some `msg.value`.
+- `fallback()` is a special contract function that is triggered whenever the smart contract receives a transaction with some calldata or with no calldata when the `receive()` function is not defined.

@@ -9,6 +9,7 @@ Solidity is an object oriented (contract oriented) programming language for impl
 - <https://github.com/protofire/solhint>
 - <https://hardhat.org/tutorial>
 - <https://github.com/foundry-rs/foundry>
+- <https://solidity-by-example.org/>
 - Full Smart Contract Development Course: <https://updraft.cyfrin.io/career-tracks/solidity-smart-contract-developer>
 
 ## Notes Resources

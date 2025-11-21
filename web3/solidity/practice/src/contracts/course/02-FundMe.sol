@@ -3,6 +3,10 @@ pragma solidity ^0.8.24;
 
 import { PriceConverter } from './02-PriceConverter.sol';
 
+error NotOwner();
+
+// This Smart Contract is deployed on Sepolia Testnet:
+// https://sepolia.etherscan.io/address/0x708e5f75d6f8a2e51226a46a0feaf59cde0e68b4
 contract FundMe {
   // With this, functions inside `PriceConverter` with `uint256` as the
   // first parameter can used like this `uint256.functionName()`.
@@ -54,8 +58,28 @@ contract FundMe {
   }
 
   modifier onlyOwner() {
-    require(msg.sender == owner, 'Caller must be the owner of the contract.');
-    // The underscore is the placeholder for where the function will execute.
+    // require(msg.sender == owner, 'Caller must be the owner of the contract.');
+
+    // Using custom errors instead of `require` is gas efficient as it
+    // doesn't require the string to be stored.
+    if (msg.sender != owner) {
+      revert NotOwner();
+    }
+
+    // The underscore is the placeholder for where the actual function
+    // that has the modifier will execute.
     _;
+  }
+
+  // Special function called when a transaction is sent to the contract
+  // without any calldata.
+  receive() external payable {
+    fund();
+  }
+
+  // Special function called when a transaction is sent to the contract
+  // with some calldata that doesn't map to an existing function.
+  fallback() external payable {
+    fund();
   }
 }
