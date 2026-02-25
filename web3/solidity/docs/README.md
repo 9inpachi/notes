@@ -32,11 +32,15 @@ There are two major development frameworks for working with Solidity and smart c
    - Faster tests and built-in fuzzing.
    - Not reliant on JavaScript ecosystem but has its own.
 
-Primary focus of this development setup will be on Foundry as that is more popular now.
+Primary focus of this development setup will be on Foundry as that is more popular now. To setup a new foundry project, use the following command.
+
+```sh
+forge init <project-name>
+```
 
 ### Tools
 
-- **solhit:** For linting solidity code.
+- **solhint:** For linting solidity code.
 - **medusa:** Fuzzer for testing smart contracts by feeding a large number of diverse and unexpected inputs to identify potential vulnerabilities.
 
 ### Package Management
@@ -52,6 +56,26 @@ There are two ways to manage packages/libraries when using foundry. Both of them
    - A downside to using `forge install` is that it will require to do an install for all libraries whereas in npm we can just do `npm install` to install all libraries.
 
 This development setup using npm as that's easier to manage.
+
+## Development Flow
+
+Build the project. This will build all the contracts in the project.
+
+```sh
+forge build
+```
+
+Build a specific file.
+
+```sh
+forge build src/contracts/TestContract.sol
+```
+
+Execute tests in the `tests/` directory.
+
+```sh
+forge test
+```
 
 ## Deployment
 
