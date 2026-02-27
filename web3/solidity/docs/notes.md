@@ -41,3 +41,26 @@ Call a read function.
 cast call <contract-address> "<function-abi>" <function-parameters>
 # cast call 0x5FbDB2315678afecb367f032d93F642f64180aa3 "retrieve()"
 ```
+
+## ZKsync
+
+### Foundry ZKsync
+
+Foundry ZKsync is a fork of Foundry that supports ZKsync. Follow the instructions at https://github.com/matter-labs/foundry-zksync to install it.
+
+After installation, the `forge` command will be replaced by `forge-zksync`. To switch between the two, use `foundryup` and `foundryup-zksync`.
+
+To start a local ZKsync testnet, use.
+
+```sh
+anvil-zksync
+```
+
+### Deploy to ZKsync
+
+To deploy to ZKsync, use the following command.
+
+```sh
+forge create src/SimpleStorage.sol:SimpleStorage --rpc_url <RPC_URL> --private_key <PRIVATE_KEY> --legacy --zksync --broadcast
+# forge create src/contracts/course/01-SimpleStorage.sol:SimpleStorage --rpc-url http://localhost:8011 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --legacy --zksync --broadcast
+```
