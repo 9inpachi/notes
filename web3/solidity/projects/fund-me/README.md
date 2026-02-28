@@ -9,10 +9,6 @@ Foundry consists of:
 - **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
 - **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-## Package Management
-
-This repo uses pnpm for package management and foundry/forge for building. For installing a new package, use `pnpm install <package-name>` and then add remappings in [./foundry.toml](./foundry.toml).
-
 ## Documentation
 
 https://book.getfoundry.sh/

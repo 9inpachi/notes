@@ -1,0 +1,6 @@
+{
+	"devDependencies": {
+		"@chainlink/contracts": "^1.5.0",
+		"solhint": "^6.0.3"
+	}
+}

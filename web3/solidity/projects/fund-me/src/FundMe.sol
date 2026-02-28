@@ -1,0 +1,85 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import { PriceConverter } from './PriceConverter.sol';
+
+error NotOwner();
+
+// This Smart Contract is deployed on Sepolia Testnet:
+// https://sepolia.etherscan.io/address/0x708e5f75d6f8a2e51226a46a0feaf59cde0e68b4
+contract FundMe {
+  // With this, functions inside `PriceConverter` with `uint256` as the
+  // first parameter can used like this `uint256.functionName()`.
+  using PriceConverter for uint256;
+
+  uint256 public constant MINIMUM_USD = 5e18;
+  // Like constants but values of immutable variables can be set inside
+  // the contract constructor.
+  address public immutable owner;
+
+  address[] public funders;
+  mapping(address funder => uint256 amountFunded) public addressToAmountFunded;
+
+  constructor() {
+    // Set the address that deployed the contract as the owner.
+    owner = msg.sender;
+  }
+
+  // `payable` is used when sending ETH to the contract. It's not needed
+  // when withdrawing ETH.
+  function fund() public payable {
+    require(msg.value.getConversionRate() >= MINIMUM_USD, 'At least 5 USD worth of ETH is required');
+    funders.push(msg.sender);
+    addressToAmountFunded[msg.sender] = addressToAmountFunded[msg.sender] + msg.value;
+  }
+
+  function withdraw() public onlyOwner {
+    for (uint256 i = 0; i < funders.length; ++i) {
+      address funder = funders[i];
+      addressToAmountFunded[funder] = 0;
+    }
+
+    // Reset the array by creating a new array with 0 length.
+    funders = new address[](0);
+
+    // Transfer the funds to the caller.
+    // 1. Use payable.transfer
+    // payable(msg.sender).transfer(address(this).balance);
+
+    // 2. Use payable.send
+    // bool sendSuccess = payable(msg.sender).send(address(this).balance);
+    // require(sendSuccess, "Send failed");
+
+    // 3. Use payable.call (this is the standard) - `call` is a low
+    // level function that can be used to call any smart contract function
+    // without an ABI.
+    (bool callSuccess,) = payable(msg.sender).call{ value: address(this).balance }('');
+    require(callSuccess, 'Call failed to transfer funds');
+  }
+
+  modifier onlyOwner() {
+    // require(msg.sender == owner, 'Caller must be the owner of the contract.');
+
+    // Using custom errors instead of `require` is gas efficient as it
+    // doesn't require the string to be stored.
+    if (msg.sender != owner) {
+      revert NotOwner();
+    }
+
+    // The underscore is the placeholder for where the actual function
+    // that has the modifier will execute.
+    _;
+  }
+
+  // Special function called when a transaction is sent to the contract
+  // without any calldata.
+  receive() external payable {
+    fund();
+  }
+
+  // Special function called when a transaction is sent to the contract
+  // with some calldata that doesn't map to an existing function.
+  fallback() external payable {
+    fund();
+  }
+}
