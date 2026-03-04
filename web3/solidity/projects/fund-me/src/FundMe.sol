@@ -15,14 +15,14 @@ contract FundMe {
   uint256 public constant MINIMUM_USD = 5e18;
   // Like constants but values of immutable variables can be set inside
   // the contract constructor.
-  address public immutable owner;
+  address public immutable i_owner;
 
   address[] public funders;
   mapping(address funder => uint256 amountFunded) public addressToAmountFunded;
 
   constructor() {
     // Set the address that deployed the contract as the owner.
-    owner = msg.sender;
+    i_owner = msg.sender;
   }
 
   // `payable` is used when sending ETH to the contract. It's not needed
@@ -62,7 +62,7 @@ contract FundMe {
 
     // Using custom errors instead of `require` is gas efficient as it
     // doesn't require the string to be stored.
-    if (msg.sender != owner) {
+    if (msg.sender != i_owner) {
       revert NotOwner();
     }
 

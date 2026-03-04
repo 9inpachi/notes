@@ -32,8 +32,7 @@ contract SolidityBasics {
   // Only visible to the current and child contracts. (Like `protected` in Java)
   uint256 internal internalVar;
 
-  // Only usable in functions. Makes the function only visible
-  // externally (via message call `this.func`).
+  // Can only be called by other contracts and accounts.
   function externalFunc() external { }
 
   // SECTION 2.2: Storage Functionality
