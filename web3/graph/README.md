@@ -34,7 +34,7 @@ Subgraphs are instructions for indexers. It's used to isolate data from the full
 - **schema.graphql**: This is the GraphQL schema for a subgraph. It is used to define the entities/types that are queried from a subgraph and the blockchain network.
 - **mapping.ts**: The mapping file has functions that are used to transform the data from when interacting with the subgraph.
 
-## Setup
+## Example Setup
 
 1. Install the Graph CLI.
 
