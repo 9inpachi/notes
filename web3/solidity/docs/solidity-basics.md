@@ -38,3 +38,26 @@ Basics of the Solidity language.
 - `constant` and `immutable` variables save gas as they are a part of the contract bytecode and don't take up storage.
 - `receive()` is a special contract function that is triggered whenever the smart contract receives a transaction without any calldata. This could be an ETH transfer transaction with some `msg.value`.
 - `fallback()` is a special contract function that is triggered whenever the smart contract receives a transaction with some calldata or with no calldata when the `receive()` function is not defined.
+
+## Testing
+
+Solidity can have different types of tests including the following.
+
+- **Unit tests:** Focus on isolating and testing individual smart contract functions or functionalities.
+- **Integration tests:** Verify how a smart contract interacts with other contracts or external systems.
+- **Forking tests:** Forking refers to creating a copy of a blockchain state at a specific point in time. This copy, called a fork, is then used to run tests in a simulated environment.
+- **Staging tests:** Execute tests against a deployed smart contract on a staging environment before mainnet deployment.
+
+### Basic Testing
+
+Run a specific test.
+
+```sh
+forge test --mt testFunctionName
+```
+
+Run tests against a fork.
+
+```sh
+forge test --fork-url <network-rpc>
+```

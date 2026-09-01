@@ -75,6 +75,8 @@ Execute tests in the `tests/` directory.
 
 ```sh
 forge test
+# Run a specific test.
+forge test --mt testFunctionName
 ```
 
 ## Deployment
