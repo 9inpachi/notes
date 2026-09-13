@@ -21,7 +21,6 @@
       - [Stack and Heap](#stack-and-heap-1)
     - [Stack Only Data (Copy)](#stack-only-data-copy)
 
-
 ## Resources
 
 - <https://doc.rust-lang.org/stable/book/title-page.html>
@@ -154,7 +153,7 @@ Heap usually stores variable length data at a particular address in memory with 
 
 When we put data on the heap, we request a certain amount of space. The memory allocator finds a big enough spot, marks the spot as being in use and returns a pointer to the spot which is the address of that location. This is called allocating on the heap and also just _allocating_. As pointer to the heap is known and fixed size, we can store the pointer on the stack.
 
-Pushing to the stack is faster than allocating on the heap because the allocator never has to search for a place to store new data; that location is always at the top of the stack. 
+Pushing to the stack is faster than allocating on the heap because the allocator never has to search for a place to store new data; that location is always at the top of the stack.
 
 Comparatively, allocating space on the heap requires more work because the allocator must first find a big enough space to hold the data and then perform bookkeeping to prepare for the next allocation.
 
@@ -204,3 +203,55 @@ In the following image, the pointer data is stored in stack and the right table 
 #### Stack Only Data (Copy)
 
 For data like integers that are only stored in stack and not heap. A `Copy` trait can be placed on types to implement how data should be copied. A type with `Drop` trait cannot have `Copy` trait as such a type requires special memory handling which is not supported for data stored in stack only.
+
+#### References
+
+Creating a reference (e.g. `fn test(s: &String);`) enables us to refer/point to a variable without taking ownership of it.
+
+The action of creating a reference is called _borrowing_. A reference _borrows_ the value of a variable.
+
+Only mutable references can update the value of the variable. Mutable references have a restriction that there can only on 1 mutable reference to a value at a time.
+
+```rs
+let mut s = String::from("hello");
+
+let r1 = &mut s;
+// This will throw a compilation error.
+let r2 = &mut s;
+
+println!("{r1}, {r2}");
+```
+
+A reference's scope starts from where it is introduced and continues through the last time the reference is used.
+
+```rs
+let mut s = String::from("hello");
+
+let r1 = &mut s;
+println!("{r1}");
+
+// This will work as r1 is out of scope at this point.
+let r2 = &mut s;
+println!("{r2}");
+```
+
+##### Dangling References
+
+Dangling references are created by a dangling pointer which points to a location in memory that may have been given to someone else. This could be due to that part of memory being freed up but the dangling pointer still pointing to it.
+
+Rust compiler guarantees that there will never be dangling references.
+
+```rs
+fn main() {
+  let reference_to_nothing = dangle();
+}
+
+fn dangle() {
+  let s = String::from("hello");
+  &s;
+} // `s` goes of of scope and is dropped after the function ends unless the `value` itself is returned.
+```
+
+#### Slice Type
+
+Slices let you reference a contiguous sequence of elements in a collection. A slice is a kind of reference, so it does not have ownership.

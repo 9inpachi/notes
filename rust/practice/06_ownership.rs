@@ -52,6 +52,21 @@ fn main1() {
   }
 }
 
+fn main2() {
+  let s = String::from("Hello");
+
+  // Using tuples to return the passed value is a pattern for
+  // getting a return value along with the original arg.
+  let (s2, len) = calculate_length(s);
+
+  println!("String {s2} has a length of {len}");
+}
+
+fn calculate_length(s: String) -> (String, usize) {
+  let length = s.len();
+  (s, length)
+}
+
 fn main() {
   let s = String::from("Hello");
   // Passing `s` is like assigning it to a new variable and invalidates this
