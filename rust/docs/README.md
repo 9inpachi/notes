@@ -255,3 +255,62 @@ fn dangle() {
 #### Slice Type
 
 Slices let you reference a contiguous sequence of elements in a collection. A slice is a kind of reference, so it does not have ownership.
+
+### Structs
+
+```rs
+struct User {
+  username: String,
+  email: String,
+  active: bool,
+};
+
+let user = User {
+  username: String::from("test"),
+  email: String::from("test@email.com"),
+  active: true,
+};
+```
+
+Rust provides a struct update syntax for reusing fields from an existing struct. But for fields that use complex types and heap like `String`, the ownership of the field is moved to the new struct instance and the old struct becomes unusable unless the fields are redefined by the new struct instance.
+
+```rs
+let user1 = User {
+  username: String::from("test"),
+  email: String::from("test@email.com"),
+  active: true,
+};
+
+let user2 = User {
+  email: String::from("test2@email.com"),
+  ..user1,
+};
+
+// Since `user1.username` was not redefined, it's ownership was moved to `user2`.
+```
+
+#### Derived Traits
+
+When using `println!()` macro, the `{variable}` syntax uses the `Display` trait of a type. Structs don't have an implementation of the `Display` trait by default.
+
+For debugging, we can put the `:?` specifier (`{variable:?}`) to tell Rust to use the `Debug` trait for printing. We have to put the `#[derive(Debug)]` outer attribute to the struct to enable it.
+
+```rs
+#[derive(Debug)]
+struct User {
+  name: String,
+};
+```
+
+We can also use `:#?` which pretty prints the struct.
+
+We can also use the `dbg!()` macro which returns ownership in case a value is passed to it or we can also pass a reference to avoid giving ownership to the macro.
+
+```rs
+let user = User {
+  email: dbg!(30 * 10), // This will print the value and return the same value back.
+};
+
+// This uses the reference for printing.
+dbg!(&user);
+```
