@@ -77,7 +77,7 @@ fn area(rectangle: &Rectangle) -> u32 {
   rectangle.width * rectangle.height
 }
 
-fn main() {
+fn main4() {
   let scale = 10;
 
   let rect = Rectangle {
@@ -93,4 +93,44 @@ fn main() {
   println!("{rect:?}");
   // Pretty print.
   println!("{rect:#?}");
+}
+
+// Struct Methods
+
+impl Rectangle {
+  // Borrowing immutably because we only need to read.
+  fn area(&self) -> u32 {
+    self.width * self.height
+  }
+
+  fn can_hold(&self, other: &Rectangle) -> bool {
+    self.width > other.width && self.height > other.height
+  }
+
+  // This is an associated function but not a method.
+  fn square(size: u32) -> Self {
+    Self {
+      width: size,
+      height: size,
+    }
+  }
+}
+
+fn main() {
+  let rect1 = Rectangle {
+    width: 30,
+    height: 20,
+  };
+  let rect2 = Rectangle {
+    width: 20,
+    height: 15,
+  };
+
+  if rect1.can_hold(&rect2) {
+    println!("rect1 can hold rect2");
+  }
+
+  let square = Rectangle::square(20);
+
+  println!("Square: {square:?}");
 }

@@ -252,6 +252,28 @@ fn dangle() {
 } // `s` goes of of scope and is dropped after the function ends unless the `value` itself is returned.
 ```
 
+#### Ownership in Functions
+
+Functions handle variables/arguments in the following ways.
+
+1. Take ownership of the variable.
+
+   ```rs
+   fn test(var: String) {}
+   ```
+
+2. Borrow immutably. That is, only be able to read the value and never update it.
+
+   ```rs
+   fn test(var: &String) {}
+   ```
+
+3. Borrow mutably. That is, to be able to update the value inside the function.
+
+   ```rs
+   fn test(var: &mut String) {}
+   ```
+
 #### Slice Type
 
 Slices let you reference a contiguous sequence of elements in a collection. A slice is a kind of reference, so it does not have ownership.
@@ -313,4 +335,58 @@ let user = User {
 
 // This uses the reference for printing.
 dbg!(&user);
+```
+
+#### Struct Methods
+
+```rs
+impl Rectangle {
+  fn area(&self) -> u32 {
+    self.width * self.height
+  }
+}
+```
+
+Rust automatically handles dereferencing unlike C++.
+
+```cpp
+object.someMethod(); // Rust: object.someMethod();
+objectPtr->somMethod(); // Rust: objectPtr.someMethod();
+(*objectPtr).somMethod();
+```
+
+#### Associated Functions
+
+All functions defined inside `impl` are called _associated functions_ because they are associated with the type being implemented. We can define functions inside `impl` that are not methods and don't have `self` as the first parameter. These functions are for used when the instance of a type is not needed, for example, for creating the instance itself (`String::from()`).
+
+```rs
+impl Rectangle {
+  // This is an associated function but not a method.
+  fn square(size: u32) -> Self {
+    Self {
+      width: size,
+      height: size
+    }
+  }
+}
+
+let square = Rectangle::square(20);
+```
+
+#### Multiple `impl` Blocks
+
+It's valid for each struct to have multiple `impl` blocks.
+
+```rs
+impl Type {
+  fn method1(&self) {}
+}
+
+impl Type {
+  fn method2(&self) {}
+}
+
+let t = Type {};
+t.method1();
+t.method2();
 ```
