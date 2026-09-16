@@ -426,4 +426,33 @@ enum Option<T> {
 }
 ```
 
-This enum is very commonly used and is included in the prelude so we don't need to explicitly import it. `Some` and `None` can also be used without the `Option::` prefix. 
+This enum is very commonly used and is included in the prelude so we don't need to explicitly import it. `Some` and `None` can also be used without the `Option::` prefix.
+
+### Control Flow with `match`
+
+This is like the switch statement in other language but more powerful.
+
+```rs
+match size {
+  Size::XL => 60,
+  Size::L => 50,
+  Size::M => 40,
+  // Enum variant `S(String)` with data.
+  Size::S(full_name) => {
+    println!("Using {full_name} size");
+    30
+  },
+  // Fallback
+  other => 0,
+}
+```
+
+#### Concise Control Flow with `if let`
+
+```rs
+let optional: Option<i32> = Some(10);
+// Shorter syntax compared to `match`.
+if let Some(value) = optional {
+  println!("The optional has a value of {value}");
+}
+```
