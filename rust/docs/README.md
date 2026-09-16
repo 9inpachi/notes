@@ -20,6 +20,17 @@
     - [Memory and Allocation](#memory-and-allocation)
       - [Stack and Heap](#stack-and-heap-1)
     - [Stack Only Data (Copy)](#stack-only-data-copy)
+    - [References](#references)
+      - [Dangling References](#dangling-references)
+    - [Ownership in Functions](#ownership-in-functions)
+    - [Slice Type](#slice-type)
+  - [Structs](#structs)
+    - [Derived Traits](#derived-traits)
+    - [Struct Methods](#struct-methods)
+    - [Associated Functions](#associated-functions)
+    - [Multiple `impl` Blocks](#multiple-impl-blocks)
+  - [Enums](#enums)
+    - [Option Enum](#option-enum)
 
 ## Resources
 
@@ -390,3 +401,29 @@ let t = Type {};
 t.method1();
 t.method2();
 ```
+
+### Enums
+
+Enums in Rust can be simple or hold struct-like values.
+
+```rs
+enum Message {
+  Quit,
+  Move { x: i32, y: i32 },
+  Write(String)
+  ChangeColor(i32, i32, i32),
+}
+```
+
+#### Option Enum
+
+Rust does not have `null` but it has an enum that encodes the concept of a value being present or absent.
+
+```rs
+enum Option<T> {
+    None,
+    Some(T),
+}
+```
+
+This enum is very commonly used and is included in the prelude so we don't need to explicitly import it. `Some` and `None` can also be used without the `Option::` prefix. 
