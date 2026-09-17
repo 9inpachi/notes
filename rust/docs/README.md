@@ -31,6 +31,12 @@
     - [Multiple `impl` Blocks](#multiple-impl-blocks)
   - [Enums](#enums)
     - [Option Enum](#option-enum)
+  - [Control Flow with `match`](#control-flow-with-match)
+    - [Concise Control Flow with `if let`](#concise-control-flow-with-if-let)
+  - [Packages, Crates and Modules](#packages-crates-and-modules)
+    - [Crates](#crates-1)
+    - [Packages](#packages)
+    - [Modules](#modules)
 
 ## Resources
 
@@ -455,4 +461,81 @@ let optional: Option<i32> = Some(10);
 if let Some(value) = optional {
   println!("The optional has a value of {value}");
 }
+```
+
+### Packages, Crates and Modules
+
+#### Crates
+
+A crate is the smallest amount of code the Rust compiler considers at a time. Crates can contain modules, and the modules may be defined in other files that get compiled with the crate.
+
+There are two types of crates.
+
+- **Binary crates** which are executable.
+- **Library crates** which contain code intended to be used by other programs and can't be executed on its own.
+
+In Rust, crates are generally used to refer to libraries. But a CLI or server executable binary is also a crate.
+
+Crate root is the source file the Rust compiler starts from.
+
+#### Packages
+
+A package is a bundle of one or more crates that provides a set of functionality. A package contains `Cargo.toml` that describes how to build those crates.
+
+Cargo itself is actually a package that contains the binary crate for the CLI tool and also a library crate on which the binary crate depends.
+
+A package can contain any number of binary crates but only a single library crate.
+
+To create a package.
+
+```sh
+cargo new my-project
+```
+
+By default, Cargo uses the `project/src/main.rs` as the crate root (entrypoint) for a binary crate with the same name as the package. Similarly, `project/src/lib.rs` is used as the crate root (entrypoint) for a library crate with the same name as the package.
+
+#### Modules
+
+Modules are used to organize code. A module can contain submodules. A module can be inline or be a part of a directory structure.
+
+Modules are private by default and need to be specified with `pub mod` to be public and usable from other parts of the code.
+
+Modules cheatsheet: <https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html#modules-cheat-sheet>
+
+Inline modules.
+
+```rs
+mod parent_module {
+  mod child_module_1 {
+    fn hello_world() {}
+  }
+
+  mod child_module_2 {
+    fn hello_world_2() {}
+  }
+}
+```
+
+File structure 1. Module as a single file `module.rs`.
+
+```text
+project/
+└── src/
+    ├── lib.rs    -> Crate root (contains `pub mod garden;` to use garden module)
+    ├── garden/
+    │   ├── vegetables.rs    -> Submodule of `garden` module
+    │   └── fruits.rs        -> Submodule of `garden` module
+    └── garden.rs    -> Module named `garden`
+```
+
+File structure 2. Module in a directory `module_name/mod.rs`.
+
+```text
+project/
+└── src/
+    ├── lib.rs    -> Crate root (contains `pub mod garden;` to use garden module)
+    └── garden/
+        ├── mod.rs    -> Module named `garden`
+        └── vegetables/
+            └── mod.rs    -> Submodule of `garden` module
 ```
