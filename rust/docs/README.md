@@ -37,6 +37,10 @@
     - [Crates](#crates-1)
     - [Packages](#packages)
     - [Modules](#modules)
+    - [Referencing Modules](#referencing-modules)
+    - [Bringing Paths into Scope with `use`](#bringing-paths-into-scope-with-use)
+    - [Re-exporting Names with `pub use`](#re-exporting-names-with-pub-use)
+    - [Nested Paths for Cleaner `use`](#nested-paths-for-cleaner-use)
 
 ## Resources
 
@@ -538,4 +542,148 @@ project/
         ├── mod.rs    -> Module named `garden`
         └── vegetables/
             └── mod.rs    -> Submodule of `garden` module
+```
+
+#### Referencing Modules
+
+Modules can be referenced with an absolute path or a relative path.
+
+`src/lib.rs`
+
+```rs
+// `front_of_house` is accessible in `eat_at_restaurant` because
+// they are siblings.
+mod front_of_house {
+  // `hosting` needs to be made public as it's inside another module
+  // and `eat_at_restaurant` doesn't have access to it.
+  pub mod hosting {
+    // This function also needs to be made public to be accessed
+    // from `eat_at_restaurant`.
+    pub fn add_to_waitlist() {}
+  }
+}
+
+fn eat_at_restaurant() {
+  // Absolute
+  // Absolute paths to modules start with `crate` which is the library's root.
+  crate::front_of_house::hosting::add_to_waitlist();
+
+  // Relative
+  front_of_house::hosting::add_to_waitlist();
+}
+```
+
+For packages that contain both a binary and a library, the best practice is to have most of the code inside the library (`src/lib.rs` entry point) and treat the binary (`src/main.rs`) as the client of the library so the package is reusable.
+
+In relative referencing, we can use `super` to access parent modules which works pretty much like the `..` for directories.
+
+We can also use `pub` to make structs and enums public. For structs, the fields inside also need to be made public with `pub`. Enums are public as whole and cannot be made public or private at the field/variant level.
+
+#### Bringing Paths into Scope with `use`
+
+The `use` keyword can be used to bring paths into the scope to avoid writing full paths.
+
+```rs
+mod parent_mod {
+  pub mod sub_mod {
+    pub fn some_fn() {}
+  }
+}
+
+use crate::parent_mod::sub_mod;
+
+fn caller_fn() {
+  sub_mod::some_fn();
+}
+```
+
+This brings the path to the same scope where `use` is used. Which means that the `main` function would not be able to use `sub_mod` if it was inside another module.
+
+```rs
+mod other_mod {
+  fn caller_fn() {
+    // Now this will fail as `sub_mod` is outside the `other_mod` scope.
+    sub_mod::some_fn();
+  }
+}
+```
+
+Specifying full paths is also supported and is useful for structs or std types.
+
+```rs
+use std::collections::HashMap;
+
+fn main() {
+  let mut map = HashMap::new();
+  map.insert(1, 2);
+}
+```
+
+We can not use full paths when bringing two items with the same name. In such a case, we have two options.
+
+1. Specify the path until the module. (`use std::fmt`)
+2. Use the `as` keyword to alias the type (`use std::fmt::Result as FmtResult`).
+
+```rs
+// First Way
+use std::fmt;
+use std::io;
+
+fn test_fn1() -> fmt::Result {}
+fn test_fn2() -> io::Result {}
+
+// Second Way
+use std::fmt::Result;
+use std::io::Result as IoResult;
+
+fn test_fn1() -> Result {}
+fn test_fn2() -> IoResult {}
+```
+
+#### Re-exporting Names with `pub use`
+
+We can use `pub use` to re-export names that we specify with `use` so they become public and accessible from external code.
+
+`restaurant/src/lib.rs`
+
+```rs
+mod front_of_house {
+  pub mod hosting {
+    pub fn add_to_waitlist() {}
+  }
+}
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+  hosting::add_to_waitlist();
+}
+```
+
+Previously, external code would have to use `restaurant::front_of_house::hosting::add_to_waitlist()` to access the function. But with `pub use`, it can be accessed like `restaurant::hosting::add_to_waitlist()` as the `hosting` module name is re-exported.
+
+This is useful for structuring the public API that's exported to external clients so it's more intuitive for them to work with your library.
+
+#### Nested Paths for Cleaner `use`
+
+```rs
+// Without Nesting
+use std::cmp::Ordering;
+use std::io;
+
+// With Nesting
+use std::{cmp::Ordering, io};
+```
+
+For bringing the module itself into scope while naming a specific type in the same module.
+
+```rs
+// This line brings std::io and std::io::Write into scope.
+use std::io::{self, Write};
+```
+
+A glob operator can also be used to import all public items from a module but it should be avoided and is usually only used for tests. Using glob import can break code in case upstream item names change.
+
+```rs
+use std::io::*;
 ```
