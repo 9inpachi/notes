@@ -41,6 +41,7 @@
     - [Bringing Paths into Scope with `use`](#bringing-paths-into-scope-with-use)
     - [Re-exporting Names with `pub use`](#re-exporting-names-with-pub-use)
     - [Nested Paths for Cleaner `use`](#nested-paths-for-cleaner-use)
+  - [Strings](#strings)
 
 ## Resources
 
@@ -686,4 +687,26 @@ A glob operator can also be used to import all public items from a module but it
 
 ```rs
 use std::io::*;
+```
+
+### Strings
+
+In Rust, string is implemented as a wrapper around a vector (`Vec<T>`) of bytes with some extra guarantees.
+
+When talking about strings in Rust, we usually refer to either the `String` type or the string slice slice (`str` usually used as `&str`). The string slice (`&str`) is part of the core Rust language but the `String` type is included in the standard library and not a part of the core language.
+
+String slices (`&str`) are references to UTF-8 encoded data stored elsewhere which is why they are almost always used as reference. String literals are stored in the program's binary and also also string slices.
+
+Using the `+` operator gives ownership of the first variable to the resulting variable. This is because the underlying `add` function has the following signature.
+
+```rs
+fn add(self, s: &str) -> String
+```
+
+So when we do `let s3 = s1 + &s2`, the `self` parameter takes ownership of `s1`.
+
+Rust does not let you access string chars by index because it may store a single letter in another language across multiple bytes as UTF-8 and this can cause issues. There are other reasons for this as well, so access by index is not allowed altogether. However, we can use string slicing.
+
+```rs
+&s[0..4];
 ```
