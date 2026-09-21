@@ -3,45 +3,46 @@
 - [Resources](#resources)
 - [Install Rust](#install-rust)
 - [Cargo](#cargo)
-- [Concepts](#concepts)
-  - [Crates](#crates)
-  - [Data Types](#data-types)
-    - [Integer](#integer)
-    - [Floats](#floats)
-    - [Compound Data Types](#compound-data-types)
-      - [Tuples](#tuples)
-      - [Arrays](#arrays)
-  - [Functions](#functions)
-    - [Statements and Expressions](#statements-and-expressions)
-  - [Ownership](#ownership)
-    - [Stack and Heap](#stack-and-heap)
-    - [Ownership Rules](#ownership-rules)
-    - [String Type](#string-type)
-    - [Memory and Allocation](#memory-and-allocation)
-      - [Stack and Heap](#stack-and-heap-1)
-    - [Stack Only Data (Copy)](#stack-only-data-copy)
-    - [References](#references)
-      - [Dangling References](#dangling-references)
-    - [Ownership in Functions](#ownership-in-functions)
-    - [Slice Type](#slice-type)
-  - [Structs](#structs)
-    - [Derived Traits](#derived-traits)
-    - [Struct Methods](#struct-methods)
-    - [Associated Functions](#associated-functions)
-    - [Multiple `impl` Blocks](#multiple-impl-blocks)
-  - [Enums](#enums)
-    - [Option Enum](#option-enum)
-  - [Control Flow with `match`](#control-flow-with-match)
-    - [Concise Control Flow with `if let`](#concise-control-flow-with-if-let)
-  - [Packages, Crates and Modules](#packages-crates-and-modules)
-    - [Crates](#crates-1)
-    - [Packages](#packages)
-    - [Modules](#modules)
-    - [Referencing Modules](#referencing-modules)
-    - [Bringing Paths into Scope with `use`](#bringing-paths-into-scope-with-use)
-    - [Re-exporting Names with `pub use`](#re-exporting-names-with-pub-use)
-    - [Nested Paths for Cleaner `use`](#nested-paths-for-cleaner-use)
-  - [Strings](#strings)
+- [Crates](#crates)
+- [Data Types](#data-types)
+  - [Integer](#integer)
+  - [Floats](#floats)
+  - [Compound Data Types](#compound-data-types)
+    - [Tuples](#tuples)
+    - [Arrays](#arrays)
+- [Functions](#functions)
+  - [Statements and Expressions](#statements-and-expressions)
+- [Ownership](#ownership)
+  - [Stack and Heap](#stack-and-heap)
+  - [Ownership Rules](#ownership-rules)
+  - [String Type](#string-type)
+  - [Memory and Allocation](#memory-and-allocation)
+    - [Stack and Heap](#stack-and-heap-1)
+  - [Stack Only Data (Copy)](#stack-only-data-copy)
+  - [References](#references)
+    - [Dangling References](#dangling-references)
+  - [Ownership in Functions](#ownership-in-functions)
+  - [Slice Type](#slice-type)
+- [Structs](#structs)
+  - [Derived Traits](#derived-traits)
+  - [Struct Methods](#struct-methods)
+  - [Associated Functions](#associated-functions)
+  - [Multiple `impl` Blocks](#multiple-impl-blocks)
+- [Enums](#enums)
+  - [Option Enum](#option-enum)
+- [Control Flow with `match`](#control-flow-with-match)
+  - [Concise Control Flow with `if let`](#concise-control-flow-with-if-let)
+- [Packages, Crates and Modules](#packages-crates-and-modules)
+  - [Crates](#crates-1)
+  - [Packages](#packages)
+  - [Modules](#modules)
+  - [Referencing Modules](#referencing-modules)
+  - [Bringing Paths into Scope with `use`](#bringing-paths-into-scope-with-use)
+  - [Re-exporting Names with `pub use`](#re-exporting-names-with-pub-use)
+  - [Nested Paths for Cleaner `use`](#nested-paths-for-cleaner-use)
+- [Strings](#strings)
+- [Error Handling](#error-handling)
+  - [The `Result` Type](#the-result-type)
 
 ## Resources
 
@@ -77,9 +78,7 @@ cargo build --release
 cargo update
 ```
 
-## Concepts
-
-### Crates
+## Crates
 
 A crate is a collection of Rust source code files. There are two types of crates.
 
@@ -95,7 +94,7 @@ rand = "0.8.5"
 
 After adding a dependency, `cargo build` can be used to build the dependency and transitive dependencies added because of it.
 
-### Data Types
+## Data Types
 
 Rust is a statically typed language so it must know about types of all variables at compile time.
 
@@ -106,7 +105,7 @@ Rust has four scalar data types.
 - Boolean
 - Character
 
-#### Integer
+### Integer
 
 Integers can be signed and unsigned (with negative values) and support the following primitive types.
 
@@ -125,13 +124,13 @@ Integers can be written in any of the following forms.
 - Binary: 0b1111_0000
 - Byte (only u8): b'A'
 
-#### Floats
+### Floats
 
 Floats have two primitive types f32 and f64 with f64 being the default.
 
-#### Compound Data Types
+### Compound Data Types
 
-##### Tuples
+#### Tuples
 
 Tuples are used to compound multiple types.
 
@@ -141,7 +140,7 @@ let tup: (u32, f64, char) = (300, 20.4, 'Z');
 
 **Tuples without any values are special and called "unit".** This value and its corresponding type are both written `()` and represent an empty value or an empty return type. Expressions implicitly return the unit value if they don’t return any other value.
 
-##### Arrays
+#### Arrays
 
 Array are of fixed length and all their values must be of the same type.
 
@@ -150,16 +149,16 @@ Array are of fixed length and all their values must be of the same type.
 let arr: [u8; 3] = [1, 2, 3];
 ```
 
-### Functions
+## Functions
 
-#### Statements and Expressions
+### Statements and Expressions
 
 - Statements are instructions that perform some action and do not return a value.
 - Expressions evaluate to a resultant value.
 
-### Ownership
+## Ownership
 
-#### Stack and Heap
+### Stack and Heap
 
 Important read for better understanding: <https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html#the-stack-and-the-heap>
 
@@ -179,13 +178,13 @@ Pushing to the stack is faster than allocating on the heap because the allocator
 
 Comparatively, allocating space on the heap requires more work because the allocator must first find a big enough space to hold the data and then perform bookkeeping to prepare for the next allocation.
 
-#### Ownership Rules
+### Ownership Rules
 
 - Each value in Rust has an owner.
 - There can only be one owner at a time.
 - When the owner goes out of scope, the value will be dropped.
 
-#### String Type
+### String Type
 
 A normal string variable `let s = "hello"` is hard coded into code, is called a string literal and has a fixed size known at compile time.
 
@@ -196,7 +195,7 @@ let mut s = String::from("hello");
 s.push_str(", world!"); // push_str() appends a literal to a String
 ```
 
-#### Memory and Allocation
+### Memory and Allocation
 
 For integers and other simple types that have a fixed size, their values are stored entirely on the stack. So when the variables are re-assigned, the new variable gets a copy of the value instead of a reference to the heap in the stack.
 
@@ -206,7 +205,7 @@ To prevent double pointers in complex types, when we do trivial `let s2 = s1`, `
 
 For deep copy of complex types, `let s2 = s1.clone()` can be used to create a new variable with a new pointer in stack and a new space in heap copying the data of `s1`. With this, the `move` doesn't happen and both `s1` and `s2` are usable.
 
-##### Stack and Heap
+#### Stack and Heap
 
 From my understanding, think of stack as a first layer in memory that either stores the value or a pointer to the value. Heap is the second layer of memory that stores larger data. If a variable is of fixed size (like i32), then the value is directly stored in the stack. If the variable is of variable size (like String), then a pointer is stored in the stack that points to a location in heap that contains the data.
 
@@ -222,11 +221,11 @@ In the following image, the pointer data is stored in stack and the right table 
 
 ![Pointers](./assets/01_pointers.svg)
 
-#### Stack Only Data (Copy)
+### Stack Only Data (Copy)
 
 For data like integers that are only stored in stack and not heap. A `Copy` trait can be placed on types to implement how data should be copied. A type with `Drop` trait cannot have `Copy` trait as such a type requires special memory handling which is not supported for data stored in stack only.
 
-#### References
+### References
 
 Creating a reference (e.g. `fn test(s: &String);`) enables us to refer/point to a variable without taking ownership of it.
 
@@ -257,7 +256,7 @@ let r2 = &mut s;
 println!("{r2}");
 ```
 
-##### Dangling References
+#### Dangling References
 
 Dangling references are created by a dangling pointer which points to a location in memory that may have been given to someone else. This could be due to that part of memory being freed up but the dangling pointer still pointing to it.
 
@@ -274,7 +273,7 @@ fn dangle() {
 } // `s` goes of of scope and is dropped after the function ends unless the `value` itself is returned.
 ```
 
-#### Ownership in Functions
+### Ownership in Functions
 
 Functions handle variables/arguments in the following ways.
 
@@ -296,11 +295,11 @@ Functions handle variables/arguments in the following ways.
    fn test(var: &mut String) {}
    ```
 
-#### Slice Type
+### Slice Type
 
 Slices let you reference a contiguous sequence of elements in a collection. A slice is a kind of reference, so it does not have ownership.
 
-### Structs
+## Structs
 
 ```rs
 struct User {
@@ -333,7 +332,7 @@ let user2 = User {
 // Since `user1.username` was not redefined, it's ownership was moved to `user2`.
 ```
 
-#### Derived Traits
+### Derived Traits
 
 When using `println!()` macro, the `{variable}` syntax uses the `Display` trait of a type. Structs don't have an implementation of the `Display` trait by default.
 
@@ -359,7 +358,7 @@ let user = User {
 dbg!(&user);
 ```
 
-#### Struct Methods
+### Struct Methods
 
 ```rs
 impl Rectangle {
@@ -377,7 +376,7 @@ objectPtr->somMethod(); // Rust: objectPtr.someMethod();
 (*objectPtr).somMethod();
 ```
 
-#### Associated Functions
+### Associated Functions
 
 All functions defined inside `impl` are called _associated functions_ because they are associated with the type being implemented. We can define functions inside `impl` that are not methods and don't have `self` as the first parameter. These functions are for used when the instance of a type is not needed, for example, for creating the instance itself (`String::from()`).
 
@@ -395,7 +394,7 @@ impl Rectangle {
 let square = Rectangle::square(20);
 ```
 
-#### Multiple `impl` Blocks
+### Multiple `impl` Blocks
 
 It's valid for each struct to have multiple `impl` blocks.
 
@@ -413,7 +412,7 @@ t.method1();
 t.method2();
 ```
 
-### Enums
+## Enums
 
 Enums in Rust can be simple or hold struct-like values.
 
@@ -426,7 +425,7 @@ enum Message {
 }
 ```
 
-#### Option Enum
+### Option Enum
 
 Rust does not have `null` but it has an enum that encodes the concept of a value being present or absent.
 
@@ -439,7 +438,7 @@ enum Option<T> {
 
 This enum is very commonly used and is included in the prelude so we don't need to explicitly import it. `Some` and `None` can also be used without the `Option::` prefix.
 
-### Control Flow with `match`
+## Control Flow with `match`
 
 This is like the switch statement in other language but more powerful.
 
@@ -458,7 +457,7 @@ match size {
 }
 ```
 
-#### Concise Control Flow with `if let`
+### Concise Control Flow with `if let`
 
 ```rs
 let optional: Option<i32> = Some(10);
@@ -468,9 +467,9 @@ if let Some(value) = optional {
 }
 ```
 
-### Packages, Crates and Modules
+## Packages, Crates and Modules
 
-#### Crates
+### Crates
 
 A crate is the smallest amount of code the Rust compiler considers at a time. Crates can contain modules, and the modules may be defined in other files that get compiled with the crate.
 
@@ -483,7 +482,7 @@ In Rust, crates are generally used to refer to libraries. But a CLI or server ex
 
 Crate root is the source file the Rust compiler starts from.
 
-#### Packages
+### Packages
 
 A package is a bundle of one or more crates that provides a set of functionality. A package contains `Cargo.toml` that describes how to build those crates.
 
@@ -499,7 +498,7 @@ cargo new my-project
 
 By default, Cargo uses the `project/src/main.rs` as the crate root (entrypoint) for a binary crate with the same name as the package. Similarly, `project/src/lib.rs` is used as the crate root (entrypoint) for a library crate with the same name as the package.
 
-#### Modules
+### Modules
 
 Modules are used to organize code. A module can contain submodules. A module can be inline or be a part of a directory structure.
 
@@ -545,7 +544,7 @@ project/
             └── mod.rs    -> Submodule of `garden` module
 ```
 
-#### Referencing Modules
+### Referencing Modules
 
 Modules can be referenced with an absolute path or a relative path.
 
@@ -580,7 +579,7 @@ In relative referencing, we can use `super` to access parent modules which works
 
 We can also use `pub` to make structs and enums public. For structs, the fields inside also need to be made public with `pub`. Enums are public as whole and cannot be made public or private at the field/variant level.
 
-#### Bringing Paths into Scope with `use`
+### Bringing Paths into Scope with `use`
 
 The `use` keyword can be used to bring paths into the scope to avoid writing full paths.
 
@@ -641,7 +640,7 @@ fn test_fn1() -> Result {}
 fn test_fn2() -> IoResult {}
 ```
 
-#### Re-exporting Names with `pub use`
+### Re-exporting Names with `pub use`
 
 We can use `pub use` to re-export names that we specify with `use` so they become public and accessible from external code.
 
@@ -665,7 +664,7 @@ Previously, external code would have to use `restaurant::front_of_house::hosting
 
 This is useful for structuring the public API that's exported to external clients so it's more intuitive for them to work with your library.
 
-#### Nested Paths for Cleaner `use`
+### Nested Paths for Cleaner `use`
 
 ```rs
 // Without Nesting
@@ -689,7 +688,7 @@ A glob operator can also be used to import all public items from a module but it
 use std::io::*;
 ```
 
-### Strings
+## Strings
 
 In Rust, string is implemented as a wrapper around a vector (`Vec<T>`) of bytes with some extra guarantees.
 
@@ -709,4 +708,70 @@ Rust does not let you access string chars by index because it may store a single
 
 ```rs
 &s[0..4];
+```
+
+## Error Handling
+
+We can use `panic!()` to abort a program in case of unrecoverable errors.
+
+```rs
+fn main() {
+  panic!("Hello panic");
+}
+```
+
+By default, a panic causes the program to unwind which means that it walks back in the call stack and clears memory from each function. We can set the panic behavior to `abort` in `Cargo.toml` which aborts the program without cleanup.
+
+```rs
+[profile.release]
+panic = 'abort'
+```
+
+### The `Result` Type
+
+Recoverable errors can be handled using the `Result<T, E>` type.
+
+```rs
+let file_result = File::open("hello.txt");
+
+let file = match file_result {
+  Ok(file) => file,
+  Err(error) => panic!("Error reading file"),
+};
+```
+
+When defining functions, we can use the `?` operator to return the error directly to the caller.
+
+```rs
+fn read_file() -> Result<String, io::Error> {
+  let mut file = File::open("hello.txt")?;
+  // The `file` variable now contains a valid `File`.
+  let mut text = String::new();
+  // Using `?` here as well so the error is returned in case read to string fails.
+  file.read_to_string(&mut text)?;
+  
+  Ok(text)
+}
+```
+
+Error values that have the `?` operator called on them go through the `from` function, defined in the From trait in the standard library, which is used to convert values from one type into another. When the `?` operator calls the `from` function, the error type received is converted into the error type defined in the return type of the current function.
+
+`?` operator can also be used in a function that returns an `Option<T>`. It can not be used directly inside the bare `main` function as it does not have the `Result<T, E>` or `Option<T>` return type.
+
+```rs
+fn last_char_of_first_line(text: &str) -> Option<char> {
+    text.lines().next()?.chars().last()
+}
+```
+
+The `main` function can also have a return type if it implements the `std::process::Termination` trait.
+
+```rs
+use std::error::Error;
+use std::fs::File;
+
+fn main() -> Result<(), Box<dyn Error>> {
+  let greeting_file = File::open("hello.txt")?;
+  Ok(())
+}
 ```
