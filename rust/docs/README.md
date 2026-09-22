@@ -43,6 +43,7 @@
 - [Strings](#strings)
 - [Error Handling](#error-handling)
   - [The `Result` Type](#the-result-type)
+- [Generic Types](#generic-types)
 
 ## Resources
 
@@ -773,5 +774,34 @@ use std::fs::File;
 fn main() -> Result<(), Box<dyn Error>> {
   let greeting_file = File::open("hello.txt")?;
   Ok(())
+}
+```
+
+## Generic Types
+
+```rs
+struct PointSimple<T> {
+  x: T,
+  y: T,
+}
+enum Answer<T> {
+  Yes(T),
+  No(T),
+}
+```
+
+Constrained to comparable types.
+
+```rs
+fn largest<T: std::cmp::PartialOrd>(values: &[T]) -> &T
+```
+
+Constrained implementation of a method. The following method of the struct is only usable with `f32` type.
+
+```rs
+impl PointSimple<f32> {
+  fn distance_from_origin(&self) -> f32 {
+    (self.x.powi(2) + self.y.powi(2)).sqrt()
+  }
 }
 ```
