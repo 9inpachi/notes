@@ -49,6 +49,12 @@
   - [Multiple Trait Bounds](#multiple-trait-bounds)
   - [Returning Types that Implement Traits](#returning-types-that-implement-traits)
   - [Conditionally Implement Methods with Trait Bounds](#conditionally-implement-methods-with-trait-bounds)
+- [Generic Lifetimes](#generic-lifetimes)
+  - [Generic Lifetimes Relationships](#generic-lifetimes-relationships)
+  - [In Struct Generic Lifetimes](#in-struct-generic-lifetimes)
+  - [Lifetime Elision Rules](#lifetime-elision-rules)
+  - [In Method Generic Lifetime Definitions](#in-method-generic-lifetime-definitions)
+  - [The Static Lifetime](#the-static-lifetime)
 
 ## Resources
 
@@ -925,3 +931,118 @@ impl<T: Display> ToString for T {
 ```
 
 For more info, see <https://doc.rust-lang.org/stable/book/ch10-02-traits.html#using-trait-bounds-to-conditionally-implement-methods>.
+
+## Generic Lifetimes
+
+Full docs: <https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html>
+
+Take the following example that will result in a compiler error.
+
+```rs
+fn main() {
+  let string1 = String::from("abcd");
+  let string2 = "xyz";
+
+  let result = longest(string1.as_str(), string2);
+  println!("The longest string is {result}");
+}
+
+fn longest(x: &str, y: &str) -> &str {
+  if x.len() > y.len() { x } else { y }
+}
+```
+
+At compile time, we don't know the concrete values of `x` and `y` and if `x` or `y` will be returned. We also don't know the concrete lifetimes of the passed in references. The borrow checker can’t determine this either, because it doesn’t know how the lifetimes of `x` and `y` relate to the lifetime of the return value at compile time.
+
+For example, consider the following code.
+
+```rs
+fn main() {
+  let string1 = String::from("abcd");
+  let result;
+
+  {
+    let string2 = "xyz";
+    result = longest(string1.as_str(), string2);
+  }
+  println!("The longest string is {result}");
+}
+```
+
+In this example, the lifetime of `string1` and `string2` is different, so the lifetime of the reference returned by the `longest` function (either `string1` or `string2`) is ambiguous and the compiler doesn't know for sure which reference is returned and should be checked at compile time as the `result` reference is dynamic and can have one of the two lifetimes. So the compilation fails. 
+
+To fix this, we can use lifetime annotations like generics.
+
+```rs
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+  if x.len() > y.len() { x } else { y }
+}
+```
+
+`'a` is a generic lifetime parameter that tells Rust that for some lifetime `'a`, the function takes two parameters, both of which are string slices that live at least as long as lifetime `'a`. The function signature also tells Rust that the string slice returned from the function will live at least as long as lifetime `'a`. In practice, it means that the lifetime of the reference returned by the longest function is the same as the smaller of the lifetimes of the values referred to by the function arguments. 
+
+Lifetimes on function or method parameters are called input lifetimes, and lifetimes on return values are called output lifetimes.
+
+### Generic Lifetimes Relationships
+
+The relationship between generic lifetime in parameters and return type depends on what the function does. If the function doesn't use a parameter or for example doesn't return the second parameter's value, the generic isn't needed on the second parameter.
+
+```rs
+fn longest<'a>(x: &'a str, y: &str) -> &'a str {
+  x
+}
+```
+
+Ultimately, lifetime syntax is about connecting the lifetimes of various parameters and return values of functions. Once they’re connected, Rust has enough information to allow memory-safe operations and disallow operations that would create dangling pointers or otherwise violate memory safety.
+
+### In Struct Generic Lifetimes
+
+Generic lifetimes can also be used inside structs on references and if the reference in the field dies, then the struct cannot be used either. Similar to variable references themselves.
+
+```rs
+struct ImportantExcerpt<'a> {
+  // String slice.
+  part: &'a str,
+}
+
+fn main() {
+  let text = String::from("Hello. World");
+  let first = text.split('.').next().unwrap();
+  let i = ImportantExcerpt {
+    part: first,
+  };
+}
+```
+
+### Lifetime Elision Rules
+
+The patterns programmed into Rust’s analysis of references are called the lifetime elision rules.
+
+The first rule is that the compiler assigns a lifetime parameter to each parameter that’s a reference. In other words, a function with one parameter gets one lifetime parameter: `fn foo<'a>(x: &'a i32);` a function with two parameters gets two separate lifetime parameters: `fn foo<'a, 'b>(x: &'a i32, y: &'b i32);` and so on.
+
+The second rule is that, if there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters: `fn foo<'a>(x: &'a i32) -> &'a i32`.
+
+The third rule is that, if there are multiple input lifetime parameters, but one of them is &self or &mut self because this is a method, the lifetime of self is assigned to all output lifetime parameters. This third rule makes methods much nicer to read and write because fewer symbols are necessary.
+
+### In Method Generic Lifetime Definitions
+
+The following method will use `&self`' reference's lifetime for the returned reference because of the third rule (above) and because the `'a` generic lifetime is not used in the function definition so Rust infers the lifetime for us.
+
+```rs
+impl<'a> ImportantExcerpt<'a> {
+  fn announce_and_return_part(&self, announcement: &str) -> &str {
+    println!("Attention please: {announcement}");
+    self.part
+  }
+}
+```
+
+### The Static Lifetime
+
+`'static` is a special lifetime which denotes that the affected or marked reference will live for the entire duration of the program. This is used in string literals which are a part of the compiled binary.
+
+```rs
+let s: &'static str = "Test";
+```
+
+Use this scarcely and only if the reference is actually meant to exist for the entire program duration.
