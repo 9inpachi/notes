@@ -44,6 +44,11 @@
 - [Error Handling](#error-handling)
   - [The `Result` Type](#the-result-type)
 - [Generic Types](#generic-types)
+- [Traits](#traits)
+  - [Traits as Parameters](#traits-as-parameters)
+  - [Multiple Trait Bounds](#multiple-trait-bounds)
+  - [Returning Types that Implement Traits](#returning-types-that-implement-traits)
+  - [Conditionally Implement Methods with Trait Bounds](#conditionally-implement-methods-with-trait-bounds)
 
 ## Resources
 
@@ -750,7 +755,7 @@ fn read_file() -> Result<String, io::Error> {
   let mut text = String::new();
   // Using `?` here as well so the error is returned in case read to string fails.
   file.read_to_string(&mut text)?;
-  
+
   Ok(text)
 }
 ```
@@ -805,3 +810,118 @@ impl PointSimple<f32> {
   }
 }
 ```
+
+## Traits
+
+A trait defines the functionality a particular type has and can share with other types. We can use traits to define shared behavior in an abstract way.
+
+Traits are similar to interfaces although there are some differences.
+
+```rs
+pub trait Summary {
+  fn summarize(&self) -> String;
+}
+```
+
+Traits can be implemented if either the trait or the type belongs to your crate. If both the trait and type come from an external library (e.g. the `Display` trait and the `Vec<T>` type), the trait cannot be implemented. Without the rule, two crates could implement the same trait for the same type, and Rust wouldn’t know which implementation to use.
+
+### Traits as Parameters
+
+Traits can be used as parameters to bound a parameter to a specific contract/interface (called trait bound).
+
+```rs
+fn notify(item: &impl Summary) {}
+```
+
+The `impl Summary` part makes sure that the type passed as item implements the `Summary` trait.
+
+The full syntax for trait bounds is the following.
+
+```rs
+fn notify<T: Summary>(item: &T) {}
+// Makes multiple parameters shorter.
+fn notify<T: Summary>(item1: &T, item2: &T) {}
+```
+
+### Multiple Trait Bounds
+
+More than one trait bounds can be specified for a parameter if we want the type to implement multiple traits.
+
+```rs
+fn notify(item: &(impl Summary + Display)) {}
+```
+
+More syntactic sugar can be used to make multiple trait bounds easier to read. For example, the following can use the `where` clause to specify generic types.
+
+```rs
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {}
+// Using `where` clause.
+fn some_function<T, U>(t: &T, u: &U) -> i32
+  where
+    T: Display + Clone,
+    U: Clone + Debug,
+{}
+```
+
+### Returning Types that Implement Traits
+
+Consider a `Shape` trait is implemented by `struct Rectangle { width: String, height: String }`.
+
+```rs
+fn returns_calculable() -> impl Shape {
+  Rectangle { width: 100, height: 50 }
+}
+```
+
+The returned value can be used to call any function specified in `Shape`.
+
+A limitation is that, two different types that implement the trait can't be returned by a function.
+
+```rs
+// THIS WON'T COMPILE.
+fn returns_calculable(switch: bool) -> impl Shape {
+  if switch {
+    Rectangle { width: 100, height: 50 }
+  } else {
+    Square { size: 10 }
+  }
+}
+```
+
+### Conditionally Implement Methods with Trait Bounds
+
+We can implement methods in a struct that are conditional so that they are only usable if the type implements some existing required traits.
+
+```rs
+use std::fmt::Display;
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+  // This is only usable if `T` implements `Display` and `PartialOrd` traits.
+  fn cmp_display(&self) {
+    if self.x >= self.y {
+      println!("The largest member is x = {}", self.x);
+    } else {
+      println!("The largest member is y = {}", self.y);
+    }
+  }
+}
+```
+
+We can also conditionally implement a trait for any type that implements another trait. These are called blanket implementations because they cover all types that implement the other trait. For example, since the `Display` trait already handles converting a type to string, the `ToString` (applied to all types) trait will be implemented for all types using the already existing functionality in the `Display` trait.
+
+```rs
+impl<T: Display> ToString for T {
+  // This is not a real implementation.
+  fn to_string(&self) -> String {
+    // Imagine that this returns a string and comes from the `Display` trait's implementation.
+    self.display()
+  }
+}
+```
+
+For more info, see <https://doc.rust-lang.org/stable/book/ch10-02-traits.html#using-trait-bounds-to-conditionally-implement-methods>.
