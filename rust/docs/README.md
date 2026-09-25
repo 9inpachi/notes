@@ -1022,11 +1022,11 @@ The first rule is that the compiler assigns a lifetime parameter to each paramet
 
 The second rule is that, if there is exactly one input lifetime parameter, that lifetime is assigned to all output lifetime parameters: `fn foo<'a>(x: &'a i32) -> &'a i32`.
 
-The third rule is that, if there are multiple input lifetime parameters, but one of them is &self or &mut self because this is a method, the lifetime of self is assigned to all output lifetime parameters. This third rule makes methods much nicer to read and write because fewer symbols are necessary.
+The third rule is that, if there are multiple input lifetime parameters, but one of them is `&self` or `&mut self` because this is a method, the lifetime of self is assigned to all output lifetime parameters. This third rule makes methods much nicer to read and write because fewer symbols are necessary.
 
 ### In Method Generic Lifetime Definitions
 
-The following method will use `&self`' reference's lifetime for the returned reference because of the third rule (above) and because the `'a` generic lifetime is not used in the function definition so Rust infers the lifetime for us.
+The following method will use `&self` reference's lifetime for the returned reference because of the third rule (above) and because the `'a` generic lifetime is not used in the function definition so Rust infers the lifetime for us.
 
 ```rs
 impl<'a> ImportantExcerpt<'a> {
