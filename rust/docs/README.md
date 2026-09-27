@@ -55,6 +55,13 @@
   - [Lifetime Elision Rules](#lifetime-elision-rules)
   - [In Method Generic Lifetime Definitions](#in-method-generic-lifetime-definitions)
   - [The Static Lifetime](#the-static-lifetime)
+- [Tests](#tests)
+  - [Controlling Test Runs](#controlling-test-runs)
+  - [Tests Organization](#tests-organization)
+    - [Private Function Tests](#private-function-tests)
+    - [Integration Tests](#integration-tests)
+    - [Submodules in Integration Tests](#submodules-in-integration-tests)
+    - [Integration Tests for Binary Crates](#integration-tests-for-binary-crates)
 
 ## Resources
 
@@ -1046,3 +1053,126 @@ let s: &'static str = "Test";
 ```
 
 Use this scarcely and only if the reference is actually meant to exist for the entire program duration.
+
+## Tests
+
+```rs
+fn add(a: u32, b: u32) -> u32 {
+  a + b;
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_add() {
+    let result = add(32, 32);
+    assert_eq!(result, 64);
+  }
+}
+```
+
+### Controlling Test Runs
+
+By default, Rust tests run in parallel using threads. To specify the number of threads, use `--test-threads`.
+
+```sh
+cargo test -- --test-threads=1
+```
+
+By default, `print` statements are silent. Enable them using `--show-output`.
+
+```sh
+cargo test -- --show-output
+```
+
+To run specific tests, use the name of the test function.
+
+```sh
+cargo test test_fn_name
+```
+
+This will run all tests that include `test_fn_name` in the function name.
+
+Ignoring tests.
+
+```rs
+#[test]
+#[ignore]
+fn expensive_test() {
+  // code that takes an hour to run
+}
+```
+
+To run only the ignored tests.
+
+```sh
+cargo test -- --ignored
+```
+
+### Tests Organization
+
+Unit tests are conventionally written in the same file as the code inside a `tests` module (`mod tests`)s annotated with `#[cfg(test)]`.
+
+The `#[cfg(test)]` annotation tells rust to compile tests only when we run `cargo test` and not with `cargo build` to exclude tests in the built binary.
+
+#### Private Function Tests
+
+Rust doesn't have any mechanism to stop from testing private functions. Functions that are not exported from the module using `pub` are still available for testing inside the `tests` module.
+
+For example, the following function is private (no `pub`) but is still testable.
+
+```rs
+fn add(a: u32, b: u32) -> u32 {
+  a + b;
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_add() {
+    let result = add(32, 32);
+    assert_eq!(result, 64);
+  }
+}
+```
+
+#### Integration Tests
+
+Integration tests exist in the `<project>/tests` folder.
+
+A particular integration test file can be specified to run using `--test`.
+
+```sh
+cargo test --test integration_test
+```
+
+Where `integration_test` is the filename where the integration tests exist (`tests/integration_test.rs`).
+
+#### Submodules in Integration Tests
+
+For creating submodules for integration tests, we need to create the `mod.rs` instead of using the module name itself inside the `/tests` directory as that will start including the file in test runs.
+
+For example, the following will show the `common.rs` as a file when we run `cargo test` because all root level files are considered integration tests. 
+
+```text
+project/
+└── tests/
+    └── common.rs
+```
+
+So we specify the module inside `common/mod.rs` instead.
+
+```rs
+project/
+└── tests/
+    └── common/
+        └── mod.rs
+```
+
+#### Integration Tests for Binary Crates
+
+If our project is a binary crate that only contains a src/main.rs file and doesn’t have a src/lib.rs file, we can’t create integration tests in the tests directory and bring functions defined in the src/main.rs file into scope with a use statement. Only library crates expose functions that other crates can use; binary crates are meant to be run on their own.
