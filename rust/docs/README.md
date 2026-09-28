@@ -43,6 +43,7 @@
 - [Strings](#strings)
 - [Error Handling](#error-handling)
   - [The `Result` Type](#the-result-type)
+  - [Printing to Standard Error](#printing-to-standard-error)
 - [Generic Types](#generic-types)
 - [Traits](#traits)
   - [Traits as Parameters](#traits-as-parameters)
@@ -794,6 +795,10 @@ fn main() -> Result<(), Box<dyn Error>> {
   Ok(())
 }
 ```
+
+### Printing to Standard Error
+
+To print to stderr instead of stdout, use `eprintln!()` macro.
 
 ## Generic Types
 
