@@ -63,6 +63,8 @@
     - [Integration Tests](#integration-tests)
     - [Submodules in Integration Tests](#submodules-in-integration-tests)
     - [Integration Tests for Binary Crates](#integration-tests-for-binary-crates)
+- [Closures](#closures)
+  - [Moving Captured Values out of Closures](#moving-captured-values-out-of-closures)
 
 ## Resources
 
@@ -1181,3 +1183,58 @@ project/
 #### Integration Tests for Binary Crates
 
 If our project is a binary crate that only contains a src/main.rs file and doesn’t have a src/lib.rs file, we can’t create integration tests in the tests directory and bring functions defined in the src/main.rs file into scope with a use statement. Only library crates expose functions that other crates can use; binary crates are meant to be run on their own.
+
+## Closures
+
+Rust’s closures are anonymous functions you can save in a variable or pass as arguments to other functions.
+
+```rs
+fn  add_one_v1   (x: u32) -> u32 { x + 1 }
+let add_one_v2 = |x: u32| -> u32 { x + 1 };
+let add_one_v3 = |x|             { x + 1 };
+let add_one_v4 = |x|               x + 1  ;
+```
+
+Closures don't need types to be specified in certain situations and the compiler infers the types based on the first usage of the closure.
+
+```rs
+let example_closure = |x| x;
+let s = example_closure(String::from("hello"));
+// The following fails because the compiler inferred `String` to be the type for `x`.
+let n = example_closure(5);
+```
+
+A closure follows the same borrowing/lifetime rules as other values: its captured references remain borrowed for as long as the closure needs them, generally until its last use.
+
+```rs
+let mut list = vec![1, 2, 3];
+println!("Before defining closure: {list:?}");
+
+let mut borrows_mutably = || list.push(7);
+// `list` cannot be borrowed mutably between definition and
+// call as only one mutable borrow is allowed at a time.
+borrows_mutably();
+println!("After calling closure: {list:?}");
+```
+
+To force the closure to take ownership of the values it uses in the environment even though the body of the closure doesn’t strictly need ownership, use the `move` keyword before the parameter list.
+
+```rs
+let list = vec![1, 2, 3];
+println!("Before defining closure: {list:?}");
+
+// This spawns a new thread.
+thread::spawn(move || println!("From thread: {list:?}"))
+  .join()
+  .unwrap();
+```
+
+### Moving Captured Values out of Closures
+
+The way a closure captures and handles values from the environment affects which traits the closure implements, and traits are how functions and structs can specify what kinds of closures they can use. Closures will automatically implement one, two, or all three of these `Fn` traits, in an additive fashion, depending on how the closure’s body handles the values:
+
+- `FnOnce` applies to closures that can be called once. All closures implement at least this trait because all closures can be called. A closure that moves captured values out of its body will only implement FnOnce and none of the other Fn traits because it can only be called once.
+- `FnMut` applies to closures that don’t move captured values out of their body but might mutate the captured values. These closures can be called more than once.
+- `Fn` applies to closures that don’t move captured values out of their body and don’t mutate captured values, as well as closures that capture nothing from their environment. These closures can be called more than once without mutating their environment, which is important in cases such as calling a closure multiple times concurrently.
+
+More on closures: <https://doc.rust-lang.org/book/ch13-01-closures.html>
