@@ -65,6 +65,9 @@
     - [Integration Tests for Binary Crates](#integration-tests-for-binary-crates)
 - [Closures](#closures)
   - [Moving Captured Values out of Closures](#moving-captured-values-out-of-closures)
+- [Iterators](#iterators)
+  - [Consumption of Iterators](#consumption-of-iterators)
+  - [Methods That Produce Iterators](#methods-that-produce-iterators)
 
 ## Resources
 
@@ -1238,3 +1241,59 @@ The way a closure captures and handles values from the environment affects which
 - `Fn` applies to closures that don’t move captured values out of their body and don’t mutate captured values, as well as closures that capture nothing from their environment. These closures can be called more than once without mutating their environment, which is important in cases such as calling a closure multiple times concurrently.
 
 More on closures: <https://doc.rust-lang.org/book/ch13-01-closures.html>
+
+## Iterators
+
+An iterator is used to iterate over values of a collection.
+
+A `for` loop uses an iterator under the hood.
+
+```rs
+let v1 = vec![1, 2, 3];
+let v1_iter = v1.iter();
+for val in v1_iter {
+  println!("Got: {val}");
+}
+```
+
+If we want to create an iterator that takes ownership of the iterable values and returns owned values, we can call `into_iter` instead of `iter`. Similarly, if we want to iterate over mutable references, we can call `iter_mut` instead of iter.
+
+All iterators implement the following trait.
+
+```rs
+pub trait Iterator {
+  type Item;
+  fn next(&mut self) -> Option<Self::Item>;
+  // methods with default implementations elided
+}
+```
+
+When we use the `next()` method of an iterator, then we *consume* the iterator and each `next()` subsequent call gives us the next value until we get a `None`.
+
+Collections have different methods for iterating over values.
+
+1. The `iter` method produces an iterator over immutable references.
+2. The `into_iter` method takes ownership and returns owned values.
+3. Similarly, `iter_mut` is used to iterate over mutable references.
+
+### Consumption of Iterators
+
+Some methods consume iterators because they call the `next()` method.
+
+```rs
+let v1 = vec![1, 2, 3];
+let v1_iter = v1.iter();
+// The `sum` method uses `next` internally and thus consumes the iterator.
+let total: i32 = v1_iter.sum();
+```
+
+### Methods That Produce Iterators
+
+An iterator method like `map` can produce other iterators. Iterators are lazy which means that they don't do anything unless consumed. For example, the iterator produced by `map` needs `collect` to be consumed to create a collection.
+
+```rs
+let v1: Vec<i32> = vec![1, 2, 3];
+// `collect()` consumes the iterator and creates a `Vec` out of it.
+let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
+assert_eq!(v2, vec![2, 3, 4]);
+```
