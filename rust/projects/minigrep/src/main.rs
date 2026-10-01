@@ -5,9 +5,9 @@ use std::fs;
 use std::process;
 
 fn main() {
-  let args: Vec<String> = env::args().collect();
+  let args = env::args();
 
-  let config = Config::build(&args).unwrap_or_else(|err| {
+  let config = Config::build(env::args()).unwrap_or_else(|err| {
     // `eprintln` prints to standard error (stderr).
     eprintln!("Could not parse arguments: {err}");
     process::exit(1);
@@ -47,13 +47,18 @@ struct Config {
 }
 
 impl Config {
-  fn build(args: &[String]) -> Result<Config, &'static str> {
-    if args.len() < 3 {
-      return Err("Two arguments [query] [file_path] required");
-    }
+  fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+    // Skip program name.
+    args.next();
 
-    let search_text = args[1].clone();
-    let file_path = args[2].clone();
+    let search_text = match args.next() {
+      Some(text) => text,
+      None => return Err("Search text missing"),
+    };
+    let file_path = match args.next() {
+      Some(path) => path,
+      None => return Err("File path missing"),
+    };
 
     let ignore_case = env::var("IGNORE_CASE").is_ok();
 

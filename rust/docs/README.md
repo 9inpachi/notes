@@ -68,6 +68,9 @@
 - [Iterators](#iterators)
   - [Consumption of Iterators](#consumption-of-iterators)
   - [Methods That Produce Iterators](#methods-that-produce-iterators)
+- [Cargo Profiles](#cargo-profiles)
+- [Publishing Crates](#publishing-crates)
+  - [Documenting Code](#documenting-code)
 
 ## Resources
 
@@ -1296,4 +1299,62 @@ let v1: Vec<i32> = vec![1, 2, 3];
 // `collect()` consumes the iterator and creates a `Vec` out of it.
 let v2: Vec<_> = v1.iter().map(|x| x + 1).collect();
 assert_eq!(v2, vec![2, 3, 4]);
+```
+
+## Cargo Profiles
+
+Custom profiles can be defined in `Cargo.toml` but `release` and `dev` are the two default profiles.
+
+```toml
+[profile.dev]
+# Optimization level. 0 to 3.
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+```
+
+To build using the release profile.
+
+```sh
+cargo build --release
+```
+
+## Publishing Crates
+
+More on publishing crates: <https://doc.rust-lang.org/book/ch14-02-publishing-to-crates-io.html>
+
+### Documenting Code
+
+```rs
+/// Adds one to the number given.
+///
+/// # Examples
+///
+/// ```
+/// let arg = 5;
+/// let answer = my_crate::add_one(arg);
+///
+/// assert_eq!(6, answer);
+/// ```
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
+```
+
+The HTML generated docs can be viewed using the following command.
+
+```sh
+cargo doc --open
+```
+
+Documentation can be added to a crate that appears at the crate's front page by using `//!` comments at the top of the crate root.
+
+```rs
+//! # My Crate
+//!
+//! `my_crate` is a collection of utilities to make performing certain
+//! calculations more convenient.
+
+// -- code
 ```

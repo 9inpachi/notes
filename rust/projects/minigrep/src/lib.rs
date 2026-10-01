@@ -2,28 +2,19 @@
 // references are linked to the content since the result comes from the content.
 // So the result references need to be valid as long as the contents are valid.
 pub fn search<'a>(search_text: &str, contents: &'a str) -> Vec<&'a str> {
-  let mut result = Vec::new();
-
-  for line in contents.lines() {
-    if line.contains(search_text) {
-      result.push(line);
-    }
-  }
-
-  result
+  contents
+    .lines()
+    .filter(|line| line.contains(search_text))
+    .collect()
 }
 
 pub fn search_case_insensitive<'a>(search_text: &str, contents: &'a str) -> Vec<&'a str> {
   let search_text = search_text.to_lowercase();
-  let mut result = Vec::new();
 
-  for line in contents.lines() {
-    if line.to_lowercase().contains(&search_text) {
-      result.push(line);
-    }
-  }
-
-  result
+  contents
+    .lines()
+    .filter(|line| line.to_lowercase().contains(&search_text))
+    .collect()
 }
 
 #[cfg(test)]
