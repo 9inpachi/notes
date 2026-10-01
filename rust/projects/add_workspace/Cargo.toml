@@ -1,0 +1,4 @@
+[workspace]
+# Cargo's resolver algorithm version.
+resolver = "3"
+members = ["add_one","adder"]

@@ -71,6 +71,8 @@
 - [Cargo Profiles](#cargo-profiles)
 - [Publishing Crates](#publishing-crates)
   - [Documenting Code](#documenting-code)
+- [Cargo Workspaces](#cargo-workspaces)
+- [Installing Binaries with Cargo](#installing-binaries-with-cargo)
 
 ## Resources
 
@@ -1358,3 +1360,31 @@ Documentation can be added to a crate that appears at the crate's front page by 
 
 // -- code
 ```
+
+## Cargo Workspaces
+
+To create a workspace with multiple packages/members, create a directory with the following `Cargo.toml`.
+
+```toml
+[workspace]
+resolver = "3"
+members = ["package1", "package2"]
+```
+
+The `members` option is populated if we use `cargo new package1` inside the workspace.
+
+To run cargo commands only for a specific package, use the `-p` option.
+
+```sh
+cargo test -p package1
+```
+
+## Installing Binaries with Cargo
+
+Cargo can be used to install binary crates in the system but only crates with binary targets (`src/main.rs` by default) can be installed this way.
+
+```sh
+cargo install ripgrep
+```
+
+This will install `ripgrep` in `~/.cargo/bin/rg`.
