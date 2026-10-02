@@ -73,6 +73,9 @@
   - [Documenting Code](#documenting-code)
 - [Cargo Workspaces](#cargo-workspaces)
 - [Installing Binaries with Cargo](#installing-binaries-with-cargo)
+- [Smart Pointers](#smart-pointers)
+  - [Using `Box<T>` to Point to Data on the Heap](#using-boxt-to-point-to-data-on-the-heap)
+    - [Enabling Recursive Types with `Box<T>`](#enabling-recursive-types-with-boxt)
 
 ## Resources
 
@@ -552,7 +555,7 @@ mod parent_module {
 
 File structure 1. Module as a single file `module.rs`.
 
-```text
+```plaintext
 project/
 └── src/
     ├── lib.rs    -> Crate root (contains `pub mod garden;` to use garden module)
@@ -564,7 +567,7 @@ project/
 
 File structure 2. Module in a directory `module_name/mod.rs`.
 
-```text
+```plaintext
 project/
 └── src/
     ├── lib.rs    -> Crate root (contains `pub mod garden;` to use garden module)
@@ -1173,7 +1176,7 @@ For creating submodules for integration tests, we need to create the `mod.rs` in
 
 For example, the following will show the `common.rs` as a file when we run `cargo test` because all root level files are considered integration tests. 
 
-```text
+```plaintext
 project/
 └── tests/
     └── common.rs
@@ -1388,3 +1391,60 @@ cargo install ripgrep
 ```
 
 This will install `ripgrep` in `~/.cargo/bin/rg`.
+
+## Smart Pointers
+
+Smart pointers are data structures that act like a pointer but also have additional metadata and capabilities. This is different from a reference pointer which only contains the address where a variable in the stack points to on the heap (search stack and heap here for more info).
+
+### Using `Box<T>` to Point to Data on the Heap
+
+Boxes don’t have performance overhead, other than storing their data on the heap instead of on the stack. But they don’t have many extra capabilities either. You’ll use them most often in these situations:
+
+- When you have a type whose size can’t be known at compile time, and you want to use a value of that type in a context that requires an exact size
+- When you have a large amount of data, and you want to transfer ownership but ensure that the data won’t be copied when you do so
+- When you want to own a value, and you care only that it’s a type that implements a particular trait rather than being of a specific type
+
+This is a simple example of a `Box` that stores an int value on the heap.
+
+```rs
+fn main() {
+  let b = Box::new(5);
+  println!("b = {b}");
+}
+```
+
+#### Enabling Recursive Types with `Box<T>`
+
+Recursive types will throw a compile error in Rust by default as the compiler does not know about the required size of the type at compile time.
+
+Let's use a _cons list_ data structure as an example which is a recursive type that works like a linked list: `(1, (2, (3, Nil)))`. The `Nil` here is the base case for recursion here.
+
+Here's a potential implementation in Rust.
+
+```rs
+enum List {
+  Cons(i32, List),
+  Nil,
+}
+```
+
+The compiler will throw an error for this type because it wouldn't know the size of the value at compile time (``recursive type `List` has infinite size``).
+
+```plaintext
+help: insert some indirection (e.g., a `Box`, `Rc`, or `&`) to break the cycle
+  |
+2 |     Cons(i32, Box<List>),
+  |               ++++    +
+```
+
+In this suggestion, indirection means that instead of storing a value directly, we should change the data structure to store the value indirectly by storing a pointer to the value instead (a pointer in stack pointing to a value in heap).
+
+Because a `Box<T>` is a pointer, Rust always knows how much space a `Box<T>` needs: A pointer’s size doesn’t change based on the amount of data it’s pointing to.
+
+Here is a before and after visualization of the cons list.
+
+| Cons List Recursive                                      | Cons List Box                                |
+| -------------------------------------------------------- | -------------------------------------------- |
+| ![Cons List Recursive](./assets/cons-list-recursive.svg) | ![Cons List Box](./assets/cons-list-box.svg) |
+
+
