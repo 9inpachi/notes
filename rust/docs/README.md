@@ -76,6 +76,9 @@
 - [Smart Pointers](#smart-pointers)
   - [Using `Box<T>` to Point to Data on the Heap](#using-boxt-to-point-to-data-on-the-heap)
     - [Enabling Recursive Types with `Box<T>`](#enabling-recursive-types-with-boxt)
+  - [Treating Smart Pointers Like References with `Deref`](#treating-smart-pointers-like-references-with-deref)
+    - [`Deref` Coercion](#deref-coercion)
+      - [`Deref` Coercion with Mutable References](#deref-coercion-with-mutable-references)
 
 ## Resources
 
@@ -1447,4 +1450,70 @@ Here is a before and after visualization of the cons list.
 | -------------------------------------------------------- | -------------------------------------------- |
 | ![Cons List Recursive](./assets/cons-list-recursive.svg) | ![Cons List Box](./assets/cons-list-box.svg) |
 
+### Treating Smart Pointers Like References with `Deref`
 
+The `Deref` trait can be implemented on a type to provide the implementation of _dereferencing_ a smart pointer. So that when we do `*var_name` on a variable, we get its value.
+
+Here's a custom `Box` implementation that doesn't store data on heap but allows referencing.
+
+```rs
+// Tuple Struct
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+  fn new(x: T) -> MyBox<T> {
+    MyBox(x)
+  }
+}
+
+impl<T> Deref for MyBox<T> {
+  type Target = T;
+
+  fn deref(&self) -> &Self::Target {
+    &self.0
+  }
+}
+```
+
+The `type Target = T;` syntax defines an associated type for the `Deref` trait to use. Associated types are a slightly different way of declaring a generic parameter.
+
+```rs
+let x = 10;
+let y = MyBox::new(10);
+
+// `*y` here will call `*(y.deref())`.
+assert_eq!(x, *y);
+```
+
+The `deref` function returns a reference so it a variable that implements it can be dereferenced like a normal reference pointer.
+
+#### `Deref` Coercion
+
+Some types that implement `Deref` can be coerced to another type that the `deref` method on them returns.
+
+In the following example, `MyBox<String>` will return `&String` through the `deref` method and then `&String` will return `&str` through the `deref` method again (which is in the standard library) forming a chain of two `deref` calls to reach from `MyBox<String>` to `&str`.
+
+```rs
+fn hello(name: &str) {
+  println!("Hello, {name}!");
+}
+
+fn main() {
+  let m = MyBox::new(String::from("Rust"));
+  hello(&m);
+}
+```
+
+##### `Deref` Coercion with Mutable References
+
+Similar to how you use the `Deref` trait to override the `*` operator on immutable references, you can use the `DerefMut` trait to override the `*` operator on mutable references.
+
+Rust does deref coercion when it finds types and trait implementations in three cases:
+
+- From `&T` to `&U` when `T: Deref<Target=U>`
+- From `&mut T` to &mut U when `T: DerefMut<Target=U>`
+- From `&mut T` to &U when `T: Deref<Target=U>`
+
+The first two cases are the same except that the second implements mutability. The first case states that if you have a `&T`, and `T` implements `Deref` to some type `U`, you can get a `&U `transparently. The second case states that the same deref coercion happens for mutable references.
+
+The third case is trickier: Rust will also coerce a mutable reference to an immutable one. But the reverse is not possible: Immutable references will never coerce to mutable references because of borrowing rules.
