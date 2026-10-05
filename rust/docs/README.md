@@ -79,6 +79,8 @@
   - [Treating Smart Pointers Like References with `Deref`](#treating-smart-pointers-like-references-with-deref)
     - [`Deref` Coercion](#deref-coercion)
       - [`Deref` Coercion with Mutable References](#deref-coercion-with-mutable-references)
+  - [The `Drop` Trait and Cleanup](#the-drop-trait-and-cleanup)
+  - [Multiple Ownership with `Rc<T>`](#multiple-ownership-with-rct)
 
 ## Resources
 
@@ -1517,3 +1519,47 @@ Rust does deref coercion when it finds types and trait implementations in three 
 The first two cases are the same except that the second implements mutability. The first case states that if you have a `&T`, and `T` implements `Deref` to some type `U`, you can get a `&U `transparently. The second case states that the same deref coercion happens for mutable references.
 
 The third case is trickier: Rust will also coerce a mutable reference to an immutable one. But the reverse is not possible: Immutable references will never coerce to mutable references because of borrowing rules.
+
+### The `Drop` Trait and Cleanup
+
+We can implement the `Drop` trait to run custom code when a variable gets dropped.
+
+```rs
+struct SomeStruct(String);
+
+impl Drop for SomeStruct {
+  fn drop(&mut self) {
+    println!("Dropping the variable with value: {}", self.0);
+  }
+}
+
+fn main() {
+  let val = SomeStruct(10);
+  println("Program finished");
+}
+```
+
+Rust calls `drop` automatically when the variable goes out of scope. We cannot call the `drop` method by ourselves as that throws a compiler error. If we want to forcefully drop value of a variable, then we can use the `std::mem::drop` import to do it.
+
+### Multiple Ownership with `Rc<T>`
+
+`Rc<T>` (called reference counting) is a smart pointer for creating multiple references to the same value. The value only gets cleaned up when all the references go out of scope.
+
+Using `Rc<T>` allows a single value to have multiple owners, and the count ensures that the value remains valid as long as any of the owners still exist.
+
+```rs
+use std::rc::Rc;
+
+enum List {
+    Cons(i32, Rc<List>),
+    Nil,
+}
+
+fn main() {
+  let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))));
+  let b = Cons(3, Rc::clone(&a));
+  let c = Cons(4, Rc::clone(&a));
+}
+```
+
+The `Rc::clone` call only increments the reference count and doesn't create a deep copy.

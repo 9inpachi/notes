@@ -39,9 +39,52 @@ impl<T> Deref for CustomBox<T> {
   }
 }
 
-fn main() {
+fn main2() {
   let x = 5;
   let y = CustomBox::new(x);
 
   assert_eq!(x, *y);
+}
+
+// The `Drop` trait.
+
+struct CustomValue(String);
+
+impl Drop for CustomValue {
+  fn drop(&mut self) {
+    println!("Custom pointer dropped with value: '{}'", self.0);
+  }
+}
+
+fn main3() {
+  let val = CustomValue(String::from("Hello World!"));
+  // Force drop with `std::mem::drop`.
+  // std::mem::drop(val);
+  println!("Do some operations");
+}
+
+// `Rc<T>` for Multiple References to a Value
+
+enum RcList {
+  // We use `Rc<List>` so the value here can have multiple references.
+  RcCons(i32, Rc<RcList>),
+  RcNil,
+}
+
+use crate::RcList::{RcCons, RcNil};
+use std::rc::Rc;
+
+fn main() {
+  let a = Rc::new(RcCons(12, Rc::new(RcCons(10, Rc::new(RcNil)))));
+  println!("Checkpoint 1: {}", Rc::strong_count(&a));
+
+  let b = RcCons(2, Rc::clone(&a));
+  println!("Checkpoint 2 after creating b: {}", Rc::strong_count(&a));
+
+  {
+    let c = RcCons(5, Rc::clone(&a));
+    println!("Checkpoint 3 after creating c: {}", Rc::strong_count(&a));
+  }
+
+  println!("Checkpoint 4 after cleaning c: {}", Rc::strong_count(&a));
 }
