@@ -81,6 +81,7 @@
       - [`Deref` Coercion with Mutable References](#deref-coercion-with-mutable-references)
   - [The `Drop` Trait and Cleanup](#the-drop-trait-and-cleanup)
   - [Multiple Ownership with `Rc<T>`](#multiple-ownership-with-rct)
+  - [`RefCell<T>` and the Interior Mutability Pattern](#refcellt-and-the-interior-mutability-pattern)
 
 ## Resources
 
@@ -999,7 +1000,7 @@ fn main() {
 }
 ```
 
-In this example, the lifetime of `string1` and `string2` is different, so the lifetime of the reference returned by the `longest` function (either `string1` or `string2`) is ambiguous and the compiler doesn't know for sure which reference is returned and should be checked at compile time as the `result` reference is dynamic and can have one of the two lifetimes. So the compilation fails. 
+In this example, the lifetime of `string1` and `string2` is different, so the lifetime of the reference returned by the `longest` function (either `string1` or `string2`) is ambiguous and the compiler doesn't know for sure which reference is returned and should be checked at compile time as the `result` reference is dynamic and can have one of the two lifetimes. So the compilation fails.
 
 To fix this, we can use lifetime annotations like generics.
 
@@ -1009,7 +1010,7 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 }
 ```
 
-`'a` is a generic lifetime parameter that tells Rust that for some lifetime `'a`, the function takes two parameters, both of which are string slices that live at least as long as lifetime `'a`. The function signature also tells Rust that the string slice returned from the function will live at least as long as lifetime `'a`. In practice, it means that the lifetime of the reference returned by the longest function is the same as the smaller of the lifetimes of the values referred to by the function arguments. 
+`'a` is a generic lifetime parameter that tells Rust that for some lifetime `'a`, the function takes two parameters, both of which are string slices that live at least as long as lifetime `'a`. The function signature also tells Rust that the string slice returned from the function will live at least as long as lifetime `'a`. In practice, it means that the lifetime of the reference returned by the longest function is the same as the smaller of the lifetimes of the values referred to by the function arguments.
 
 Lifetimes on function or method parameters are called input lifetimes, and lifetimes on return values are called output lifetimes.
 
@@ -1179,7 +1180,7 @@ Where `integration_test` is the filename where the integration tests exist (`tes
 
 For creating submodules for integration tests, we need to create the `mod.rs` instead of using the module name itself inside the `/tests` directory as that will start including the file in test runs.
 
-For example, the following will show the `common.rs` as a file when we run `cargo test` because all root level files are considered integration tests. 
+For example, the following will show the `common.rs` as a file when we run `cargo test` because all root level files are considered integration tests.
 
 ```plaintext
 project/
@@ -1281,7 +1282,7 @@ pub trait Iterator {
 }
 ```
 
-When we use the `next()` method of an iterator, then we *consume* the iterator and each `next()` subsequent call gives us the next value until we get a `None`.
+When we use the `next()` method of an iterator, then we _consume_ the iterator and each `next()` subsequent call gives us the next value until we get a `None`.
 
 Collections have different methods for iterating over values.
 
@@ -1336,7 +1337,7 @@ More on publishing crates: <https://doc.rust-lang.org/book/ch14-02-publishing-to
 
 ### Documenting Code
 
-```rs
+````rs
 /// Adds one to the number given.
 ///
 /// # Examples
@@ -1350,7 +1351,7 @@ More on publishing crates: <https://doc.rust-lang.org/book/ch14-02-publishing-to
 pub fn add_one(x: i32) -> i32 {
     x + 1
 }
-```
+````
 
 The HTML generated docs can be viewed using the following command.
 
@@ -1400,6 +1401,12 @@ This will install `ripgrep` in `~/.cargo/bin/rg`.
 ## Smart Pointers
 
 Smart pointers are data structures that act like a pointer but also have additional metadata and capabilities. This is different from a reference pointer which only contains the address where a variable in the stack points to on the heap (search stack and heap here for more info).
+
+Reasons to choose `Box<T>`, `Rc<T>`, or `RefCell<T>`:
+
+- `Rc<T>` enables multiple owners of the same data; `Box<T>` and `RefCell<T>` have single owners.
+- `Box<T>` allows immutable or mutable borrows checked at compile time; `Rc<T>` allows only immutable borrows checked at compile time; `RefCell<T>` allows immutable or mutable borrows checked at runtime.
+- Because `RefCell<T>` allows mutable borrows checked at runtime, you can mutate the value inside the `RefCell<T>` even when the `RefCell<T>` is immutable.
 
 ### Using `Box<T>` to Point to Data on the Heap
 
@@ -1563,3 +1570,35 @@ fn main() {
 ```
 
 The `Rc::clone` call only increments the reference count and doesn't create a deep copy.
+
+### `RefCell<T>` and the Interior Mutability Pattern
+
+Interior mutability is a design pattern in Rust that allows you to mutate data even when there are immutable references to that.
+
+`RefCell<T>` represents single ownership over the data it holds and the borrowing rules are enforced at runtime. `Box<T>` will fail to compile if the borrowing rules are broken but `RefCell<T>` will compile and panic at runtime.
+
+The `RefCell<T>` type is useful when you’re sure your code follows the borrowing rules but the compiler is unable to understand and guarantee that.
+
+When creating immutable and mutable references, we use the & and &mut syntax, respectively. With `RefCell<T>`, we use the borrow and borrow_mut methods, which are part of the safe API that belongs to `RefCell<T>`. The borrow method returns the smart pointer type `Ref<T>`, and borrow_mut returns the smart pointer type `RefMut<T>`. Both types implement Deref, so we can treat them like regular references.
+
+```rs
+let x = RefCell::new(10);
+// This creates a mutable reference and increments internal count by one.
+// The count is decremented once the variable goes out of scope.
+let y = x.borrow_mut(); // Gives `RefMut<T>`
+// We cannot call `x.borrow_mut()` again untill `y` goes out of scope.
+
+// This is an immutable borrow.
+let z = x.borrow(); // Gives `Ref<T>`
+```
+
+We can make values in `Rc<T>` mutable which only works with immutable data by using `RefCell<T>` as the value.
+
+```rs
+let value = Rc::new(RefCell::new(5));
+let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+
+*value.borrow_mut() += 10;
+```

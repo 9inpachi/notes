@@ -74,7 +74,7 @@ enum RcList {
 use crate::RcList::{RcCons, RcNil};
 use std::rc::Rc;
 
-fn main() {
+fn main4() {
   let a = Rc::new(RcCons(12, Rc::new(RcCons(10, Rc::new(RcNil)))));
   println!("Checkpoint 1: {}", Rc::strong_count(&a));
 
@@ -87,4 +87,78 @@ fn main() {
   }
 
   println!("Checkpoint 4 after cleaning c: {}", Rc::strong_count(&a));
+}
+
+// RefCell<T> for Runtime Borrowing
+
+use std::cell::RefCell;
+
+pub trait Messenger {
+  fn send(&self, msg: &str);
+}
+
+pub struct LimitTracker<'a, T: Messenger> {
+  messenger: &'a T,
+  value: usize,
+  max: usize,
+}
+
+impl<'a, T> LimitTracker<'a, T>
+where
+  T: Messenger,
+{
+  pub fn new(messenger: &'a T, max: usize) -> LimitTracker<'a, T> {
+    LimitTracker {
+      messenger,
+      value: 0,
+      max,
+    }
+  }
+
+  pub fn set_value(&mut self, value: usize) {
+    self.value = value;
+
+    let percent_of_max = self.value as f64 / self.max as f64;
+
+    if percent_of_max > 1.0 {
+      self.messenger.send("Error: over quota");
+    } else if percent_of_max >= 0.9 {
+      self
+        .messenger
+        .send("Urgent: You've used up over 90% of your quota!");
+    } else if percent_of_max >= 0.75 {
+      self
+        .messenger
+        .send("Warning: You've used up over 75% of your quota!");
+    }
+  }
+}
+
+struct MockMessenger {
+  sent_messages: RefCell<Vec<String>>,
+}
+
+impl MockMessenger {
+  fn new() -> MockMessenger {
+    MockMessenger {
+      sent_messages: RefCell::new(vec![]),
+    }
+  }
+}
+
+impl Messenger for MockMessenger {
+  fn send(&self, msg: &str) {
+    // Without `RefCell<T>`, `sent_messages.push` wouldn't work because
+    // `&self` is an immutable reference.
+    self.sent_messages.borrow_mut().push(String::from(msg));
+  }
+}
+
+fn main() {
+  let mock_messenger = MockMessenger::new();
+  let mut tracker = LimitTracker::new(&mock_messenger, 100);
+
+  tracker.set_value(80);
+
+  assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
 }
