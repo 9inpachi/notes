@@ -65,6 +65,7 @@
     - [Integration Tests for Binary Crates](#integration-tests-for-binary-crates)
 - [Closures](#closures)
   - [Moving Captured Values out of Closures](#moving-captured-values-out-of-closures)
+  - [Closures Summary](#closures-summary)
 - [Iterators](#iterators)
   - [Consumption of Iterators](#consumption-of-iterators)
   - [Methods That Produce Iterators](#methods-that-produce-iterators)
@@ -84,6 +85,9 @@
   - [`RefCell<T>` and the Interior Mutability Pattern](#refcellt-and-the-interior-mutability-pattern)
   - [Reference Cycles, Memory Leaks and Weak Reference](#reference-cycles-memory-leaks-and-weak-reference)
     - [Using `Weak<T>` to Prevent Reference Cycles](#using-weakt-to-prevent-reference-cycles)
+- [Concurrency and Threads](#concurrency-and-threads)
+  - [Creating Threads with `spawn`](#creating-threads-with-spawn)
+  - [Using `move` Closures with Threads](#using-move-closures-with-threads)
 
 ## Resources
 
@@ -1256,6 +1260,18 @@ The way a closure captures and handles values from the environment affects which
 - `FnMut` applies to closures that don’t move captured values out of their body but might mutate the captured values. These closures can be called more than once.
 - `Fn` applies to closures that don’t move captured values out of their body and don’t mutate captured values, as well as closures that capture nothing from their environment. These closures can be called more than once without mutating their environment, which is important in cases such as calling a closure multiple times concurrently.
 
+### Closures Summary
+
+- **Capture mode is inferred from usage.** A closure borrows immutably if it only reads, borrows mutably if it mutates, and takes ownership if it moves or consumes a value.
+- **`move` forces ownership.** It transfers all captured variables into the closure (copies for `Copy` types). Needed for threads or returning closures.
+- **The closure's trait depends on what it does with captures, not how it captures them:**
+  - `FnOnce`: may consume captured values; callable once.
+  - `FnMut`: mutates captures; callable many times.
+  - `Fn`: only reads captures; callable many times, even concurrently.
+  - Every closure is `FnOnce`; `FnMut` ⊂ `FnOnce`; `Fn` ⊂ `FnMut`.
+- **Borrow rules still apply.** While a closure holds a `&mut` borrow, you can't use that variable elsewhere until the closure is dropped.
+- **Lifetimes:** A closure that borrows can't outlive its captured data. Use `move` (or `Box<dyn Fn>`/`impl Fn`) when it must.
+
 More on closures: <https://doc.rust-lang.org/book/ch13-01-closures.html>
 
 ## Iterators
@@ -1522,8 +1538,8 @@ Similar to how you use the `Deref` trait to override the `*` operator on immutab
 Rust does deref coercion when it finds types and trait implementations in three cases:
 
 - From `&T` to `&U` when `T: Deref<Target=U>`
-- From `&mut T` to &mut U when `T: DerefMut<Target=U>`
-- From `&mut T` to &U when `T: Deref<Target=U>`
+- From `&mut T` to `&mut U` when `T: DerefMut<Target=U>`
+- From `&mut T` to `&U` when `T: Deref<Target=U>`
 
 The first two cases are the same except that the second implements mutability. The first case states that if you have a `&T`, and `T` implements `Deref` to some type `U`, you can get a `&U `transparently. The second case states that the same deref coercion happens for mutable references.
 
@@ -1581,7 +1597,7 @@ Interior mutability is a design pattern in Rust that allows you to mutate data e
 
 The `RefCell<T>` type is useful when you’re sure your code follows the borrowing rules but the compiler is unable to understand and guarantee that.
 
-When creating immutable and mutable references, we use the & and &mut syntax, respectively. With `RefCell<T>`, we use the borrow and borrow_mut methods, which are part of the safe API that belongs to `RefCell<T>`. The borrow method returns the smart pointer type `Ref<T>`, and borrow_mut returns the smart pointer type `RefMut<T>`. Both types implement Deref, so we can treat them like regular references.
+When creating immutable and mutable references, we use the `&` and `&mut` syntax, respectively. With `RefCell<T>`, we use the `borrow` and `borrow_mut` methods, which are part of the safe API that belongs to `RefCell<T>`. The borrow method returns the smart pointer type `Ref<T>`, and borrow_mut returns the smart pointer type `RefMut<T>`. Both types implement Deref, so we can treat them like regular references.
 
 ```rs
 let x = RefCell::new(10);
@@ -1681,3 +1697,69 @@ fn main() {
 ```
 
 This code will properly drop both `child` and `parent` because child has no strong reference to parent and once `parent` and `child` are dropped, `Rc::clone(&child)` can also be dropped because nothing is using it.
+
+## Concurrency and Threads
+
+The Rust standard library uses a 1:1 model of thread implementation, whereby a program uses one operating system thread per one language thread.
+
+### Creating Threads with `spawn`
+
+```rs
+use std::thread;
+use std::thread::Duration;
+
+fn main() {
+  thread::spawn(|| {
+    for i in 1..10 {
+      println!("Hello from spawned thread {i}");
+      thread::sleep(Duration::from_millis(1));
+    }
+  });
+
+  for i in 1..10 {
+    println!("Hello from main thread {i}");
+    thread::sleep(Duration::from_millis(1));
+  }
+}
+```
+
+The spawned thread is exited when the main thread finishes. The main thread doesn't wait for the spawned thread to finish to terminate.
+
+We can use the returned `JoinHandle<T>` to block the main thread (caller thread) until the spawned thread finishes. Blocking a thread means that thread is prevented from performing work or exiting.
+
+```rs
+let handle = thread::spawn(|| {
+  for i in 1..10 {
+    println!("hi number {i} from the spawned thread!");
+    thread::sleep(Duration::from_millis(1));
+  }
+});
+
+for i in 1..5 {
+  println!("hi number {i} from the main thread!");
+  thread::sleep(Duration::from_millis(1));
+}
+
+handle.join().unwrap();
+```
+
+If we put `handle.join()` between the two loops, the main loop will only finish once the spawned thread has finished as the main thread is blocked by `handle.join()`.
+
+### Using `move` Closures with Threads
+
+Since threads execute independent of the main thread that is executing the program, the variables passed to the thread (aka variables captured by the closure) cannot be borrowed immutably or mutably. Doing this will throw a compile error because Rust does not know how long the thread will live and it may outlive the main thread or the main thread may drop the variable.
+
+So we use `move` to transfer ownership of the captured/passed variables to the thread closure.
+
+The following code won't compile without the `move` keyword. We need to use the `move` keyword to transfer ownership of `v` to the thread.
+
+```rs
+let v = vec![1, 2, 3];
+
+let handle = thread::spawn(move || {
+  println!("Here's a vector: {v:?}");
+});
+
+handle.join().unwrap();
+// `v` is not usable anymore in the main thread.
+```
