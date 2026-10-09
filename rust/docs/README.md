@@ -82,6 +82,8 @@
   - [The `Drop` Trait and Cleanup](#the-drop-trait-and-cleanup)
   - [Multiple Ownership with `Rc<T>`](#multiple-ownership-with-rct)
   - [`RefCell<T>` and the Interior Mutability Pattern](#refcellt-and-the-interior-mutability-pattern)
+  - [Reference Cycles, Memory Leaks and Weak Reference](#reference-cycles-memory-leaks-and-weak-reference)
+    - [Using `Weak<T>` to Prevent Reference Cycles](#using-weakt-to-prevent-reference-cycles)
 
 ## Resources
 
@@ -1602,3 +1604,80 @@ let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
 
 *value.borrow_mut() += 10;
 ```
+
+### Reference Cycles, Memory Leaks and Weak Reference
+
+Memory leaks prevention is not guaranteed in Rust. A reference cycle can lead to a memory leak because the memory is not fully cleaned up.
+
+For example, `Rc<T>` and `RefCell<T>` can be used together to create a memory leak situation.
+
+```rs
+#[derive(Debug)]
+enum List {
+  Cons(i32, RefCell<Rc<List>>),
+  Nil,
+}
+
+impl List {
+  fn tail(&self) -> Option<&RefCell<Rc<List>>> {
+    match self {
+      Cons(_, item) => Some(item),
+      Nil => None,
+    }
+  }
+}
+
+fn main() {
+  let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+  let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&a))));
+
+  if let Some(link) = a.tail() {
+    // This creates a cycle from a.tail -> b -> b.tail -> a -> a.tail ...
+    *link.borrow_mut() = Rc::clone(&b);
+  }
+
+  // Reference strong_count for both `a` and `b` here is 2. 
+
+  // Uncomment the next line to see that we have a cycle. The `Display`
+  // trait will get stuck in a cycle by trying to print a, then b, then
+  // a again and so on.
+  // println!("a next item = {:?}", a.tail());
+}
+```
+
+Both `a` and `b` have a `strong_count` 1 after `main` finishes because inside the heap, the `List::Cons` `b` is still pointing to `List::Cons` `a` and `List::Cons` `b` is still pointing to `List::Cons` `a`. First, `a` gets dropped, then count of `a` goes from 2 to 1 but since `b` still has `Rc::clone(&a)`, the `Rc::clone(&a)` is not dropped. Then `b` gets dropped, the count of `b` also goes from 2 to 1 but since `Rc::clone(&a)` has `Rc::clone(&b)`, the `Rc::clone(&b)` is not dopped. And Rust stops there because both references are pointing to each other in a cycle creating a circular dependency which will never break. (I know it's hard to understand.)
+
+#### Using `Weak<T>` to Prevent Reference Cycles
+
+`Weak<T>` is a smart pointer that can be used to create a weak reference that doesn't get counted towards the reference count (`strong_count`). This means that this variable existing doesn't affect the main variable being dropped but we have to map relationships between variables correctly. For example, in a tree, parent to child is a strong reference with ownership but child to parent is a weak reference because child dropping shouldn't drop the parent.
+
+The following are two main methods to use the `Weak<T>` smart pointer.
+
+- `Rc::downgrade(v)` gives us a `Weak<T>` reference. It doesn't increase the `strong_count` but increases the `weak_count`,
+- `Weak<T>.borrow().upgrade()` can be used to get an `Option<Rc<T>>` so that we can handle situations where the reference will exist or not. Because it's a weak reference, it could have been dropped without a runtime or compile time error.
+
+```rs
+struct Node {
+  value: i32,
+  parent: RefCell<Weak<Node>>,
+  chilren: RefCell<Vec<Rc<Node>>>,
+}
+
+fn main() {
+  let child = Rc::new(Node {
+    value: 3,
+    parent: RefCell::new(Weak::new()),
+    children: RefCell::new(vec![]),
+  })
+
+  let parent = Rc::new(Node {
+    value: 5,
+    parent: RefCell::new(Weak::new()),
+    children: RefCell::new(vec![Rc::clone(&child)]),
+  })
+
+  *child.parent.borrow_mut() = Rc::downgrade(&parent);
+}
+```
+
+This code will properly drop both `child` and `parent` because child has no strong reference to parent and once `parent` and `child` are dropped, `Rc::clone(&child)` can also be dropped because nothing is using it.

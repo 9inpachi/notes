@@ -154,11 +154,88 @@ impl Messenger for MockMessenger {
   }
 }
 
-fn main() {
+fn main5() {
   let mock_messenger = MockMessenger::new();
   let mut tracker = LimitTracker::new(&mock_messenger, 100);
 
   tracker.set_value(80);
 
   assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
+}
+
+// Using Weak<T> to Avoid Reference Cycles and Memory Leaks
+
+// Example of Memory Leakage
+#[derive(Debug)]
+enum BadList {
+  Cons(i32, RefCell<Rc<BadList>>),
+  Nil,
+}
+
+fn main6() {
+  let a = Rc::new(BadList::Cons(5, RefCell::new(Rc::new(BadList::Nil))));
+  let b = Rc::new(BadList::Cons(10, RefCell::new(Rc::clone(&a))));
+
+  println!("a={}, b={}", Rc::strong_count(&a), Rc::strong_count(&b));
+
+  if let BadList::Cons(_, a_link) = a.as_ref() {
+    *a_link.borrow_mut() = Rc::clone(&b);
+  }
+
+  println!("a={}, b={}", Rc::strong_count(&a), Rc::strong_count(&b));
+
+  // The `Display` trait will get stuck in a cycle by trying to print a, then b,
+  // then a again and so on.
+  // println!("{:?}", &a);
+}
+// After `main` ends, strong_count of both `a` and `b` will be 1 causing them to
+// not drop.
+
+// Example of Using `Weak<T>`
+
+use std::rc::{Weak};
+
+#[derive(Debug)]
+struct Node {
+  value: i32,
+  parent: RefCell<Weak<Node>>,
+  children: RefCell<Vec<Rc<Node>>>,
+}
+
+fn main() {
+  let child = Rc::new(Node {
+    value: 5,
+    parent: RefCell::new(Weak::new()),
+    children: RefCell::new(vec![]),
+  });
+
+  println!("[strong] parent={}, child={}", 0, Rc::strong_count(&child));
+  println!("[weak] parent={}, child={}", 0, Rc::weak_count(&child));
+
+  {
+    let parent = Rc::new(Node {
+      value: 10,
+      parent: RefCell::new(Weak::new()),
+      children: RefCell::new(vec![Rc::clone(&child)]),
+    });
+
+    *child.parent.borrow_mut() = Rc::downgrade(&parent);
+
+    // `upgrade()` gives an `Option<Node>`.
+    println!("parent val={:?}", child.parent.borrow().upgrade());
+    println!(
+      "[strong] parent={}, child={}",
+      Rc::strong_count(&parent),
+      Rc::strong_count(&child)
+    );
+    println!(
+      "[weak] parent={}, child={}",
+      Rc::weak_count(&parent),
+      Rc::weak_count(&child)
+    );
+  }
+
+  println!("parent val={:?}", child.parent.borrow().upgrade());
+  println!("[strong] parent={}, child={}", 0, Rc::strong_count(&child));
+  println!("[weak] parent={}, child={}", 0, Rc::weak_count(&child));
 }
