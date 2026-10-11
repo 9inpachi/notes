@@ -88,6 +88,7 @@
 - [Concurrency and Threads](#concurrency-and-threads)
   - [Creating Threads with `spawn`](#creating-threads-with-spawn)
   - [Using `move` Closures with Threads](#using-move-closures-with-threads)
+  - [Message Passing Between Threads](#message-passing-between-threads)
 
 ## Resources
 
@@ -1762,4 +1763,46 @@ let handle = thread::spawn(move || {
 
 handle.join().unwrap();
 // `v` is not usable anymore in the main thread.
+```
+
+### Message Passing Between Threads
+
+Rust provides the ability to create a channel to send and receive messages between threads. We can use `mpsc` (multiple producers, single consumer), which allows us to create a channel over which multiple producers can send messages but there can only be a single consumer.
+
+```rs
+use std::sync::mpsc;
+use std::thread;
+
+fn main() {
+  let (tx, rx) = mpsc::channel();
+
+  thread::spawn(move || {
+    let val = String::from("hi");
+    tx.send(val).unwrap();
+    // No `val` here because of ownership transfer to `send`.
+  });
+
+  let received = rx.recv().unwrap();
+  println!("Got: {received}");
+}
+```
+
+We can send multiple messages from within the thread to prove that concurrency works (see [25_threads.rs](../practice/25_threads.rs)).
+
+To create another transmitter/producer, we can clone the `tx` variable and use the clone in another thread.
+
+```rs
+let (tx, rx) = mpsc::channel();
+// This is the second producer.
+let tx1 = tx.clone();
+
+thread::spawn(move || {
+  let val = String::from("hi");
+  tx.send(val).unwrap();
+});
+
+thread::spawn(move || {
+  let val = String::from("hello from thread 2");
+  tx1.send(val).unwrap();
+});
 ```
