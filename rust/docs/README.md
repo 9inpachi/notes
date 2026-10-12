@@ -89,6 +89,7 @@
   - [Creating Threads with `spawn`](#creating-threads-with-spawn)
   - [Using `move` Closures with Threads](#using-move-closures-with-threads)
   - [Message Passing Between Threads](#message-passing-between-threads)
+  - [Shared State Concurrency](#shared-state-concurrency)
 
 ## Resources
 
@@ -1805,4 +1806,57 @@ thread::spawn(move || {
   let val = String::from("hello from thread 2");
   tx1.send(val).unwrap();
 });
+```
+
+### Shared State Concurrency
+
+Another way to communicate between threads is to use shared memory that all of the threads will access.
+
+Mutexes (Mutual Exclusion) is a way that allows only one thread to access any given data. Mutexes have a reputation for being difficult to use because you have to remember two rules:
+
+- You must attempt to acquire the lock before using the data.
+- When you’re done with the data that the mutex guards, you must unlock the data so that other threads can acquire the lock.
+
+Rust implements it so that a `Mutex.lock` method is needed to read the value and the `Drop` trait implementation unlocks the data once out of scope.
+
+The call to `lock` would fail if another thread holding the lock panicked. In that case, no one would ever be able to get the lock.
+
+```rs
+use std::sync::Mutex;
+
+fn main() {
+  let m = Mutex::new(5);
+
+  {
+    let mut num = m.lock().unwrap();
+    *num = 6;
+  }
+
+  println!("m = {m:?}");
+}
+```
+
+When sharing a value across multiple threads, `move` would not work because one thread will keep the ownership and then it can't be tranferred to the next thread.
+
+`Rc<T>` smart pointer also doesn't work because it's not safe to share across threads. When `Rc<T>` manages the reference count, it adds to the count for each call to clone and subtracts from the count when each clone is dropped. But it doesn’t use any concurrency primitives to make sure that changes to the count can’t be interrupted by another thread. 
+
+`Arc<T>` (Atomic Reference Counting) is the concurrency safe variant of `Rc<T>`. We still use `Rc<T>` outside concurrency because of the performance overhead in `Arc<T>` that comes with concurrency support.
+
+```rs
+let counter = Arc::new(Mutex::new(0));
+let mut handles = vec![];
+
+for _ in 0..10 {
+  let counter = Arc::clone(&counter);
+  let handle = thread::spawn(move || {
+    let mut num = counter.lock().unwrap();
+
+    *num += 1;
+  });
+  handles.push(handle);
+}
+
+for handle in handles {
+  handle.join().unwrap();
+}
 ```

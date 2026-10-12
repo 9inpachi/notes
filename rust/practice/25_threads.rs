@@ -82,7 +82,7 @@ fn main4() {
 }
 
 // Multiple Producers
-fn main() {
+fn main5() {
   let (tx, rx) = mpsc::channel();
   // We can clone the transmitter to create another producer.
   let tx1 = tx.clone();
@@ -108,4 +108,31 @@ fn main() {
   for received in rx {
     println!("Received {received}");
   }
+}
+
+// Shared Memory Concurrency
+
+use std::sync::{Arc, Mutex};
+
+fn main() {
+  let counter = Arc::new(Mutex::new(0));
+  let mut handles = vec![];
+
+  for i in 1..10 {
+    // This will increase reference count of the variable with thread safety.
+    let counter = Arc::clone(&counter);
+
+    let handle = thread::spawn(move || {
+      let mut num = counter.lock().unwrap();
+      *num += 1;
+    });
+
+    handles.push(handle);
+  }
+
+  for handle in handles {
+    handle.join().unwrap();
+  }
+
+  println!("Counter {}", *counter.lock().unwrap());
 }
