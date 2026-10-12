@@ -90,6 +90,7 @@
   - [Using `move` Closures with Threads](#using-move-closures-with-threads)
   - [Message Passing Between Threads](#message-passing-between-threads)
   - [Shared State Concurrency](#shared-state-concurrency)
+  - [Concurrency Marker Traits](#concurrency-marker-traits)
 
 ## Resources
 
@@ -1860,3 +1861,11 @@ for handle in handles {
   handle.join().unwrap();
 }
 ```
+
+### Concurrency Marker Traits
+
+The `Send` and `Sync` are market traits (with no implementation) to indicate to the Rust compiler that a type is thread safe for certain operations.
+
+- `Send`: The `Send` marker trait indicates that ownership of values of the type implementing `Send` can be transferred between threads.
+- `Sync`: The `Sync` marker trait indicates that it is safe for the type implementing `Sync` to be referenced from multiple threads.
+  - This also means that the references of such a type (`&T`) are marked as `Send` as the references are going to be *sent* to other threads for them to be accessible from those threads.
