@@ -91,6 +91,10 @@
   - [Message Passing Between Threads](#message-passing-between-threads)
   - [Shared State Concurrency](#shared-state-concurrency)
   - [Concurrency Marker Traits](#concurrency-marker-traits)
+- [Async, Await, Futures and Streams](#async-await-futures-and-streams)
+  - [Concurrency and Parallelism](#concurrency-and-parallelism)
+  - [Futures and Async Syntax](#futures-and-async-syntax)
+  - [Async Runtime](#async-runtime)
 
 ## Resources
 
@@ -1864,8 +1868,26 @@ for handle in handles {
 
 ### Concurrency Marker Traits
 
-The `Send` and `Sync` are market traits (with no implementation) to indicate to the Rust compiler that a type is thread safe for certain operations.
+The `Send` and `Sync` are marker traits (with no implementation) to indicate to the Rust compiler that a type is thread safe for certain operations.
 
 - `Send`: The `Send` marker trait indicates that ownership of values of the type implementing `Send` can be transferred between threads.
 - `Sync`: The `Sync` marker trait indicates that it is safe for the type implementing `Sync` to be referenced from multiple threads.
   - This also means that the references of such a type (`&T`) are marked as `Send` as the references are going to be *sent* to other threads for them to be accessible from those threads.
+
+## Async, Await, Futures and Streams
+
+### Concurrency and Parallelism
+
+Concurrency is when a single core is multitasking by doing a part of one task, then doing a little of another task, then coming back to the old task and resuming it.
+
+Parallelism is when there are multiple cores/threads and each are doing unrelated work. Like how OpenCL and CUDA parallel programming works.
+
+### Futures and Async Syntax
+
+Async await is similar to how it works in JavaScript. Functions that return a `Future` (the same as `Promise` in JavaScript) can be awaited. Within a function or block, an `await`ed expression is a place to pause and resume a program for concurrency (the multitasking one).
+
+`async` and `await` are keywords that are compiled to equivalent code using the `Future` trait.
+
+### Async Runtime
+
+Async code needs a runtime which is a crate that handles the execution of async code. Rust has different async runtimes and we choose one over the other based on the use cases. `tokio` is a popular crate for setting up async runtime. `trpl::block_on` (a helper library "The Rust Programming Languagae") uses the `tokio` trait internally to block execution in a synchronous function until the async block inside it executes.
