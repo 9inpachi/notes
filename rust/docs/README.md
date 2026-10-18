@@ -95,6 +95,7 @@
   - [Concurrency and Parallelism](#concurrency-and-parallelism)
   - [Futures and Async Syntax](#futures-and-async-syntax)
   - [Async Runtime](#async-runtime)
+  - [Concurrency with Async](#concurrency-with-async)
 
 ## Resources
 
@@ -1891,3 +1892,22 @@ Async await is similar to how it works in JavaScript. Functions that return a `F
 ### Async Runtime
 
 Async code needs a runtime which is a crate that handles the execution of async code. Rust has different async runtimes and we choose one over the other based on the use cases. `tokio` is a popular crate for setting up async runtime. `trpl::block_on` (a helper library "The Rust Programming Languagae") uses the `tokio` trait internally to block execution in a synchronous function until the async block inside it executes.
+
+### Concurrency with Async
+
+Concurrency with async doesn't necessarily uses CPU threads but schedules tasks in a way that they can run concurrently on a single thread. It depends on the async runtime if threads are internally used or not.
+
+This is how the syntax for async code looks like.
+
+```rs
+// To be able to `await` at the top level as `main` cannot be an `async` function.
+trpl::block_on(async {
+  trpl::spawn_task(async {
+    // This will run concurrently,
+  });
+
+  for i in 1..5 {
+    // Code here will run concurrently with the spawned task.
+  }
+});
+```
