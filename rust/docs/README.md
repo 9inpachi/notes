@@ -96,6 +96,7 @@
   - [Futures and Async Syntax](#futures-and-async-syntax)
   - [Async Runtime](#async-runtime)
   - [Concurrency with Async](#concurrency-with-async)
+  - [Working with Multiple Futures](#working-with-multiple-futures)
 
 ## Resources
 
@@ -1911,3 +1912,38 @@ trpl::block_on(async {
   }
 });
 ```
+
+### Working with Multiple Futures
+
+Rust passes the control back to the async runtime if there is an `await` point that hasn't finished yet inside a future. `await` points in code are where runtimes can switch to another task and come back to the same point later. These points can be used to make code concurrent and not block other futures from making progress. If an `async` block does a lot of work without an `await` point, then it blocks other futures from progressing.
+
+`trpl::yield_now()` adds an await point in the async block that can pass control to another future. In the following example, both `a` and `b` async blocks execute concurrently switching back and forth because of the `await` points inside them.
+
+```rs
+fn slow(name: &str, ms: u64) {
+  thread::sleep(Duration::from_millis(ms));
+  println!("'{name}' ran for {ms}ms");
+}
+
+let a = async {
+  println!("'a' started.");
+  slow("a", 10);
+  trpl::yield_now().await;
+  slow("a", 20);
+  trpl::yield_now().await;
+  println!("'a' finished.");
+};
+
+let b = async {
+  println!("'b' started.");
+  slow("b", 15);
+  trpl::yield_now().await;
+  slow("b", 350);
+  trpl::yield_now().await;
+  println!("'b' finished.");
+};
+
+trpl::select(a, b).await;
+```
+
+`await` points have a computation cost in switching and they shouldn't be used everywhere as they can also make the overall execution slower because of all the switching.

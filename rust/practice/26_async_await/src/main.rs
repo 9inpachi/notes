@@ -1,5 +1,6 @@
-use trpl::{Either, Html};
+use std::thread;
 use std::time::Duration;
+use trpl::{Either, Html};
 
 async fn page_title(url: &str) -> Option<String> {
   let response = trpl::get(url).await;
@@ -18,7 +19,7 @@ async fn page_title_2(url: &str) -> (&str, Option<String>) {
     .select_first("title")
     .map(|tag| tag.inner_html());
 
-    (url, title)
+  (url, title)
 }
 
 fn main1() {
@@ -36,18 +37,18 @@ fn main1() {
   trpl::block_on(async {
     let title_future_1 = page_title_2(&args[1]);
     let title_future_2 = page_title_2(&args[2]);
-    
+
     // `trpl::select` returns the future that resolved first.
     let (url, title) = match trpl::select(title_future_1, title_future_2).await {
-        Either::Left(left) => left,
-        Either::Right(right) => right,
+      Either::Left(left) => left,
+      Either::Right(right) => right,
     };
 
     println!("URL loaded first: {url}");
 
     match title {
-        Some(valid_title) => println!("The title is: {valid_title}"),
-        None => println!("No title found"),
+      Some(valid_title) => println!("The title is: {valid_title}"),
+      None => println!("No title found"),
     }
   });
 }
@@ -97,7 +98,7 @@ fn main3() {
   });
 }
 
-fn main() {
+fn main4() {
   trpl::block_on(async {
     let (tx, mut rx) = trpl::channel();
 
@@ -122,5 +123,66 @@ fn main() {
 
     trpl::join(tx_fut, rx_fut).await;
     // Program doesn't shut and waits forever for new messages.
+  });
+}
+
+// Working with Multiple Futures
+
+fn slow(name: &str, ms: u64) {
+  thread::sleep(Duration::from_millis(ms));
+  println!("{name} ran for {ms}ms");
+}
+
+fn main5() {
+  trpl::block_on(async {
+    let a = async {
+      println!("'a' started");
+
+      slow("a", 10);
+      trpl::yield_now().await;
+      slow("a", 100);
+      trpl::yield_now().await;
+
+      println!("'a' finished");
+    };
+
+    let b = async {
+      println!("'b' started");
+
+      slow("b", 15);
+      trpl::yield_now().await;
+      slow("b", 20);
+      trpl::yield_now().await;
+
+      println!("'b' finished");
+    };
+
+    // Running in race mode.
+    trpl::select(a, b).await;
+  });
+}
+
+// Async Abstraction
+
+async fn timeout<T: Future>(future: T, max_time: Duration) -> Result<T::Output, Duration> {
+  // `future` is first because `trpl::select` starts execution with the first
+  // argument.
+  match trpl::select(future, trpl::sleep(max_time)).await {
+    Either::Left(result) => Ok(result),
+    Either::Right(_) => Err(max_time),
+  }
+}
+
+fn main() {
+  trpl::block_on(async {
+    let long_running_task = async {
+      trpl::sleep(Duration::from_secs(5)).await;
+      "Successfully finished"
+    };
+
+    match timeout(long_running_task, Duration::from_secs(2)).await {
+      Ok(result) => println!("Finished with message '{result}'"),
+      Err(duration) => println!("Couldn't finish in {}s", duration.as_secs()),
+    }
   });
 }
