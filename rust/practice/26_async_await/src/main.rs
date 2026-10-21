@@ -173,7 +173,7 @@ async fn timeout<T: Future>(future: T, max_time: Duration) -> Result<T::Output, 
   }
 }
 
-fn main() {
+fn main6() {
   trpl::block_on(async {
     let long_running_task = async {
       trpl::sleep(Duration::from_secs(5)).await;
@@ -183,6 +183,22 @@ fn main() {
     match timeout(long_running_task, Duration::from_secs(2)).await {
       Ok(result) => println!("Finished with message '{result}'"),
       Err(duration) => println!("Couldn't finish in {}s", duration.as_secs()),
+    }
+  });
+}
+
+// Async Stream
+
+use trpl::StreamExt;
+
+fn main() {
+  trpl::block_on(async {
+    let nums = vec![1, 2, 3, 4, 5];
+    let iter = nums.iter().map(|v| v * 2);
+    let mut stream = trpl::stream_from_iter(iter);
+
+    while let Some(value) = stream.next().await {
+      println!("Value from stream: {value}");
     }
   });
 }
