@@ -97,6 +97,7 @@
   - [Async Runtime](#async-runtime)
   - [Concurrency with Async](#concurrency-with-async)
   - [Working with Multiple Futures](#working-with-multiple-futures)
+  - [Traits for Async](#traits-for-async)
 
 ## Resources
 
@@ -1947,3 +1948,40 @@ trpl::select(a, b).await;
 ```
 
 `await` points have a computation cost in switching and they shouldn't be used everywhere as they can also make the overall execution slower because of all the switching.
+
+### Traits for Async
+
+This is how the `Future` trait looks.
+
+```rs
+use std::pin::Pin;
+use std::task::{Context, Poll};
+
+pub trait Future {
+    type Output;
+
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output>;
+}
+```
+
+This is the `Poll` type.
+
+```rs
+pub enum Poll<T> {
+  Ready(T),
+  Pending,
+}
+```
+
+The `Poll<T>` type has two states like an `Option<T>`. It's used to identify the result of a polling call and tells if the future has data (ready) or is still waiting for it (pending).
+
+Technically, this is how the polling for a future looks but the `loop` here doesn't keep running but can backoff to allow other futures to poll as well. This scheduling and coordination is one of the main jobs of an async runtime.
+
+```rs
+loop {
+  match some_future.poll() {
+    Ready(value) => (...)
+    Pending => (...)
+  }
+}
+```
