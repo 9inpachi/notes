@@ -98,6 +98,8 @@
   - [Concurrency with Async](#concurrency-with-async)
   - [Working with Multiple Futures](#working-with-multiple-futures)
   - [Traits for Async](#traits-for-async)
+    - [Pin Type and Unpin Trait](#pin-type-and-unpin-trait)
+    - [Stream Trait](#stream-trait)
 
 ## Resources
 
@@ -1984,4 +1986,59 @@ loop {
     Pending => (...)
   }
 }
+```
+
+#### Pin Type and Unpin Trait
+
+Consider the following example code.
+
+```rs
+let tx_fut = async move {
+  // --snip--
+};
+
+let futures: Vec<Box<dyn Future<Output = ()>>> =
+  vec![Box::new(tx1_fut), Box::new(rx_fut), Box::new(tx_fut)];
+
+trpl::join_all(futures).await;
+```
+
+This code combines multiple futures (`async blocks`) into a vector. All of them return a future that resolves to `()`/void type so they can be used in a vector together as they are all the same types.
+
+The `trpl::join_all` function returns a struct called `JoinAll`. That struct is generic over with `<F: Future>`. Directly awaiting a future with `await` pins the future implicitly. That’s why we don’t need to use pin! everywhere we want to await futures. However, we're not directly awaiting a future here. Instead, we construct a new future, `JoinAll`, by passing a collection of futures to the `join_all` function. The signature for `join_all` requires that the types of the items in the collection all implement the `Future` trait, and `Box<T>` implements `Future` only if the `T` it wraps is a future that implements the `Unpin` trait.
+
+Going back to the `Future` trait definition at the start of this section, if we want to poll a future to check whether it is `Pending` or `Ready(Output)`, we need a `Pin`-wrapped mutable reference to the type.
+
+This is quite complex, read more about it here: <https://doc.rust-lang.org/book/ch17-05-traits-for-async.html#the-pin-type-and-the-unpin-trait>
+
+#### Stream Trait
+
+The `Stream` trait is like a combination of `Future` and `Iterator`. It provides us a way to iterate over awaitable values.
+
+This trait is not a part of the Rust standard library.
+
+```rs
+use std::pin::Pin;
+use std::task::{Context, Poll};
+
+trait Stream {
+  type Item;
+
+  fn poll_next(
+    self: Pin<&mut Self>,
+    cx: &mut Context<'_>
+  ) -> Poll<Option<Self::Item>>;
+}
+```
+
+The `poll_next` method here returns `Poll` which we saw earlier returns either a `Ready` or `Pending` state. This is not the best approach though as we would need to check the poll state to move forward while iterating. So we have `StreamExt` which is an extended version of `Stream` with `next` helper method that correctly handles the details of calling `poll_next` and lets us use `.await` syntax.
+
+```rs
+trait StreamExt: Stream {
+  async fn next(&mut self) -> Option<Self::Item>
+  where
+    Self: Unpin;
+
+  // other methods...
+  }
 ```
