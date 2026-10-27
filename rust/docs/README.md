@@ -100,6 +100,8 @@
   - [Traits for Async](#traits-for-async)
     - [Pin Type and Unpin Trait](#pin-type-and-unpin-trait)
     - [Stream Trait](#stream-trait)
+- [Object Oriented Programming](#object-oriented-programming)
+  - [Encapsulation](#encapsulation)
 
 ## Resources
 
@@ -2041,4 +2043,24 @@ trait StreamExt: Stream {
 
   // other methods...
   }
+```
+
+## Object Oriented Programming
+
+### Encapsulation
+
+The idea of making some fields and methods private can be implemented in Rust through structs.
+
+```rs
+pub struct AveragedCollection {
+  list: Vec<i32>,
+  average: f64,
+}
+
+impl AveragedCollection {
+  pub fn add(&mut self, value: i32) { }
+  pub fn remove(&mut self) -> Option<i32> { }
+  pub fn average(&self) -> f64 { }
+  fn update_average(&mut self) { }
+}
 ```
