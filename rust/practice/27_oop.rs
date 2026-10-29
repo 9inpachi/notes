@@ -41,7 +41,7 @@ impl AveragedCollection {
   }
 }
 
-fn main() {
+fn main1() {
   let mut averaged = AveragedCollection::new();
 
   averaged.add(10);
@@ -52,4 +52,72 @@ fn main() {
   averaged.remove();
 
   println!("Average: {}", averaged.average());
+}
+
+// Shared Behavior
+
+// An interface
+pub trait Draw {
+  fn draw(&self);
+}
+
+// Some implementations
+#[derive(Debug)]
+pub struct Button {
+  label: String,
+  width: u32,
+  height: u32,
+}
+
+impl Draw for Button {
+  fn draw(&self) {
+    println!("Drew Button {:?}", self);
+  }
+}
+
+#[derive(Debug)]
+pub struct SelectBox {
+  options: Vec<String>,
+  width: u32,
+  height: u32,
+}
+
+impl Draw for SelectBox {
+  fn draw(&self) {
+    println!("Drew SelectBox {:?}", self);
+  }
+}
+
+// User of the interface.
+pub struct Screen {
+  // Usage of the interface. The `Box<dyn Draw>` here is a "trait object" which
+  // defines that any type implementing this trait can be used here.
+  pub components: Vec<Box<dyn Draw>>,
+}
+
+impl Screen {
+  pub fn run(&self) {
+    for component in self.components.iter() {
+      component.draw();
+    }
+  }
+}
+
+fn main() {
+  let screen = Screen {
+    components: vec![
+      Box::new(Button {
+        width: 32,
+        height: 8,
+        label: String::from("Ok"),
+      }),
+      Box::new(SelectBox {
+        width: 100,
+        height: 100,
+        options: vec![String::from("Option 1"), String::from("Option 2")],
+      }),
+    ],
+  };
+
+  screen.run();
 }
