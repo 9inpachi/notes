@@ -82,7 +82,7 @@ impl State for Published {
   }
 }
 
-fn main() {
+fn main1() {
   let mut post = Post::new();
 
   post.add_text("Hello world");
@@ -90,5 +90,60 @@ fn main() {
 
   post.request_review();
   post.approve();
+  assert_eq!("Hello world", post.content());
+}
+
+// Encoding States and Behaviors as Types
+
+struct Post2 {
+  content: String,
+}
+
+impl Post2 {
+  fn new() -> DraftPost2 {
+    DraftPost2 {
+      content: String::from(""),
+    }
+  }
+
+  fn content(&self) -> &str {
+    &self.content
+  }
+}
+
+struct DraftPost2 {
+  content: String,
+}
+
+impl DraftPost2 {
+  fn add_text(&mut self, val: &str) {
+    self.content.push_str(val);
+  }
+
+  fn request_review(self) -> PendingReviewPost2 {
+    PendingReviewPost2 {
+      content: self.content,
+    }
+  }
+}
+
+struct PendingReviewPost2 {
+  content: String,
+}
+
+impl PendingReviewPost2 {
+  fn approve(self) -> Post2 {
+    Post2 {
+      content: self.content,
+    }
+  }
+}
+
+fn main() {
+  let mut post = Post2::new();
+
+  post.add_text("Hello world");
+  let post = post.request_review();
+  let post = post.approve();
   assert_eq!("Hello world", post.content());
 }
