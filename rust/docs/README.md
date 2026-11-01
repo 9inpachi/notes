@@ -102,6 +102,12 @@
     - [Stream Trait](#stream-trait)
 - [Object Oriented Programming](#object-oriented-programming)
   - [Encapsulation](#encapsulation)
+- [Patterns and Matching](#patterns-and-matching)
+  - [`match` Expressions](#match-expressions)
+  - [`if let`](#if-let)
+  - [`while let`](#while-let)
+  - [`for` Loops](#for-loops)
+  - [Function Parameters](#function-parameters)
 
 ## Resources
 
@@ -2062,5 +2068,84 @@ impl AveragedCollection {
   pub fn remove(&mut self) -> Option<i32> { }
   pub fn average(&self) -> f64 { }
   fn update_average(&mut self) { }
+}
+```
+
+## Patterns and Matching
+
+### `match` Expressions
+
+```rs
+match VALUE {
+  PATTERN => EXPRESSION,
+  PATTERN => EXPRESSION,
+  PATTERN => EXPRESSION,
+}
+```
+
+`match` expressions need to be exhaustive and all possibilities of patterns for the `VALUE` must be accounted for.
+
+### `if let`
+
+`if let` also has pattern matching. We can also use `else if let` for adding more conditions.
+
+```rs
+fn main() {
+  let favorite_color: Option<&str> = None;
+  let is_tuesday = false;
+  let age: Result<u8, _> = "34".parse();
+
+  if let Some(color) = favorite_color {
+    println!("Using your favorite color, {color}, as the background");
+  } else if is_tuesday {
+    println!("Tuesday is green day!");
+  } else if let Ok(age) = age {
+    if age > 30 {
+      println!("Using purple as the background color");
+    } else {
+      println!("Using orange as the background color");
+    }
+  } else {
+    println!("Using blue as the background color");
+  }
+}
+```
+
+### `while let`
+
+```rs
+let (tx, rx) = std::sync::mpsc::channel();
+std::thread::spawn(move || {
+  for val in [1, 2, 3] {
+    tx.send(val).unwrap();
+  }
+});
+
+while let Ok(value) = rx.recv() {
+  println!("{value}");
+}
+```
+
+`recv` method returns an `Ok` each time a message arrives, as long as the sender exists, and then produces an `Err` once the sender side disconnects.
+
+### `for` Loops
+
+In `for x in y`, the `x` part is the pattern.
+
+```rs
+let v = vec!['a', 'b', 'c'];
+
+for (index, value) in v.iter().enumerate() {
+  println!("{value} is at index {index}");
+}
+```
+
+### Function Parameters
+
+In `fn test(x: i32)`, the `x` part is the pattern.
+
+```rs
+fn print_coordinates(&(x, y): &(i32, i32)) {
+  println!("Current location: ({x}, {y})");
 }
 ```
