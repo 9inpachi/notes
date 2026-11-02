@@ -103,11 +103,23 @@
 - [Object Oriented Programming](#object-oriented-programming)
   - [Encapsulation](#encapsulation)
 - [Patterns and Matching](#patterns-and-matching)
-  - [`match` Expressions](#match-expressions)
-  - [`if let`](#if-let)
-  - [`while let`](#while-let)
-  - [`for` Loops](#for-loops)
-  - [Function Parameters](#function-parameters)
+  - [Places Patterns Can be Used](#places-patterns-can-be-used)
+    - [`match` Expressions](#match-expressions)
+    - [`if let`](#if-let)
+    - [`while let`](#while-let)
+    - [`for` Loops](#for-loops)
+    - [Function Parameters](#function-parameters)
+  - [Refutability of Patterns](#refutability-of-patterns)
+  - [Patterns Syntax](#patterns-syntax)
+    - [Destructuring](#destructuring)
+    - [Matching on Destructured Values](#matching-on-destructured-values)
+    - [Matching on Enums](#matching-on-enums)
+    - [Matching Nested Structs and Enums](#matching-nested-structs-and-enums)
+    - [Ignoring Values in a Pattern](#ignoring-values-in-a-pattern)
+    - [Unused Variables with `_`](#unused-variables-with-_)
+    - [Remaining Parts with `..`](#remaining-parts-with-)
+    - [Conditionals with Match Guards](#conditionals-with-match-guards)
+  - [Using `@` Bindings](#using--bindings)
 
 ## Resources
 
@@ -2073,7 +2085,9 @@ impl AveragedCollection {
 
 ## Patterns and Matching
 
-### `match` Expressions
+### Places Patterns Can be Used
+
+#### `match` Expressions
 
 ```rs
 match VALUE {
@@ -2085,7 +2099,7 @@ match VALUE {
 
 `match` expressions need to be exhaustive and all possibilities of patterns for the `VALUE` must be accounted for.
 
-### `if let`
+#### `if let`
 
 `if let` also has pattern matching. We can also use `else if let` for adding more conditions.
 
@@ -2111,7 +2125,7 @@ fn main() {
 }
 ```
 
-### `while let`
+#### `while let`
 
 ```rs
 let (tx, rx) = std::sync::mpsc::channel();
@@ -2128,7 +2142,7 @@ while let Ok(value) = rx.recv() {
 
 `recv` method returns an `Ok` each time a message arrives, as long as the sender exists, and then produces an `Err` once the sender side disconnects.
 
-### `for` Loops
+#### `for` Loops
 
 In `for x in y`, the `x` part is the pattern.
 
@@ -2140,12 +2154,288 @@ for (index, value) in v.iter().enumerate() {
 }
 ```
 
-### Function Parameters
+#### Function Parameters
 
 In `fn test(x: i32)`, the `x` part is the pattern.
 
 ```rs
 fn print_coordinates(&(x, y): &(i32, i32)) {
   println!("Current location: ({x}, {y})");
+}
+```
+
+### Refutability of Patterns
+
+Patterns can be refutable or irrefutable. In `let x = 10`, the `x` part is the pattern and is irrefutable. In `if let Some(val) = some_value`, the `Some(val)` part is the pattern and it will only match if the value is `Some` and not `None`.
+
+The following will throw a compiler error.
+
+```rs
+let Some(x) = some_option_value;
+```
+
+But we can fix it by using `let ... else` so that all conditions of the refutable pattern are handled.
+
+```rs
+let Some(x) = some_option_value else {
+  return;
+}
+```
+
+### Patterns Syntax
+
+Matching named variables.
+
+```rs
+let x = 5;
+
+match x {
+  Some(10) => println!("ten"),
+  Some(y) => println!("matched"),
+  _ => println!("Default case"), 
+}
+```
+
+Matching multiple patterns.
+
+```rs
+match x {
+  1 | 5 => println!("one or five"),
+  3 => println!("three"),
+  _ => println!("other"),
+}
+```
+
+Matching ranges of values with `..=`.
+
+```rs
+match x {
+  0..=5 => println!("one through 5"),
+  _ => println!("other"),
+}
+
+match x {
+  'a'..='j' => println!("a through j"),
+  _ => println!("other"),
+}
+```
+
+Only numberic and `char` values can be used as patterns for matching ranges.
+
+#### Destructuring
+
+Simple struct destructuring.
+
+```rs
+let p = Point { x: 10, y: 20 };
+
+let Point { x: a, y: b } = p;
+// Can also be the following.
+// let Point { x, y } = p;
+
+assert_eq!(10, a);
+assert_eq!(20, b);
+```
+
+Nested destructuring with structs and tuples.
+
+```rs
+let ((feet, inches), Point { x, y }) = ((3, 10), Point { x: 3, y: -10 });
+```
+
+#### Matching on Destructured Values
+
+```rs
+let p = Point { x: 10, y: 20 };
+
+match p {
+  // Matched if `x` is `10` and `y` is any value.
+  Point { x: 10, y } => println!("{y}"),
+  // Matched if `x` is any value and `y` is '0'.
+  Point { x, y: 10 } => println!("{x}"),
+  Point { x, y } => println!("{x} {y}"),
+}
+```
+
+#### Matching on Enums
+
+```rs
+enum Message {
+  Quit,
+  Move { x: i32, y: i32 },
+  Write(String),
+  ChangeColor(i32, i32, i32),
+}
+
+fn main() {
+  let msg = Message::ChangeColor(0, 160, 255);
+
+  match msg {
+    Message::Quit => {
+      println!("The Quit variant has no data to destructure.");
+    }
+    // We can use similar patterns for matching on destructured values.
+    // For example, `Message::Move { x: 10, y }` which will only match if `x` is `10`.
+    Message::Move { x, y } => {
+      println!("Move in the x direction {x} and in the y direction {y}");
+    }
+    Message::Write(text) => {
+      println!("Text message: {text}");
+    }
+    Message::ChangeColor(r, g, b) => {
+      println!("Change color to red {r}, green {g}, and blue {b}");
+    }
+  }
+}
+```
+
+#### Matching Nested Structs and Enums
+
+```rs
+enum Color {
+  Rgb(i32, i32, i32),
+  Hsv(i32, i32, i32),
+}
+
+enum Message {
+  Quit,
+  Move { x: i32, y: i32 },
+  Write(String),
+  ChangeColor(Color),
+}
+
+fn main() {
+  let msg = Message::ChangeColor(0, 160, 255);
+
+  match msg {
+    // This matches to `Rgb` variant of the `Color` enum which is
+    // nested inside the `Message::ChangeColor` enum.
+    Message::ChangeColor(Color::Rgb(r, g, b)) => {
+      println!("Change color to r={r}, g={g}, b={b}");
+    },
+    // This matches to `Hsv` variant of the `Color` enum which is
+    // nested inside the `Message::ChangeColor` enum.
+    Message::ChangeColor(Color::Hsv(h, s, v)) => {
+      println!("Change color to h={h}, s={s}, v={v}");
+    },
+    _ => (),
+  }
+}
+```
+
+#### Ignoring Values in a Pattern
+
+The underscore `_` can be used to ignore values in any pattern.
+
+For example, for a function.
+
+```rs
+fn test(_: i32, b: i32) {
+  println!("Only uses b={b}");
+}
+```
+
+This is different from JavaScript because here the value is fully ignored and is not usable inside the code.
+
+This is an example with `Option`.
+
+```rs
+let mut setting_value = Some(5);
+let new_setting_value = Some(10);
+
+match (setting_value, new_setting_value) {
+  (Some(_), Some(_)) => {
+    println!("Can't overwrite an existing customized value");
+  }
+  _ => println!("Not called"),
+}
+```
+
+```rs
+let numbers = (2, 4, 8, 16, 32);
+
+match numbers {
+  (first, _, third, _, fifth) => {
+    println!("Some numbers: {first}, {third}, {fifth}");
+  }
+}
+```
+
+#### Unused Variables with `_`
+
+If variables start with `_` (for example `_some_var`), they can still be used but the compiler doesn't show a warning. The `_` by itself doesn't bind to the value but a prefixed var does.
+
+The following will not work.
+
+```rs
+let s = Some(String::from("Hello!"));
+
+// Using `_s` in place of `_` here will throw a compile error
+// because `_s` will `move` the variable `s` into `_s` but
+// underscore (`_`) by itself doesn't do that.
+if let Some(_) = s {
+  println!("found a string");
+}
+
+println!("{s:?}");
+```
+
+#### Remaining Parts with `..`
+
+This is like JavaScript.
+
+```rs
+let p = Point { x: 10, y: 20, z: 30 };
+
+match p {
+  Point { x, .. } => println!("Only using x={x}"),
+}
+```
+
+This also works for in between values.
+
+```rs
+let numbers = (2, 4, 8, 16, 32);
+
+match numbers {
+  (first, .., last) => {
+    println!("Some numbers: {first}, {last}");
+  }
+}
+```
+
+#### Conditionals with Match Guards
+
+```rs
+let x = 5;
+
+match x {
+  Some(x) if x % 2 == 0 => println!("number is even"),
+  Some(x) => println!("number is odd"),
+  None => (),
+}
+```
+
+### Using `@` Bindings
+
+```rs
+enum Message {
+  Hello { id: 32 },
+}
+
+let message = Message::Hello { id: 5 };
+
+match message {
+  // This matches on the range and also gives us the `id`
+  // variable for use inside the block.
+  Message::Hello { id: id @ 5..=10 } => {
+    println!("message id between 5 and 10 and is {id}");
+  },
+  // This matches on the given range but doesn't have any `id`
+  // variable we can use afterwards.
+  Message::Hello { id: 10..=12 } => {
+    println!("message id not in range");
+  },
+  Message::Hello { id } => println!("Not in any range"),
 }
 ```
