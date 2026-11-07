@@ -1,3 +1,4 @@
+use multithreaded_server::ThreadPool;
 use std::{
   fs,
   io::{prelude::*, BufReader},
@@ -5,7 +6,6 @@ use std::{
   thread,
   time::Duration,
 };
-use multithreaded_server::ThreadPool;
 
 fn main() {
   let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
