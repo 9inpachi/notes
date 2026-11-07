@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "multithreaded-server"
+name = "multithreaded_server"
 version = "0.1.0"
