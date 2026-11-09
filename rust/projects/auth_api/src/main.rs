@@ -1,4 +1,5 @@
 mod api;
+mod db;
 mod state;
 
 use api::auth;
@@ -15,7 +16,9 @@ async fn main() {
     .with_env_filter(EnvFilter::from_default_env())
     .init();
 
-  let state = AppState {};
+  let db = db::setup_db().await.unwrap();
+
+  let state = AppState { db };
 
   let app = Router::new()
     .route("/health", get(|| async { "Healthy" }))
