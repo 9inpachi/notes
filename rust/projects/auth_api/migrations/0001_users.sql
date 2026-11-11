@@ -1,5 +1,5 @@
 CREATE TABLE users (
-  user TEXT PRIMARY KEY,
+  username TEXT PRIMARY KEY NOT NULL UNIQUE,
   full_name TEXT NOT NULL,
-  password_hash TEXT NOT NULL,
+  password_hash TEXT NOT NULL
 );
