@@ -19,3 +19,9 @@ pub struct CreateUserResponse {
   pub username: String,
   pub status: CreateUserStatus,
 }
+
+#[derive(Serialize, sqlx::FromRow)]
+pub struct GetUserResponse {
+  pub username: String,
+  pub full_name: String,
+}
