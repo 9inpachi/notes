@@ -1,4 +1,5 @@
 mod handlers;
+mod model;
 
 use crate::state::AppState;
 use axum::{Router, routing::post};
