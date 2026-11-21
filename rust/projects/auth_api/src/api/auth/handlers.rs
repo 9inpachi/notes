@@ -5,7 +5,7 @@ use argon2::{
   Argon2, PasswordVerifier,
   password_hash::{Error as HashError, phc::PasswordHash},
 };
-use axum::{Json, extract::State};
+use axum::{Json, extract::State, http::StatusCode};
 use jsonwebtoken::{EncodingKey, Header};
 
 use crate::{
@@ -17,7 +17,7 @@ use crate::{
 pub async fn login_user(
   State(state): State<AppState>,
   Json(body): Json<LoginRequest>,
-) -> Result<Json<LoginResponse>, AppError> {
+) -> Result<(StatusCode, Json<LoginResponse>), AppError> {
   tracing::info!("Received request for login from username {}", body.username);
 
   let password_hash: String =
@@ -34,10 +34,13 @@ pub async fn login_user(
 
   let (access_token, refresh_token) = get_auth_tokens(&body.username)?;
 
-  Ok(Json(LoginResponse {
-    access_token,
-    refresh_token,
-  }))
+  Ok((
+    StatusCode::OK,
+    Json(LoginResponse {
+      access_token,
+      refresh_token,
+    }),
+  ))
 }
 
 fn verify_password(password: String, password_hash: String) -> Result<(), AppError> {
