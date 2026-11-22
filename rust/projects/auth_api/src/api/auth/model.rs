@@ -7,12 +7,12 @@ pub struct LoginRequest {
 }
 
 #[derive(Serialize)]
-pub struct LoginResponse {
+pub struct TokensResponse {
   pub access_token: String,
   pub refresh_token: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct JwtClaims {
   // pub aud: String, // Optional. Audience
   pub exp: usize, // Required (validate_exp defaults to true in validation). Expiration time (as UTC timestamp)

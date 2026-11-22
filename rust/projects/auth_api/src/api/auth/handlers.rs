@@ -5,11 +5,11 @@ use argon2::{
   Argon2, PasswordVerifier,
   password_hash::{Error as HashError, phc::PasswordHash},
 };
-use axum::{Json, extract::State, http::StatusCode};
+use axum::{Extension, Json, extract::State, http::StatusCode};
 use jsonwebtoken::{EncodingKey, Header};
 
 use crate::{
-  api::auth::model::{JwtClaims, LoginRequest, LoginResponse},
+  api::auth::model::{JwtClaims, LoginRequest, TokensResponse},
   error::AppError,
   state::AppState,
 };
@@ -17,7 +17,7 @@ use crate::{
 pub async fn login_user(
   State(state): State<AppState>,
   Json(body): Json<LoginRequest>,
-) -> Result<(StatusCode, Json<LoginResponse>), AppError> {
+) -> Result<(StatusCode, Json<TokensResponse>), AppError> {
   tracing::info!("Received request for login from username {}", body.username);
 
   let password_hash: String =
@@ -36,7 +36,21 @@ pub async fn login_user(
 
   Ok((
     StatusCode::OK,
-    Json(LoginResponse {
+    Json(TokensResponse {
+      access_token,
+      refresh_token,
+    }),
+  ))
+}
+
+pub async fn refresh_token(
+  Extension(jwt_claims): Extension<JwtClaims>,
+) -> Result<(StatusCode, Json<TokensResponse>), AppError> {
+  let (access_token, refresh_token) = get_auth_tokens(&jwt_claims.sub)?;
+
+  Ok((
+    StatusCode::OK,
+    Json(TokensResponse {
       access_token,
       refresh_token,
     }),
