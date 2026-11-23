@@ -5,8 +5,13 @@ use argon2::{
   Argon2, PasswordVerifier,
   password_hash::{Error as HashError, phc::PasswordHash},
 };
-use axum::{Extension, Json, extract::State, http::StatusCode};
-use jsonwebtoken::{EncodingKey, Header};
+use axum::{
+  Extension, Json,
+  extract::State,
+  http::{HeaderMap, StatusCode, header},
+};
+use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation};
+use serde_json::{Value, json};
 
 use crate::{
   api::auth::model::{JwtClaims, LoginRequest, TokensResponse},
@@ -44,8 +49,29 @@ pub async fn login_user(
 }
 
 pub async fn refresh_token(
-  Extension(jwt_claims): Extension<JwtClaims>,
+  headers: HeaderMap,
 ) -> Result<(StatusCode, Json<TokensResponse>), AppError> {
+  tracing::info!("Received request to refresh token");
+
+  let refresh_token = headers
+    .get(header::AUTHORIZATION)
+    .and_then(|header| header.to_str().ok())
+    .and_then(|value| value.strip_prefix("Bearer "))
+    .ok_or(AppError::Unauthorized(
+      "Missing or invalid refresh token".to_string(),
+    ))?;
+
+  let jwt_secret = std::env::var("JWT_SECRET").map_err(|error| anyhow!(error))?;
+  let secret = DecodingKey::from_secret(jwt_secret.as_bytes()).map_err(|error| anyhow!(error))?;
+
+  let jwt_claims =
+    jsonwebtoken::decode::<JwtClaims>(refresh_token, &secret, &Validation::default())
+      .map(|data| data.claims)
+      .map_err(|_| AppError::Unauthorized("Invalid refresh token".to_string()))?;
+
+  tracing::info!("Received refresh token with the following claims: {jwt_claims:?}");
+
+  // If JWT is successfully verified, then generate a new set of tokens.
   let (access_token, refresh_token) = get_auth_tokens(&jwt_claims.sub)?;
 
   Ok((
@@ -55,6 +81,12 @@ pub async fn refresh_token(
       refresh_token,
     }),
   ))
+}
+
+pub async fn authenticated_me(
+  Extension(jwt_claims): Extension<JwtClaims>,
+) -> Result<(StatusCode, Json<Value>), AppError> {
+  Ok((StatusCode::OK, Json(json!({ "username": jwt_claims.sub }))))
 }
 
 fn verify_password(password: String, password_hash: String) -> Result<(), AppError> {
@@ -86,7 +118,7 @@ fn get_auth_tokens(username: &String) -> Result<(String, String), AppError> {
   let access_token_claims = JwtClaims {
     sub: username.clone(),
     // 1 hour
-    exp: now * 60 * 60,
+    exp: now + 60 * 60,
   };
   let access_token =
     jsonwebtoken::encode(&header, &access_token_claims, &secret).map_err(|error| anyhow!(error))?;
@@ -94,7 +126,7 @@ fn get_auth_tokens(username: &String) -> Result<(String, String), AppError> {
   let refresh_token_claims = JwtClaims {
     sub: username.clone(),
     // 7 days
-    exp: now * 7 * 24 * 60 * 60,
+    exp: now + 7 * 24 * 60 * 60,
   };
   let refresh_token = jsonwebtoken::encode(&header, &refresh_token_claims, &secret)
     .map_err(|error| anyhow!(error))?;
