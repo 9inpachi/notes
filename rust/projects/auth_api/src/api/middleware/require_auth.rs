@@ -2,7 +2,7 @@ use anyhow::anyhow;
 use axum::{extract::Request, http::header, middleware::Next, response::Response};
 use jsonwebtoken::{DecodingKey, Validation};
 
-use crate::{api::auth::model::JwtClaims, error::AppError};
+use crate::{api::common::model::JwtClaims, error::AppError};
 
 pub async fn require_auth(mut req: Request, next: Next) -> Result<Response, AppError> {
   let access_token = req

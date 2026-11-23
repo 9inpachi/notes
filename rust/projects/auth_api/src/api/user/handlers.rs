@@ -10,7 +10,7 @@ use regex::Regex;
 use crate::{
   api::user::{
     constants::{FULL_NAME_RE, PASSWORD_RE, USERNAME_RE},
-    model::{CreateUserRequest, CreateUserResponse, CreateUserStatus, GetUserResponse},
+    model::{CreateUserRequest, CreateUserResponse, GetUserResponse},
   },
   error::AppError,
   state::AppState,
@@ -51,7 +51,7 @@ pub async fn create_user(
     StatusCode::CREATED,
     Json(CreateUserResponse {
       username: body.username,
-      status: CreateUserStatus::Success,
+      status: String::from("success"),
     }),
   ))
 }

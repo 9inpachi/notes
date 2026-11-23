@@ -14,7 +14,10 @@ use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation};
 use serde_json::{Value, json};
 
 use crate::{
-  api::auth::model::{JwtClaims, LoginRequest, TokensResponse},
+  api::{
+    auth::model::{LoginRequest, TokensResponse},
+    common::model::JwtClaims,
+  },
   error::AppError,
   state::AppState,
 };

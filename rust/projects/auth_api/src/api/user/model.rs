@@ -8,16 +8,9 @@ pub struct CreateUserRequest {
 }
 
 #[derive(Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum CreateUserStatus {
-  Success,
-  Failed,
-}
-
-#[derive(Serialize)]
 pub struct CreateUserResponse {
   pub username: String,
-  pub status: CreateUserStatus,
+  pub status: String,
 }
 
 #[derive(Serialize, sqlx::FromRow)]
