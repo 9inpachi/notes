@@ -14,7 +14,7 @@ pub struct CreateUserResponse {
 }
 
 #[derive(Serialize, sqlx::FromRow)]
-pub struct GetUserResponse {
+pub struct UserResponse {
   pub username: String,
   pub full_name: String,
 }

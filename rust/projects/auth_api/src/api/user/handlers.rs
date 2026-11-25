@@ -1,16 +1,19 @@
 use anyhow::anyhow;
 use argon2::{Argon2, PasswordHasher};
 use axum::{
-  Json,
+  Extension, Json,
   extract::{Path, State},
   http::StatusCode,
 };
 use regex::Regex;
 
 use crate::{
-  api::user::{
-    constants::{FULL_NAME_RE, PASSWORD_RE, USERNAME_RE},
-    model::{CreateUserRequest, CreateUserResponse, GetUserResponse},
+  api::{
+    common::model::JwtClaims,
+    user::{
+      constants::{FULL_NAME_RE, PASSWORD_RE, USERNAME_RE},
+      model::{CreateUserRequest, CreateUserResponse, UserResponse},
+    },
   },
   error::AppError,
   state::AppState,
@@ -90,7 +93,7 @@ fn get_password_hash(raw_password: String) -> Result<String, AppError> {
 pub async fn get_user(
   State(state): State<AppState>,
   Path(username): Path<String>,
-) -> Result<(StatusCode, Json<GetUserResponse>), AppError> {
+) -> Result<(StatusCode, Json<UserResponse>), AppError> {
   tracing::info!("Fetching user with username {}", username);
 
   let username_re = Regex::new(USERNAME_RE).unwrap();
@@ -98,13 +101,33 @@ pub async fn get_user(
     return Err(AppError::BadRequest("Invalid username".to_string()));
   }
 
-  let user = sqlx::query_as::<_, GetUserResponse>(
-    "SELECT username, full_name from users where username = $1",
-  )
-  .bind(&username)
-  .fetch_optional(&state.db)
-  .await
-  .map_err(|error| AppError::Internal(anyhow!(error)))?;
+  let user =
+    sqlx::query_as::<_, UserResponse>("SELECT username, full_name from users where username = $1")
+      .bind(&username)
+      .fetch_optional(&state.db)
+      .await
+      .map_err(|error| AppError::Internal(anyhow!(error)))?;
+
+  match user {
+    Some(user) => Ok((StatusCode::OK, Json(user))),
+    None => Err(AppError::NotFound(format!(
+      "User with username {username} not found"
+    ))),
+  }
+}
+
+pub async fn get_user_profile(
+  State(state): State<AppState>,
+  Extension(jwt_claims): Extension<JwtClaims>,
+) -> Result<(StatusCode, Json<UserResponse>), AppError> {
+  let username = jwt_claims.sub;
+
+  let user =
+    sqlx::query_as::<_, UserResponse>("SELECT username, full_name from users where username = $1")
+      .bind(&username)
+      .fetch_optional(&state.db)
+      .await
+      .map_err(|error| AppError::Internal(anyhow!(error)))?;
 
   match user {
     Some(user) => Ok((StatusCode::OK, Json(user))),
