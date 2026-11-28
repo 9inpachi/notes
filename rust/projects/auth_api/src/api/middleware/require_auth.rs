@@ -1,8 +1,14 @@
 use anyhow::anyhow;
 use axum::{extract::Request, http::header, middleware::Next, response::Response};
-use jsonwebtoken::{DecodingKey, Validation};
+use jsonwebtoken::{
+  DecodingKey, Validation,
+  errors::{Error, ErrorKind},
+};
 
-use crate::{api::common::model::JwtClaims, error::AppError};
+use crate::{
+  api::common::model::{JwtClaims, TokenType},
+  error::AppError,
+};
 
 pub async fn require_auth(mut req: Request, next: Next) -> Result<Response, AppError> {
   let access_token = req
@@ -18,7 +24,10 @@ pub async fn require_auth(mut req: Request, next: Next) -> Result<Response, AppE
   let secret = DecodingKey::from_secret(jwt_secret.as_bytes()).map_err(|error| anyhow!(error))?;
 
   let claims = jsonwebtoken::decode::<JwtClaims>(access_token, &secret, &Validation::default())
-    .map(|data| data.claims)
+    .and_then(|data| match data.claims.typ {
+      TokenType::Access => Ok(data.claims),
+      _ => Err(Error::from(ErrorKind::InvalidToken)),
+    })
     .map_err(|_| AppError::Unauthorized("Invalid access token".to_string()))?;
 
   req.extensions_mut().insert(claims);

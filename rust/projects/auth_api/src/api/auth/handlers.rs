@@ -10,13 +10,16 @@ use axum::{
   extract::State,
   http::{HeaderMap, StatusCode, header},
 };
-use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation};
+use jsonwebtoken::{
+  DecodingKey, EncodingKey, Header, Validation,
+  errors::{Error, ErrorKind},
+};
 use serde_json::{Value, json};
 
 use crate::{
   api::{
     auth::model::{LoginRequest, TokensResponse},
-    common::model::JwtClaims,
+    common::model::{JwtClaims, TokenType},
   },
   error::AppError,
   state::AppState,
@@ -69,7 +72,10 @@ pub async fn refresh_token(
 
   let jwt_claims =
     jsonwebtoken::decode::<JwtClaims>(refresh_token, &secret, &Validation::default())
-      .map(|data| data.claims)
+      .and_then(|data| match data.claims.typ {
+        TokenType::Refresh => Ok(data.claims),
+        _ => Err(Error::from(ErrorKind::InvalidToken)),
+      })
       .map_err(|_| AppError::Unauthorized("Invalid refresh token".to_string()))?;
 
   tracing::info!("Received refresh token with the following claims: {jwt_claims:?}");
@@ -122,6 +128,7 @@ fn get_auth_tokens(username: &String) -> Result<(String, String), AppError> {
     sub: username.clone(),
     // 1 hour
     exp: now + 60 * 60,
+    typ: TokenType::Access,
   };
   let access_token =
     jsonwebtoken::encode(&header, &access_token_claims, &secret).map_err(|error| anyhow!(error))?;
@@ -130,6 +137,7 @@ fn get_auth_tokens(username: &String) -> Result<(String, String), AppError> {
     sub: username.clone(),
     // 7 days
     exp: now + 7 * 24 * 60 * 60,
+    typ: TokenType::Refresh,
   };
   let refresh_token = jsonwebtoken::encode(&header, &refresh_token_claims, &secret)
     .map_err(|error| anyhow!(error))?;
